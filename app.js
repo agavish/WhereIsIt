@@ -23,10 +23,11 @@ var app = express();
 // all environment
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+//app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser());
 app.use(bodyParser.json());
+app.engine('html', require('ejs').renderFile); // ' avi 8.8
 
 // set up the RESTful API, handler methods are defined in controllers
 var userController = require('./controllers/userController.js');
