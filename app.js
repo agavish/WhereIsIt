@@ -10,13 +10,13 @@ var express = require('express')
   , mongoose = require('mongoose')
   , bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://localhost:27017'), function(err, res) {
+mongoose.connect('mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt', function(err, res) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
     console.log('Connected to Database');
   }
-};
+});
 
 var app = express();
 
