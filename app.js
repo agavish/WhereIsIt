@@ -14,7 +14,7 @@ mongoose.connect('mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt', fun
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
-    console.log('Connected to Database');
+    console.log('Connected to Database' + res);
   }
 });
 
