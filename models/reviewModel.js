@@ -3,9 +3,9 @@ var mongoose = require('mongoose')
    ,ObjectId = Schema.ObjectId;
    
 var reviewSchema = new Schema({
-    userId     : ObjectId,
-    businessId : ObjectId,
-    content    : String,
+    userId     : { type: ObjectId, required: true },
+    businessId : { type: ObjectId, required: true },
+    content    : { type: String, required: true },
     date       : Date,
 });
 

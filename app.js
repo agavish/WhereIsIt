@@ -10,7 +10,7 @@ var express = require('express')
   , mongoose = require('mongoose')
   , bodyParser = require('body-parser');
 
-mongoose.connect('mongodb://localhost:27017', function(err, res) {
+mongoose.connect('mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt', function(err, res) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
@@ -46,6 +46,14 @@ app.put('/business/:name', businessController.updateBusinessById);
 app.post('/business', businessController.createNewBusiness);
 app.post('/business/:name', businessController.addBranch);
 app.delete('/business/:name', businessController.deleteBusiness);
+
+var reviewController = require('./controllers/reviewController.js');
+
+app.get('/review/:id', reviewController.findReviewById);
+app.get('/review/user/:userId', reviewController.findReviewsByUserId);
+app.get('/review/business/:businessId', reviewController.findReviewsByBusinessId);
+app.post('/review', reviewController.createNewReview);
+app.delete('/review/:id', reviewController.deleteReview);
 
 
 app.get('/', routes.index);
