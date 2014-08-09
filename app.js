@@ -44,7 +44,6 @@ app.get('/business', businessController.findAllBusinesses);
 app.get('/business/:name', businessController.findBusinessById);
 app.put('/business/:name', businessController.updateBusinessById);
 app.post('/business', businessController.createNewBusiness);
-app.post('/business/:name', businessController.addBranch);
 app.delete('/business/:name', businessController.deleteBusiness);
 
 var reviewController = require('./controllers/reviewController.js');

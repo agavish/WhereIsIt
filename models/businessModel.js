@@ -1,18 +1,15 @@
 var mongoose = require('mongoose')
    ,Schema = mongoose.Schema
-   ,Branch = require('../models/branchModel.js')
    ,Address = require('../models/addressModel.js');
 
 var businessSchema = new Schema({
 	name        : { type: String, required: true },
-    branch      : [{
-        address    : [{
+    address     : [{
             city       : String,
             street     : String,
             homeNumber : Number            
         }],
-        phone      : String,
-    }],
+    phone       : {type: String, required: true, unique: true},
     email       : String,
     imagePath   : String,
     numOfScores : Number,
