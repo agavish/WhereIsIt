@@ -1,7 +1,7 @@
 // The User controller
  
 var Business = require('../models/businessModel.js');
-
+var Address = require('../models/addressModel.js');
   /**
    * Creates a new Business from the data request
    * @param {Object} req HTTP request object.
@@ -12,10 +12,10 @@ exports.createNewBusiness = function(req, res) {
     console.log('POST - /business');
 
     var business = new Business({
-      name : req.body.name,
-//      address: req.body.Address, 
+      name         : req.body.name,
+      address      : req.body.address[0],
       businessType : req.body.businessType,
-      phone : req.body.phone
+      phone        : req.body.phone
     });
 
     business.save(function(err) {
@@ -27,7 +27,7 @@ exports.createNewBusiness = function(req, res) {
 
       } else {
         console.log("Business created");
-        return res.send({ status: 'OK', business:business });
+        return res.send(business);
       }
     });
   };
@@ -56,15 +56,15 @@ exports.findAllBusinesses = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findBusinessById = function(req, res) {
-    console.log("GET - /business/:name");
-    return Business.find({name: req.params.name, address: req.params.address}, function(err, user) {
+    console.log("GET - /business/:id");
+    return Business.find({id: req.params.id}, function(err, user) {
       if(!business || !business[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Business Not found' });
       }
 
       if(!err) {
-        return res.send({ status: 'OK', business:business });
+        return res.send(business);
       } else {
 
         res.statusCode = 500;

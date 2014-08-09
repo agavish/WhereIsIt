@@ -3,10 +3,9 @@ var mongoose = require('mongoose')
 
 // Address
 var addressSchema = new Schema({
-{
     city       : String,
     street     : String,
-    homeNumber : int,
+    homeNumber : Number
 });
 
 module.exports = mongoose.model('Address', addressSchema);

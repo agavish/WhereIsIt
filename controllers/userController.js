@@ -12,9 +12,9 @@ exports.createNewUser = function(req, res) {
     console.log('POST - /users');
 
     var user = new User({
-      userName : req.body.userName,
-      firstName: req.body.firstName, 
-      lastName : req.body.lastName,
+      username : req.body.username,
+      firstname: req.body.firstname, 
+      lastname : req.body.lastname,
       password : req.body.password,
     });
 
@@ -56,15 +56,16 @@ exports.findAllUsers = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findUserById = function(req, res) {
-    console.log("GET - /users/:username");
-    return User.find({userName: req.params.username}, function(err, user) {
+    console.log("GET - /users/:id");
+
+    return User.find({id: req.params.id}, function(err, user) {
       if(!user || !user[0]) {
         res.statusCode = 404;
         return res.send({ error: 'User Not found' });
       }
 
       if(!err) {
-        return res.send({ status: 'OK', user:user });
+        return res.send(user[0]);
       } else {
 
         res.statusCode = 500;
@@ -81,9 +82,9 @@ exports.findUserById = function(req, res) {
    */
 exports.updateUserById = function(req, res) {
 
-    console.log("PUT - /users/:username");
+    console.log("PUT - /users/:id");
 
-    return User.find({userName: req.params.username}, function(err, user) {
+    return User.find({id: req.params.id}, function(err, user) {
 
       if(!user || !user[0]) {
         res.statusCode = 404;
@@ -91,8 +92,8 @@ exports.updateUserById = function(req, res) {
         return res.send({ error: 'User Not found' });
       }
 
-      if (req.body.firstName != null) user[0].firstName = req.body.firstName;
-      if (req.body.lastName != null) user[0].lastName = req.body.lastName;
+      if (req.body.firstname != null) user[0].firstname = req.body.firstname;
+      if (req.body.lastname != null) user[0].lastname = req.body.lastname;
       if (req.body.password != null) user[0].password = req.body.password;
 
       return user[0].save(function(err) {
@@ -123,9 +124,9 @@ exports.updateUserById = function(req, res) {
    */
 exports.deleteUser = function(req, res) {
 
-    console.log("DELETE - /users/:username");
+    console.log("DELETE - /users/:id");
     
-    return User.find({userName: req.params.username}, function(err, user) {
+    return User.find({id: req.params.id}, function(err, user) {
       
       if(!user || !user[0]) {
         res.statusCode = 404;
