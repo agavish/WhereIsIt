@@ -49,21 +49,15 @@ exports.createNewBusiness = function(req, res) {
 exports.addBranch = function(req, res) {
 
     console.log('POST - /business/:name');
-
-    var business = Business.find({name: req.params.name}, function(err, business) {
-
-      if (!business || !business[0]) {
-        return null;
-      } else {
-        return business;
+    return Business.find({name: req.params.name}, function(err, business) {
+      if(!business || !business[0]) {
+        res.statusCode = 404;
+        return res.send({ error: 'Business Not found' });
       }
-    });
 
-    if (business == null) {
-      res.send({error: "business name# " + req.params.name + " not found"});
-    } else {
+      if(!err) {
 
-      var addressModel = new Address();
+         var addressModel = new Address();
       addressModel.city = req.body.address.city;
       addressModel.street = req.body.address.street;
       addressModel.homeNumber = req.body.address.homeNumber;
@@ -75,9 +69,9 @@ exports.addBranch = function(req, res) {
       var phone = req.body.phone;
 
       console.log(business);
-      business.branch.push(branchModel);
+      business[0].branch.push(branchModel);
 
-      business.save(function(err) {
+      business[0].save(function(err) {
 
       if(err) {
         console.log('Error while saving business new branch: ' + err);
@@ -89,8 +83,13 @@ exports.addBranch = function(req, res) {
         return res.send(business);
       }
     });
-    }
+      } else {
 
+        res.statusCode = 500;
+        console.log('Internal error(%d): %s', res.statusCode, err.message);
+        return res.send({ error: 'Server error' });
+      }
+    });
   };
 
   /**
