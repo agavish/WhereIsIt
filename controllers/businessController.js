@@ -1,7 +1,9 @@
-// The User controller
+// The Business controller
  
 var Business = require('../models/businessModel.js');
+var Branch = require('../models/branchModel.js');
 var Address = require('../models/addressModel.js');
+
   /**
    * Creates a new Business from the data request
    * @param {Object} req HTTP request object.
@@ -11,14 +13,21 @@ exports.createNewBusiness = function(req, res) {
 
     console.log('POST - /business');
 
-    var business = new Business({
-      name         : req.body.name,
-      address      : req.body.address[0],
-      businessType : req.body.businessType,
-      phone        : req.body.phone
-    });
+    var addressModel = new Address();
+    addressModel.city = req.body.branch.address.city;
+    addressModel.street = req.body.branch.address.street;
+    addressModel.homeNumber = req.body.branch.address.homeNumber;
+ 
+    var branchModel = new Branch();
+    branchModel.address[0] = addressModel;
+    branchModel.phone = req.body.branch.phone;
 
-    business.save(function(err) {
+    var businessModel = new Business();
+    businessModel.name = req.body.name;
+    businessModel.businessType = req.body.businessType;
+    businessModel.branch[0] = branchModel;
+
+    businessModel.save(function(err) {
 
       if(err) {
         console.log('Error while saving business: ' + err);
@@ -27,9 +36,61 @@ exports.createNewBusiness = function(req, res) {
 
       } else {
         console.log("Business created");
+        return res.send(businessModel);
+      }
+    });
+  };
+
+  /**
+   * Creates a new Business branch from the data request
+   * @param {Object} req HTTP request object.
+   * @param {Object} res HTTP response object.
+   */
+exports.addBranch = function(req, res) {
+
+    console.log('POST - /business/:name');
+
+    var business = Business.find({name: req.params.name}, function(err, business) {
+
+      if (!business || !business[0]) {
+        return null;
+      } else {
+        return business;
+      }
+    });
+
+    if (business == null) {
+      res.send({error: "business name# " + req.params.name + " not found"});
+    } else {
+
+      var addressModel = new Address();
+      addressModel.city = req.body.address.city;
+      addressModel.street = req.body.address.street;
+      addressModel.homeNumber = req.body.address.homeNumber;
+
+      var branchModel = new Branch();
+      branchModel.address[0] = addressModel;
+      branchModel.phone = req.body.phone;
+
+      var phone = req.body.phone;
+
+      console.log(business);
+      business.branch.push(branchModel);
+
+      business.save(function(err) {
+
+      if(err) {
+        console.log('Error while saving business new branch: ' + err);
+        res.send({ error:err });
+        return;
+
+      } else {
+        console.log("Business new branch created");
         return res.send(business);
       }
     });
+    }
+
   };
 
   /**
@@ -39,9 +100,9 @@ exports.createNewBusiness = function(req, res) {
    */
 exports.findAllBusinesses = function(req, res) {
     console.log("GET - /business");
-    return Business.find(function(err, business) {
+    return Business.find(function(err, businesses) {
       if(!err) {
-        return res.send(business);
+        return res.send(businesses);
       } else {
         res.statusCode = 500;
         console.log('Internal error(%d): %s',res.statusCode,err.message);
@@ -56,15 +117,15 @@ exports.findAllBusinesses = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findBusinessById = function(req, res) {
-    console.log("GET - /business/:id");
-    return Business.find({id: req.params.id}, function(err, user) {
+    console.log("GET - /business/:name");
+    return Business.find({name: req.params.name}, function(err, business) {
       if(!business || !business[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Business Not found' });
       }
 
       if(!err) {
-        return res.send(business);
+        return res.send(business[0]);
       } else {
 
         res.statusCode = 500;
@@ -83,7 +144,7 @@ exports.updateBusinessById = function(req, res) {
 
     console.log("PUT - /users/:name");
 
-    return Business.find({name: req.params.name, address: req.params.address}, function(err, user) {
+    return Business.find({name: req.params.name}, function(err, business) {
 
       if(!business || !business[0]) {
         res.statusCode = 404;

@@ -58,7 +58,7 @@ exports.findAllUsers = function(req, res) {
 exports.findUserById = function(req, res) {
     console.log("GET - /users/:id");
 
-    return User.find({id: req.params.id}, function(err, user) {
+    return User.find({username: req.params.username}, function(err, user) {
       if(!user || !user[0]) {
         res.statusCode = 404;
         return res.send({ error: 'User Not found' });

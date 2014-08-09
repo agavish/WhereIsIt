@@ -15,15 +15,10 @@ var userSchema = new Schema({
 	lastname: { type: String, required: true },
 	password: { type: String, required: true },
 	imagePath: String,
-	//reviewedBusiness: [ Business ],
+//	reviewedBusiness: [ Business ],
 	//address: Address,
 	//lastVisitedBusiness : [ Business ]
 });
-
-userSchema.virtual('id')
-	.get(function() {
-		return this.username;
-	});
 
 module.exports = mongoose.model('User', userSchema);
 

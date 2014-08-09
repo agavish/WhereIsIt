@@ -1,11 +1,18 @@
 var mongoose = require('mongoose')
    ,Schema = mongoose.Schema
+   ,Branch = require('../models/branchModel.js')
    ,Address = require('../models/addressModel.js');
 
 var businessSchema = new Schema({
 	name        : { type: String, required: true },
-    address     : [ Address ],
-    phone       : { type: String, unique: true },
+    branch      : [{
+        address    : [{
+            city       : String,
+            street     : String,
+            homeNumber : Number            
+        }],
+        phone      : String,
+    }],
     email       : String,
     imagePath   : String,
     numOfScores : Number,
@@ -19,10 +26,5 @@ var businessSchema = new Schema({
     additionalInfo : { },
     //reviews     : [ Review ],
 });
-
-businessSchema.virtual('id')
-    .get(function() {
-        return this.name;
-    });
 
 module.exports = mongoose.model('Business', businessSchema);
