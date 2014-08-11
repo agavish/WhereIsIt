@@ -142,7 +142,7 @@ exports.createNewReview = function(req, res) {
 
     console.log("DELETE - /review/:id");
     
-    return Review.find({id: new ObjectId(req.params.id)}, function(err, review) {
+    return Review.find({_id: req.params.id}, function(err, review) {
       if(!review || !review[0]) {
         res.statusCode = 404;
         console.log("error: Review Not Found");
