@@ -12,10 +12,9 @@ exports.createNewUser = function(req, res) {
     console.log('POST - /users');
 
     var user = new User({
-      username : req.body.username,
       firstname: req.body.firstname, 
       lastname : req.body.lastname,
-      password : req.body.password,
+      email : req.body.email,
     });
 
     user.save(function(err) {
@@ -58,7 +57,7 @@ exports.findAllUsers = function(req, res) {
 exports.findUserById = function(req, res) {
     console.log("GET - /users/:id");
 
-    return User.find({username: req.params.username}, function(err, user) {
+    return User.find({"_id": req.params.id}, function(err, user) {
       if(!user || !user[0]) {
         res.statusCode = 404;
         return res.send({ error: 'User Not found' });
@@ -126,7 +125,7 @@ exports.deleteUser = function(req, res) {
 
     console.log("DELETE - /users/:id");
     
-    return User.find({id: req.params.id}, function(err, user) {
+    return User.find({_id: req.params.id}, function(err, user) {
       
       if(!user || !user[0]) {
         res.statusCode = 404;

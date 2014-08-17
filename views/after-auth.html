@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WhereIsIt</title>
+</head>
+<body>
+  <script type="text/javascript">
+    if (window.opener) {
+      window.opener.focus();
+      var state = '<%= state %>';
+      var user = <%- JSON.stringify(user) %>;
+      if (window.opener.app && window.opener.app.authState) {
+        window.opener.app.authState(state, user);
+      }
+    }
+    window.close();
+  </script>
+</body>
+</html>

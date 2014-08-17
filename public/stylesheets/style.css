@@ -1,8 +1,99 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+@import url(http://fonts.googleapis.com/earlyaccess/alefhebrew.css);
 
+body {
+  font: 14px 'Alef Hebrew', Arial, Helvetica, sans-serif;
+  direction: rtl;
+  margin: 0 auto;
+}
 a {
   color: #00B7FF;
+}
+ul, ol ,li {
+  list-style-type: none;
+  list-style: none;
+}
+#page {
+  margin: 0 auto;
+  text-align: center;
+  padding: 15px;
+}
+.content-width {
+  max-width:1000px;
+  margin:0 auto;
+}
+#search-bar .input-group {
+  direction: ltr;
+}
+#search-input {
+  text-align: right;
+  direction: rtl;
+}
+#user-bar {
+  margin: 0 auto 50px;
+  padding: 20px 0;
+}
+#login-btn {
+  float: left;
+  background: #4c69ba;
+  background: -webkit-gradient(linear, center top, center bottom, from(#4c69ba), to(#3b55a0));
+  background: -webkit-linear-gradient(#4c69ba, #3b55a0);
+  border-color: #4c69ba;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 -1px 0 #354c8c
+}
+#login-btn:hover {
+  background: -webkit-gradient(linear, center top, center bottom, from(#5b7bd5), to(#4864b1));
+  background: -webkit-linear-gradient(#5b7bd5, #4864b1);
+  border-bottom-color: #41599f;
+  border-left-color: #4961a8;
+  border-right-color: #4961a8;
+  border-top-color: #5874c3;
+  -webkit-box-shadow: inset 0 1px 0 #607fd6;
+  cursor: pointer
+}
+#login-btn .text {
+  font-weight: bold;
+}
+#user-details {
+  float: left;
+  border: 1px solid #E8E8E8;
+  border-radius: 6px;
+  padding: 0 10px 0 0;
+  vertical-align: middle;
+  line-height: 50px;
+  height: 50px;
+  position: relative;
+  width: 225px;
+}
+#user-details, #user-details > * {
+  cursor: default;
+}
+.user-image {
+  height: 48px;
+  width: 48px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+  position: relative;
+  top: -2px;
+  float: left;
+}
+.user-menu {
+  display: none;
+  position: absolute;
+  border: 1px solid #E8E8E8;
+  background-color: #FFFFFF !important;
+  width: 225px;
+  top: 48px;
+  right: 0;
+  padding: 0;
+}
+ul#user-details:hover .user-menu {
+  display: block; 
+}
+.user-menu a {
+  display: block;
+  width: 100%;
+  text-align:right;
+  padding: 5px;
 }

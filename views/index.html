@@ -1,111 +1,55 @@
 <!DOCTYPE html>
 <html ng-app="WhereIsIt">
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>WhereIsIt</title>
+<head>
+  <meta charset="UTF-8">
+  <title>WhereIsIt</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+  <script src="WhereIsIt.js"></script>
+  <script src="/services/session-service.js"></script>
+  <link href="/stylesheets/style.css" rel="stylesheet" />
+
+  <script type="text/javascript">
+    window.user = <%- JSON.stringify(user) %>;
+  </script>
 </head>
-<body ng-controller="counterController">
-<script>
-    // This is called with the results from from FB.getLoginStatus().
-    function statusChangeCallback(response) {
-        console.log('statusChangeCallback');
-        console.log(response);
-        // The response object is returned with a status field that lets the
-        // app know the current login status of the person.
-        // Full docs on the response object can be found in the documentation
-        // for FB.getLoginStatus().
-        if (response.status === 'connected') {
-            // Logged into your app and Facebook.
-            testAPI();
-        } else if (response.status === 'not_authorized') {
-            // The person is logged into Facebook, but not your app.
-            document.getElementById('status').innerHTML = 'Please log ' +
-                    'into this app.';
-        } else {
-            // The person is not logged into Facebook, so we're not sure if
-            // they are logged into this app or not.
-            document.getElementById('status').innerHTML = 'Please log ' +
-                    'into Facebook.';
-        }
-    }
+<body>
+  <div id="page">
 
-    // This function is called when someone finishes with the Login
-    // Button.  See the onlogin handler attached to it in the sample
-    // code below.
-    function checkLoginState() {
-        FB.getLoginStatus(function(response) {
-            statusChangeCallback(response);
-        });
-    }
+    <!-- USER BAR -->
+    <div id="user-bar" class="content-width">
+      <button ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" id="login-btn" class="btn btn-primary btn-lg" type="button">
+        <i class="fa fa-facebook"></i> 
+        <span class="text">התחבר</span>
+      </button>
+      <ul id="user-details" ng-show="session.isLoggedIn">
+        <li>
+          <span class="user-carte"><i class="fa fa-caret-down"></i></span>
+          <span class="user-name">{{session.currentUser.firstname}} {{session.currentUser.lastname}}</span>
+          <span class="user-image"><img src="{{session.currentUser.imagePath}}" class="img-rounded" /></span>
+          <ul class="user-menu">
+            <li><a href="#" ng-click="session.logout()"><i class="fa fa-shutdown"></i> התנתק</a></li>
+          </ul>
+        </li>
+      </ul>
+      <button ng-show="session.isLoggedIn" ng-click="session.logout()" type="button" class="btn btn-default"><i class="fa fa-off"></i> התנתק</button>
+    </div>
+    <!-- END USER BAR -->
 
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '800252983352901',
-            cookie     : true,  // enable cookies to allow the server to access
-            // the session
-            xfbml      : true,  // parse social plugins on this page
-            version    : 'v2.0' // use version 2.0
-        });
+    <!-- SEARCH BAR -->
+    <div id="search-bar" class="content-width">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-primary btn-lg" type="button"><i class="fa fa-search fa-lg"></i></button>
+        </span>
+        <input id="search-input" class="form-control input-lg" type="text" placeholder="חפש בתי עסק, שירותים או מקומות בילוי">
+      </div>
+    </div>
+    <!-- END SEARCH BAR -->
 
-        // Now that we've initialized the JavaScript SDK, we call
-        // FB.getLoginStatus().  This function gets the state of the
-        // person visiting this page and can return one of three states to
-        // the callback you provide.  They can be:
-        //
-        // 1. Logged into your app ('connected')
-        // 2. Logged into Facebook, but not your app ('not_authorized')
-        // 3. Not logged into Facebook and can't tell if they are logged into
-        //    your app or not.
-        //
-        // These three cases are handled in the callback function.
-
-        FB.getLoginStatus(function(response) {
-            statusChangeCallback(response);
-        });
-
-    };
-
-    // Load the SDK asynchronously
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-    // Here we run a very simple test of the Graph API after login is
-    // successful.  See statusChangeCallback() for when this call is made.
-    function testAPI() {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-            console.log('Successful login for: ' + response.name);
-            document.getElementById('status').innerHTML =
-                    'Thanks for logging in, ' + response.name + '!';
-        });
-    }
-</script>
-
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
-
-<div id="status">
-</div>
-
-<h2>Hello Counter World</h2>
-
-<p>
-    <button ng_click=increaseByOne()>Increase</button>
-    <button ng-click=decreaseByOne()>Decrease</button>
-</p>
-
-<p>Counter is : <span ng-bind="counter"></span></p>
-
-</div>
-
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-<script src="javascripts/WhereIsIt.js"></script>
-<script src="javascripts/counterController.js"></script>
-
+  </div>
 </body>
 </html>

@@ -8,7 +8,10 @@
   "dependencies": {
     "express": "*",
     "jade": "*",
-    "mongodb":"*",
-    "ejs":"*"
+    "mongodb": "*",
+    "ejs": "*",
+    "passport": "*",
+    "passport-facebook": "*",
+    "cookie-session": "*"
   }
 }

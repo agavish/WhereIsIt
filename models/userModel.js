@@ -10,10 +10,11 @@ var mongoose = require('mongoose');
 var	Schema = mongoose.Schema;
  
 var userSchema = new Schema({
-	username : { type: String, unique: true , required: true },
+	_id: { type: String, required: true },
 	firstname: { type: String, required: true },
 	lastname: { type: String, required: true },
-	password: { type: String, required: true },
+	email: { type: String, required: true, unique: true },
+	username : { type: String },
 	imagePath: String,
 //	reviewedBusiness: [ Business ],
 	//address: Address,
