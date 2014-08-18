@@ -7,7 +7,7 @@ var User = require('../models/userModel.js');
 module.exports = passport.use(new FacebookStrategy({
     clientID: "800252983352901",
     clientSecret: "d3f24fc0704e166fe196c5927529552c",
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: "/auth/facebook/callback"
   },
 
   // the callback function after a successful login via facebook 
