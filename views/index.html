@@ -20,27 +20,33 @@
   <div id="page">
 
     <!-- USER BAR -->
-    <div id="user-bar" class="content-width">
+    <div id="user-bar">
       <button ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" id="login-btn" class="btn btn-primary btn-lg" type="button">
         <i class="fa fa-facebook"></i> 
         <span class="text">התחבר</span>
       </button>
       <ul id="user-details" ng-show="session.isLoggedIn">
         <li>
-          <span class="user-carte"><i class="fa fa-caret-down"></i></span>
-          <span class="user-name">{{session.currentUser.firstname}} {{session.currentUser.lastname}}</span>
-          <span class="user-image"><img src="{{session.currentUser.imagePath}}" class="img-rounded" /></span>
+          <div class="user-details-wrapper">
+            <div class="user-image"><img src="{{session.currentUser.imagePath}}" class="img-rounded" /></div>
+            <div class="user-name-email">
+              <div class="user-name">{{session.currentUser.firstname}} {{session.currentUser.lastname}}</div>
+              <div class="user-email">{{session.currentUser.email}}</div>
+            </div>
+            <div class="user-caret"><i class="fa fa-chevron-circle-down"></i></div>
+          </div>
           <ul class="user-menu">
-            <li><a href="#" ng-click="session.logout()"><i class="fa fa-shutdown"></i> התנתק</a></li>
+            <li class="text-muted"><i class="fa fa-history"></i> הצג היסטוריה</li>
+            <li class="text-muted"><i class="fa fa-star"></i> הצג מועדפים</li>
+            <li><span ng-click="session.logout();"><i class="fa fa-power-off"></i> התנתק</span></li>
           </ul>
         </li>
       </ul>
-      <button ng-show="session.isLoggedIn" ng-click="session.logout()" type="button" class="btn btn-default"><i class="fa fa-off"></i> התנתק</button>
     </div>
     <!-- END USER BAR -->
 
     <!-- SEARCH BAR -->
-    <div id="search-bar" class="content-width">
+    <div id="search-bar">
       <div class="input-group">
         <span class="input-group-btn">
           <button class="btn btn-primary btn-lg" type="button"><i class="fa fa-search fa-lg"></i></button>
