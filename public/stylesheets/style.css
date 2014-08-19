@@ -88,6 +88,10 @@ ul, ol ,li {
   float: left;
   margin-right:10px;
 }
+.user-image img {
+  height: 48px;
+  width: 48px;
+}
 .user-name-email {
   float: left;
   text-align: right;
