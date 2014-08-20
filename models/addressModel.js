@@ -5,7 +5,11 @@ var mongoose = require('mongoose')
 var addressSchema = new Schema({
     city       : String,
     street     : String,
-    homeNumber : Number
+    homeNumber : Number,
+    coordinates: {
+      lat: { type:Number },
+      lng: { type:Number }
+    }
 });
 
 module.exports = mongoose.model('Address', addressSchema);

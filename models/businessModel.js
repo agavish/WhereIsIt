@@ -4,11 +4,7 @@ var mongoose = require('mongoose')
 
 var businessSchema = new Schema({
 	name        : { type: String, required: true },
-    address     : [{
-            city       : String,
-            street     : String,
-            homeNumber : Number            
-        }],
+    address     : { type: [Address.schema], required: true },
     phone       : {type: String, required: true, unique: true},
     email       : String,
     imagePath   : String,

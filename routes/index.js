@@ -17,7 +17,7 @@ router.get('/business', businessController.findAllBusinesses);
 router.get('/business/:name', businessController.findBusinessById);
 router.put('/business/:name', businessController.updateBusinessById);
 router.post('/business', businessController.createNewBusiness);
-router.delete('/business/:name', businessController.deleteBusiness);
+router.delete('/business/:id', businessController.deleteBusiness);
 
 router.get('/review/:id', reviewController.findReviewById);
 router.get('/review/user/:userId', reviewController.findReviewsByUserId);

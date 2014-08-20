@@ -12,13 +12,24 @@ exports.createNewBusiness = function(req, res) {
 
     console.log('POST - /business');
 
-    var businessModel = new Business();
-    businessModel.name = req.body.name;
-    businessModel.phone = req.body.phone;
-    businessModel.businessType = req.body.businessType;
-    businessModel.address = req.body.address;
+    var business = new Business();
+    business.name = req.body.name;
+    business.businessType = req.body.businessType;
+    business.phone = req.body.phone;
+    business.website = req.body.website;
 
-    businessModel.save(function(err) {
+    var address = new Address({
+      city : req.body.address.city,
+      street : req.body.address.street,
+      homeNumber : req.body.address.homeNumber,
+      coordinates : {
+        lat : req.body.address.coordinates.lat,
+        lng : req.body.address.coordinates.lng
+      }
+    });
+    business.address.push(address);
+    
+    business.save(function(err) {
 
       if(err) {
         console.log('Error while saving business: ' + err);
@@ -27,7 +38,7 @@ exports.createNewBusiness = function(req, res) {
 
       } else {
         console.log("Business created");
-        return res.send(businessModel);
+        return res.send(business);
       }
     });
   };
@@ -124,7 +135,7 @@ exports.deleteBusiness = function(req, res) {
 
     console.log("DELETE - /business/:name");
     
-    return Business.find({name: req.params.name, address: req.params.address}, function(err, business) {
+    return Business.find({_id: req.params.id}, function(err, business) {
       if(!business || !business[0]) {
         res.statusCode = 404;
         console.log("error: Business Not Found");
