@@ -177,3 +177,20 @@ ul#user-details:hover .user-menu {
   cursor: pointer;
   background-color: #ECF2F7;
 }
+.geolocator-bar {
+  margin: 25px auto;
+  float: left;
+  width: 100%;
+  text-align:center;
+}
+.geolocator-or {
+  font-size:18px;
+}
+.nearest-businesses-table {
+  margin:40px auto 0;
+}
+.nearest-businesses-table,
+.nearest-businesses-table *
+ {
+  text-align: right !important;
+}

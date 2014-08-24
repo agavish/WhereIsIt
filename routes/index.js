@@ -13,9 +13,10 @@ router.put('/users/:username', userController.updateUserById);
 router.post('/users', userController.createNewUser);
 router.delete('/users/:id', userController.deleteUser);
 
+router.get('/business/nearest/:coordinates', businessController.findNearest);
+router.get('/business/:name/', businessController.findBusinessByName);
 router.get('/business', businessController.findAllBusinesses);
-router.get('/business/:name', businessController.findBusinessById);
-router.put('/business/:name', businessController.updateBusinessById);
+router.put('/business/:name', businessController.updateBusinessByName);
 router.post('/business', businessController.createNewBusiness);
 router.delete('/business/:id', businessController.deleteBusiness);
 

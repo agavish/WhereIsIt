@@ -2,6 +2,7 @@
  
 var Business = require('../models/businessModel.js');
 var Address = require('../models/addressModel.js');
+var mongoose = require('mongoose');
 
   /**
    * Creates a new Business from the data request
@@ -11,37 +12,47 @@ var Address = require('../models/addressModel.js');
 exports.createNewBusiness = function(req, res) {
 
     console.log('POST - /business');
+    var body = req.body;
+    var result = [];
 
-    var business = new Business();
-    business.name = req.body.name;
-    business.businessType = req.body.businessType;
-    business.phone = req.body.phone;
-    business.website = req.body.website;
-
-    var address = new Address({
-      city : req.body.address.city,
-      street : req.body.address.street,
-      homeNumber : req.body.address.homeNumber,
-      coordinates : {
-        lat : req.body.address.coordinates.lat,
-        lng : req.body.address.coordinates.lng
+    if (body.businesses) {
+      var businesses = body.businesses;
+      for (i = 0; i < businesses.length; i++) {
+        result.push(fillBusinessModel(businesses[i]));
       }
-    });
-    business.address.push(address);
-    
-    business.save(function(err) {
+    }
+    else {
+      result.push(fillBusinessModel(body));
+    }
+
+    Business.create(result, function(err, result) {
 
       if(err) {
-        console.log('Error while saving business: ' + err);
+        console.log('Error while saving businesses: ' + err);
         res.send({ error:err });
         return;
 
       } else {
-        console.log("Business created");
-        return res.send(business);
+        console.log("Businesses created");
+        return res.send(result);
       }
     });
   };
+
+  fillBusinessModel = function(business) {
+    var businessModel = new Business();
+    businessModel.name = business.name;
+    businessModel.businessType = business.businessType;
+    businessModel.phone = business.phone;
+    businessModel.website = business.website;
+    businessModel.address.city = business.address.city,
+    businessModel.address.street = business.address.street,
+    businessModel.address.homeNumber = business.address.homeNumber,
+    businessModel.address.coordinates = business.address.coordinates 
+    return businessModel;
+  }
+
+
 
   /**
    * Find and retrieves all Businesses
@@ -62,12 +73,12 @@ exports.findAllBusinesses = function(req, res) {
   };
 
   /**
-   * Find and retrieves a single business by its name and address
+   * Find and retrieves a single business by its id
    * @param {Object} req HTTP request object.
    * @param {Object} res HTTP response object.
    */
-exports.findBusinessById = function(req, res) {
-    console.log("GET - /business/:name");
+exports.findBusinessByName = function(req, res) {
+    console.log("GET - /business/:name/");
     return Business.find({name: req.params.name}, function(err, business) {
       if(!business || !business[0]) {
         res.statusCode = 404;
@@ -86,11 +97,59 @@ exports.findBusinessById = function(req, res) {
   };
 
   /**
+   * Find and retrieves a single business by its id
+   * @param {Object} req HTTP request object.
+   * @param {Object} res HTTP response object.
+   */
+exports.findNearest = function(req, res) {
+    console.log("GET - /business/nearest/:coordinates");
+
+    var coordinatesStr = req.params.coordinates;
+    var coordinates = coordinatesStr.split(",");
+    var longitude = parseFloat(coordinates[0]);
+    var latitude = parseFloat(coordinates[1]);
+
+    // the order is important. the first item must be longitude, the second must be latitude.
+    // this is mongodb spatial queries restriction, and that is the order we save business.address.coordinates
+    coordinates[0] = longitude;
+    coordinates[1] = latitude;
+
+    // we use direct mongo API because this method retrieves also the distance from the current coordinates (mongoose does not).
+    mongoose.connection.db.executeDbCommand({ 
+      geoNear : "businesses",           // the mongo collection
+      near : coordinates,               // the geo point
+      spherical : true,                 // tell mongo the earth is round, so it calculates based on a 
+                                        // spherical location system
+      distanceMultiplier: 6371,         // tell mongo how many radians go into one kilometer.
+      maxDistance : 1/6371,             // tell mongo the max distance in radians to filter out - currently, search within 1 km radius
+    }, function(err, data) {
+      if(!data.documents[0].results || !data.documents[0].results[0]) {
+        res.statusCode = 404;
+        return res.send({ error: 'Businesses Not found' });
+      }
+
+      if (!err) {
+        var result = data.documents[0].results;
+        for (i = 0; i < result.length; i++) {
+          var distance = result[i].dis;
+          distance = Math.ceil(distance * 1000);
+          result[i].dis = distance;
+        }
+        return res.send(result);
+      } else {
+        res.statusCode = 500;
+        console.log('Internal error(%d): %s', res.statusCode, err.message);
+        return res.send({ error: 'Server error' });
+      }
+    });
+  };
+
+  /**
    * Update a Business by its name and address
    * @param {Object} req HTTP request object.
    * @param {Object} res HTTP response object.
    */
-exports.updateBusinessById = function(req, res) {
+exports.updateBusinessByName = function(req, res) {
 
     console.log("PUT - /users/:name");
 
@@ -127,13 +186,13 @@ exports.updateBusinessById = function(req, res) {
   };
 
     /**
-   * Delete a Business by its name and address
+   * Delete a Business by its id
    * @param {Object} req HTTP request object.
    * @param {Object} res HTTP response object.
    */
 exports.deleteBusiness = function(req, res) {
 
-    console.log("DELETE - /business/:name");
+    console.log("DELETE - /business/:id");
     
     return Business.find({_id: req.params.id}, function(err, business) {
       if(!business || !business[0]) {
@@ -154,3 +213,23 @@ exports.deleteBusiness = function(req, res) {
       })
     });
   };
+
+    /**
+   * Delete all Businesses
+   * @param {Object} req HTTP request object.
+   * @param {Object} res HTTP response object.
+   */
+// exports.deleteAllBusinesses = function(req, res) {
+
+//     console.log("DELETE - /business");
+//     return Business.collection.remove(function(err) {
+//       if(!err) {
+//         console.log('Removed Businesses');
+//         return res.send({ status: 'OK' });
+//       } else {
+//         res.statusCode = 500;
+//         console.log('Internal error(%d): %s',res.statusCode,err.message);
+//         return res.send({ error: 'Server error' });
+//       }
+//     });
+//   };

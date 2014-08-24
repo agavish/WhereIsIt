@@ -4,7 +4,12 @@ var mongoose = require('mongoose')
 
 var businessSchema = new Schema({
 	name        : { type: String, required: true },
-    address     : { type: [Address.schema], required: true },
+    address     : { 
+      city       : String,
+      street     : String,
+      homeNumber : Number,
+      coordinates: { type: [Number] }
+    },
     phone       : {type: String, required: true, unique: true},
     email       : String,
     imagePath   : String,
@@ -20,4 +25,5 @@ var businessSchema = new Schema({
     //reviews     : [ Review ],
 });
 
+businessSchema.index({ 'address.coordinates': '2d' });
 module.exports = mongoose.model('Business', businessSchema);
