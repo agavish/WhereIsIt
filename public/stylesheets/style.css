@@ -18,7 +18,7 @@ input:hover, input:active, input:focus, input:visited {
   outline: 0 !important;
 }
 .loader {
-  background: url('../images/loader.gif') no-repeat 0 0;
+  background: url('../images/loader.GIF') no-repeat 0 0;
   width: 18px;
   height: 18px;
   display: inline-block;
