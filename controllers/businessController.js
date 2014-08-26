@@ -1,8 +1,8 @@
 // The Business controller
  
 var Business = require('../models/businessModel.js');
-var Address = require('../models/addressModel.js');
 var mongoose = require('mongoose');
+var geolib = require('geolib');
 
   /**
    * Creates a new Business from the data request
@@ -20,13 +20,11 @@ exports.createNewBusiness = function(req, res) {
       for (i = 0; i < businesses.length; i++) {
         result.push(fillBusinessModel(businesses[i]));
       }
-    }
-    else {
+    } else {
       result.push(fillBusinessModel(body));
     }
 
     Business.create(result, function(err, result) {
-
       if(err) {
         console.log('Error while saving businesses: ' + err);
         res.send({ error:err });
@@ -73,22 +71,58 @@ exports.findAllBusinesses = function(req, res) {
   };
 
   /**
-   * Find and retrieves a single business by its id
+   * Find and retrieve businesses by keyword
    * @param {Object} req HTTP request object.
    * @param {Object} res HTTP response object.
    */
-exports.findBusinessByName = function(req, res) {
-    console.log("GET - /business/:name/");
-    return Business.find({name: req.params.name}, function(err, business) {
-      if(!business || !business[0]) {
+exports.findBusinessesByKeyword = function(req, res) {
+    console.log("GET - /business/:keyword");
+    var regex = new RegExp(req.params.keyword, "i");
+
+    return Business.find( {$or:[{name: regex}, {businessType: regex}]} , function(err, businesses) {
+      if(!businesses || !businesses[0]) {
         res.statusCode = 404;
-        return res.send({ error: 'Business Not found' });
+        return res.send({ error: 'Businesses Not found' });
+      }
+
+      var coordinatesStr = req.query.coordinates;
+      var coordinates = "";
+      var myLongitude = "";
+      var myLatitude = "";
+      if (coordinatesStr) {
+        coordinates = coordinatesStr.split(",");
+        myLongitude = parseFloat(coordinates[0]);
+        myLatitude = parseFloat(coordinates[1]);
       }
 
       if(!err) {
-        return res.send(business[0]);
-      } else {
+        if (coordinates) {
+          for (i=0; i<businesses.length; i++) {
+            var business = businesses[i];
+            var businessLongitude = business.address.coordinates[0];
+            var businessLatitude = business.address.coordinates[1];
+            var distanceMeters = geolib.getDistance(
+              { latitude : myLatitude, longitude : myLongitude },
+              { latitude : businessLatitude, longitude : businessLongitude }
+            );
+            if (distanceMeters > 1000) {
+              distanceKilometers = distanceMeters/1000;
+              distanceKilometers = distanceKilometers.toFixed(2);
+            }
+            businesses[i]._doc.distanceMeters = distanceMeters;
+            businesses[i]._doc.distanceKilometers = distanceKilometers;
+          }
 
+          businesses.sort(function(a, b) {
+            var keyA = a._doc.distanceMeters,
+            keyB = b._doc.distanceMeters;
+            if(keyA < keyB) return -1;
+            if(keyA > keyB) return 1;
+            return 0;
+          });
+        }
+        return res.send(businesses);
+      } else {
         res.statusCode = 500;
         console.log('Internal error(%d): %s', res.statusCode, err.message);
         return res.send({ error: 'Server error' });
@@ -97,7 +131,7 @@ exports.findBusinessByName = function(req, res) {
   };
 
   /**
-   * Find and retrieves a single business by its id
+   * Find and retrieve all businesses within 1 km from the given coordinates
    * @param {Object} req HTTP request object.
    * @param {Object} res HTTP response object.
    */
@@ -118,8 +152,7 @@ exports.findNearest = function(req, res) {
     mongoose.connection.db.executeDbCommand({ 
       geoNear : "businesses",           // the mongo collection
       near : coordinates,               // the geo point
-      spherical : true,                 // tell mongo the earth is round, so it calculates based on a 
-                                        // spherical location system
+      spherical : true,                 // tell mongo the earth is round, so it calculates based on a spherical location system
       distanceMultiplier: 6371,         // tell mongo how many radians go into one kilometer.
       maxDistance : 1/6371,             // tell mongo the max distance in radians to filter out - currently, search within 1 km radius
     }, function(err, data) {
@@ -129,11 +162,13 @@ exports.findNearest = function(req, res) {
       }
 
       if (!err) {
+        // by default, mongo gives the distance in km.
+        // we'd like to get the distances in meters
         var result = data.documents[0].results;
         for (i = 0; i < result.length; i++) {
           var distance = result[i].dis;
-          distance = Math.ceil(distance * 1000);
-          result[i].dis = distance;
+          var distanceMeters = Math.ceil(distance * 1000);
+          result[i].distanceMeters = distanceMeters;
         }
         return res.send(result);
       } else {

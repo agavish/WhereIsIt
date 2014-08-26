@@ -7,24 +7,25 @@ var userController = require('../controllers/userController.js');
 var businessController = require('../controllers/businessController.js');
 var reviewController = require('../controllers/reviewController.js');
 
-router.get('/users', userController.findAllUsers);
-router.get('/users/:id', userController.findUserById);
-router.put('/users/:username', userController.updateUserById);
-router.post('/users', userController.createNewUser);
-router.delete('/users/:id', userController.deleteUser);
+router.get('/api/users', userController.findAllUsers);
+router.get('/api/users/:id', userController.findUserById);
+router.put('/api/users/:username', userController.updateUserById);
+router.post('/api/users', userController.createNewUser);
+router.delete('/api/users/:id', userController.deleteUser);
 
-router.get('/business/nearest/:coordinates', businessController.findNearest);
-router.get('/business/:name/', businessController.findBusinessByName);
-router.get('/business', businessController.findAllBusinesses);
-router.put('/business/:name', businessController.updateBusinessByName);
-router.post('/business', businessController.createNewBusiness);
-router.delete('/business/:id', businessController.deleteBusiness);
+router.get('/api/business/nearest/:coordinates', businessController.findNearest);
+router.get('/api/business/:keyword', businessController.findBusinessesByKeyword);
+router.get('/api/business', businessController.findAllBusinesses);
+router.put('/api/business/:name', businessController.updateBusinessByName);
+router.post('/api/business', businessController.createNewBusiness);
+router.delete('/api/business/:id', businessController.deleteBusiness);
+// router.delete('/api/business', businessController.deleteAllBusinesses);
 
-router.get('/review/:id', reviewController.findReviewById);
-router.get('/review/user/:userId', reviewController.findReviewsByUserId);
-router.get('/review/business/:businessId', reviewController.findReviewsByBusinessId);
-router.post('/review', reviewController.createNewReview);
-router.delete('/review/:id', reviewController.deleteReview);
+router.get('/api/review/:id', reviewController.findReviewById);
+router.get('/api/review/user/:userId', reviewController.findReviewsByUserId);
+router.get('/api/review/business/:businessId', reviewController.findReviewsByBusinessId);
+router.post('/api/review', reviewController.createNewReview);
+router.delete('/api/review/:id', reviewController.deleteReview);
 
 // redirect the user to facebook for authentication.  when complete,
 // facebook will redirect the user back to the application at

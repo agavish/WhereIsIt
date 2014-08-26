@@ -12,6 +12,19 @@ ul, ol ,li {
   list-style-type: none;
   list-style: none;
 }
+a:hover, a:active, a:focus, a:visited,
+button:hover, button:active, button:focus, button:visited,
+input:hover, input:active, input:focus, input:visited {
+  outline: 0 !important;
+}
+.loader {
+  background: url('../images/loader.gif') no-repeat 0 0;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  margin: 0 auto;
+  padding: 0;
+}
 #page {
   margin: 0 auto;
   text-align: center;
@@ -32,7 +45,7 @@ ul, ol ,li {
   direction: rtl;
 }
 #user-bar {
-  margin: 0 auto 50px;
+  margin: 0 auto 25px;
   float: left;
   width: 100%;
 }
@@ -177,20 +190,20 @@ ul#user-details:hover .user-menu {
   cursor: pointer;
   background-color: #ECF2F7;
 }
-.geolocator-bar {
+.businesses-results {
   margin: 25px auto;
   float: left;
   width: 100%;
-  text-align:center;
 }
-.geolocator-or {
+.businesses-results-title {
   font-size:18px;
+  text-align: right;
 }
-.nearest-businesses-table {
+.businesses-results-table {
   margin:40px auto 0;
 }
-.nearest-businesses-table,
-.nearest-businesses-table *
+.businesses-results-table,
+.businesses-results-table *
  {
   text-align: right !important;
 }
