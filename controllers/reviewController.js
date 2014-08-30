@@ -1,8 +1,6 @@
 // The Review controller
  
 var Review = require('../models/reviewModel.js');
-var User = require('../models/userModel.js');
-var Business = require('../models/businessModel.js');
 
   /**
    * Creates a new Review from the data request
@@ -16,6 +14,7 @@ exports.createNewReview = function(req, res) {
 
     var userId = req.body.userId;
     var businessId = req.body.businessId;
+    var content = req.body.content;
 
     // validate the user exists
     User.findOne({ "_id": userId }, function (err, user) {
@@ -44,7 +43,7 @@ exports.createNewReview = function(req, res) {
     var reviewModel = new Review();
     reviewModel.userId = userId;
     reviewModel.businessId = businessId;
-    reviewModel.content = req.body.content;
+    reviewModel.content = content;
     reviewModel.date = new Date();
     reviewModel.save(function(err) {
 
@@ -66,8 +65,8 @@ exports.createNewReview = function(req, res) {
    * @param {Object} res HTTP response object.
    */
   exports.findReviewById = function(req, res) {
-    console.log("GET - /business/:id");
-    return Review.find({_id: req.params.id}, function(err, review) {
+    console.log("GET - /review/:id");
+    return Review.find({"_id": req.params.id}, function(err, review) {
       if(!review || !review[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Review Not found' });
@@ -90,8 +89,8 @@ exports.createNewReview = function(req, res) {
    * @param {Object} res HTTP response object.
    */
   exports.findReviewsByUserId = function(req, res) {
-    console.log("GET - /review/user/:userId");
-    return Review.find({userId: req.params.userId}, function(err, reviews) {
+    console.log("GET - /review/user/:id");
+    return Review.find({"userId": req.params.id}, function(err, reviews) {
       if(!reviews || !reviews[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Reviews Not found' });
@@ -114,8 +113,8 @@ exports.createNewReview = function(req, res) {
    * @param {Object} res HTTP response object.
    */
   exports.findReviewsByBusinessId = function(req, res) {
-    console.log("GET - /review/business/:businessId");
-    return Review.find({businessId: req.params.businessId}, function(err, reviews) {
+    console.log("GET - /review/business/:id");
+    return Review.find({"businessId": req.params.id}, function(err, reviews) {
       if(!reviews || !reviews[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Reviews Not found' });
@@ -142,7 +141,7 @@ exports.createNewReview = function(req, res) {
 
     console.log("DELETE - /review/:id");
     
-    return Review.find({_id: req.params.id}, function(err, review) {
+    return Review.find({"_id": req.params.id}, function(err, review) {
       if(!review || !review[0]) {
         res.statusCode = 404;
         console.log("error: Review Not Found");

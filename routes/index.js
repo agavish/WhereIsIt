@@ -3,9 +3,9 @@ var router = app.Router();
 var passport = require('passport');
 
 // set up the RESTful API, handler methods are defined in controllers
-var userController = require('../controllers/userController.js');
-var businessController = require('../controllers/businessController.js');
 var reviewController = require('../controllers/reviewController.js');
+var businessController = require('../controllers/businessController.js');
+var userController = require('../controllers/userController.js');
 
 router.get('/api/users', userController.findAllUsers);
 router.get('/api/users/:id', userController.findUserById);

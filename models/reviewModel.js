@@ -1,10 +1,18 @@
+/**
+ * Review
+ *
+ * @module      :: Model
+ * @description :: Represent data model for the Reviews
+ * @author      :: Adam Gavish
+ */
+
 var mongoose = require('mongoose')
    ,Schema = mongoose.Schema
    ,ObjectId = Schema.ObjectId;
    
 var reviewSchema = new Schema({
-    userId     : { type: ObjectId, required: true },
-    businessId : { type: ObjectId, required: true },
+    userId     : { type: ObjectId, ref: 'User', required: true },
+    businessId : { type: ObjectId, ref: 'Business', required: true },
     content    : { type: String, required: true },
     date       : Date,
 });

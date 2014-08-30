@@ -8,6 +8,8 @@
 
 var mongoose = require('mongoose');
 var	Schema = mongoose.Schema;
+var Review = require('mongoose').model('Review');
+var Business = require('mongoose').model('Business');
  
 var userSchema = new Schema({
 	_id: { type: String, required: true },
@@ -16,9 +18,8 @@ var userSchema = new Schema({
 	email: { type: String, required: true, unique: true },
 	username : { type: String },
 	imagePath: String,
-//	reviewedBusiness: [ Business ],
-	//address: Address,
-	//lastVisitedBusiness : [ Business ]
+	reviews: [ Review.schema ],
+	lastVisitedBusiness : [ Business.schema ]
 });
 
 module.exports = mongoose.model('User', userSchema);

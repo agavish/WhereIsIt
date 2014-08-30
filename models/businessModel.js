@@ -1,6 +1,13 @@
+/**
+ * Business
+ *
+ * @module      :: Model
+ * @description :: Represent data model for the Businesses
+ * @author      :: Adam Gavish
+ */
+
 var mongoose = require('mongoose')
-   ,Schema = mongoose.Schema
-   ,Address = require('../models/addressModel.js');
+   ,Schema = mongoose.Schema;
 
 var businessSchema = new Schema({
   name        : { type: String, required: true },
@@ -22,7 +29,7 @@ var businessSchema = new Schema({
   openDays    : [ Date ],
   website     : String,
   additionalInfo : { },
-  //reviews     : [ Review ],
+  reviews     : [{ type: Schema.ObjectId, ref: 'Review' }],
 });
 
 businessSchema.index({ 'address.coordinates': '2d' });
