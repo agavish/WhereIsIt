@@ -77,7 +77,7 @@ exports.findAllBusinesses = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findBusinessesByKeyword = function(req, res) {
-    console.log("GET - /api/business/:keyword");
+    console.log("GET - /api/business/keyword/:keyword");
     var regex = new RegExp(req.params.keyword, "i");
 
     return Business.find( {$or:[{name: regex}, {businessType: regex}]} , function(err, businesses) {
