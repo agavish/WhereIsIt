@@ -49,7 +49,7 @@ app.service('businessesService', ['$http', function($http) {
       var latitude = position.latitude;
       var longitude = position.longitude;
       var coordinates = longitude + ',' + latitude;
-      return $http({ method: 'GET', url: '/api/business/' + keyword + '?coordinates=' + coordinates });
+      return $http({ method: 'GET', url: '/api/business/keyword/' + keyword + '?coordinates=' + coordinates });
     },
 
     getNearestBusinesses: function(position) {
