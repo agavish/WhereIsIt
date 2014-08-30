@@ -201,21 +201,31 @@ exports.updateBusinessById = function(req, res) {
       if (req.body.phone != null) business[0].phone = req.body.phone;
       if (req.body.rate != null) {
 
-        business[0].rates.push(req.body.rate);
+        // check if current userId already rated the business
+        for(var i=0; i < business[0].rates.length; i++) {
+          if (business[0].rates[i].userId == req.body.userId) {
+            res.statusCode = 500;
+            console.log("error: user id %d already rated business id %d", req.body.userId, req.params.id);
+            return res.send({ error: "User already rated that business" });
+          }
+        }
+
+        // user didn't rate that business yet, creating a new rate
+        var newRate = {
+          userId: req.body.userId,
+          rate: req.body.rate
+        }
+
+        business[0].rates.push(newRate);
 
         var totalRate = 0;
         var numOfRates = business[0].rates.length;
 
-        console.log("numOfRates: " + numOfRates);
-
         for (var i = 0; i < numOfRates; i++) {
-            totalRate += business[0].rates[i];
+            totalRate += business[0].rates[i].rate;
         }
 
-        console.log("totalRate: " + totalRate);
-
         business[0].averateRate = parseFloat(totalRate/numOfRates);
-        console.log("business[0].averageRate: " + business[0].averageRate);
       }
 
       return business[0].save(function(err) {

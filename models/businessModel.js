@@ -26,7 +26,10 @@ var businessSchema = new Schema({
     startHour:      { type: String },
     endHour:        { type: String }
   }],
-  rates: [ { type: Number, default: 0, max: 5 }],
+  rates: [{
+    userId: String,
+    rate: { type: Number, default: 0, max: 5 }
+    }],
   averateRate:      { type: Number, default: 0 },
   description:      { type: String },
   reviews     :     { type: [Schema.ObjectId], ref: 'Review' },
