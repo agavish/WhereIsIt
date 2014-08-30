@@ -1,6 +1,7 @@
 // The User controller
  
 var User = require('../models/userModel.js');
+var mongoose = require('mongoose');
 
   /**
    * Creates a new User from the data request
@@ -98,7 +99,7 @@ exports.updateUserById = function(req, res) {
       if (req.body.lastname != null) user[0].lastname = req.body.lastname;
       if (req.body.password != null) user[0].password = req.body.password;
       if (req.body.favoriteBusinessID != null) addBusinessToFavorites(user[0],req.body.favoriteBusinessID);
-         // addBusinessToFavorites(user,req.body.favoriteBusinessID);
+      if (req.body.lastVisitedBusinessId != null) addLastVisitedBusiness(user[0],req.body.lastVisitedBusinessId);
 
       return user[0].save(function(err) {
         if(!err) {
@@ -150,6 +151,19 @@ exports.deleteUser = function(req, res) {
       })
     });
   };
+
+var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
+  var lastVisitedArray = user.lastVisitedBusiness;
+
+  if (lastVisitedArray.indexOf(lastVisitedBusinessId) == -1) {
+    if (lastVisitedArray.length >= 10) {
+      lastVisitedArray.shift(); // remove most old visited business
+    } 
+
+    var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
+    lastVisitedArray.push(castedBusinessObjectId);
+  }
+};
 
 var addBusinessToFavorites = function (user,id) {
             var businessArray = user.favoriteBusiness;
