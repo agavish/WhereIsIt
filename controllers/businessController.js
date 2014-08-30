@@ -11,7 +11,7 @@ var geolib = require('geolib');
    */
 exports.createNewBusiness = function(req, res) {
 
-    console.log('POST - /business');
+    console.log('POST - /api/business');
     var body = req.body;
     var result = [];
 
@@ -46,7 +46,17 @@ exports.createNewBusiness = function(req, res) {
     businessModel.address.city = business.address.city,
     businessModel.address.street = business.address.street,
     businessModel.address.homeNumber = business.address.homeNumber,
-    businessModel.address.coordinates = business.address.coordinates 
+    businessModel.address.coordinates = business.address.coordinates,
+
+    businessModel.openHours = [];
+    for (var i=0; i<business.openHours.length; i++) {
+      var currDay = {};
+      currDay.day = business.openHours[i].day;
+      currDay.startHour = business.openHours[i].startHour;
+      currDay.endHour = business.openHours[i].endHour;
+      businessModel.openHours.push(currDay);
+    }
+    
     return businessModel;
   }
 
@@ -58,7 +68,7 @@ exports.createNewBusiness = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findAllBusinesses = function(req, res) {
-    console.log("GET - /business");
+    console.log("GET - /api/business");
     return Business.find(function(err, businesses) {
       if(!err) {
         return res.send(businesses);
@@ -76,7 +86,7 @@ exports.findAllBusinesses = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findBusinessesByKeyword = function(req, res) {
-    console.log("GET - /business/:keyword");
+    console.log("GET - /api/business/:keyword");
     var regex = new RegExp(req.params.keyword, "i");
 
     return Business.find( {$or:[{name: regex}, {businessType: regex}]} , function(err, businesses) {
@@ -136,7 +146,7 @@ exports.findBusinessesByKeyword = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findNearest = function(req, res) {
-    console.log("GET - /business/nearest/:coordinates");
+    console.log("GET - /api/business/nearest/:coordinates");
 
     var coordinatesStr = req.params.coordinates;
     var coordinates = coordinatesStr.split(",");
@@ -180,13 +190,13 @@ exports.findNearest = function(req, res) {
   };
 
   /**
-   * Update a Business by its name and address
+   * Update a Business by its id
    * @param {Object} req HTTP request object.
    * @param {Object} res HTTP response object.
    */
-exports.updateBusinessByName = function(req, res) {
+exports.updateBusinessById = function(req, res) {
 
-    console.log("PUT - /users/:name");
+    console.log("PUT - /api/business/:id");
 
     return Business.find({name: req.params.name}, function(err, business) {
 
@@ -227,7 +237,7 @@ exports.updateBusinessByName = function(req, res) {
    */
 exports.deleteBusiness = function(req, res) {
 
-    console.log("DELETE - /business/:id");
+    console.log("DELETE - /api/business/:id");
     
     return Business.find({_id: req.params.id}, function(err, business) {
       if(!business || !business[0]) {

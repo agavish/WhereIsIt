@@ -9,12 +9,15 @@ var User = require('../models/userModel.js');
    */
 exports.createNewUser = function(req, res) {
 
-    console.log('POST - /users');
+    console.log('POST - /api/user');
 
     var user = new User({
+      _id: req.body.id,
       firstname: req.body.firstname, 
-      lastname : req.body.lastname,
-      email : req.body.email,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      username: req.body.username,
+      imagePath: req.body.imagePath
     });
 
     user.save(function(err) {
@@ -37,7 +40,7 @@ exports.createNewUser = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findAllUsers = function(req, res) {
-    console.log("GET - /users");
+    console.log("GET - /api/user");
     return User.find(function(err, users) {
       if(!err) {
         return res.send(users);
@@ -55,7 +58,7 @@ exports.findAllUsers = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findUserById = function(req, res) {
-    console.log("GET - /users/:id");
+    console.log("GET - /api/user/:id");
 
     return User.find({"_id": req.params.id}, function(err, user) {
       if(!user || !user[0]) {
@@ -81,7 +84,7 @@ exports.findUserById = function(req, res) {
    */
 exports.updateUserById = function(req, res) {
 
-    console.log("PUT - /users/:id");
+    console.log("PUT - /api/user/:id");
 
     return User.find({id: req.params.id}, function(err, user) {
 
@@ -123,7 +126,7 @@ exports.updateUserById = function(req, res) {
    */
 exports.deleteUser = function(req, res) {
 
-    console.log("DELETE - /users/:id");
+    console.log("DELETE - /api/user/:id");
     
     return User.find({_id: req.params.id}, function(err, user) {
       
