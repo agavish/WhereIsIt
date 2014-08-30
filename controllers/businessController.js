@@ -198,7 +198,7 @@ exports.updateBusinessById = function(req, res) {
 
     console.log("PUT - /api/business/:id");
 
-    return Business.find({name: req.params.name}, function(err, business) {
+    return Business.find({"_id": req.params.id}, function(err, business) {
 
       if(!business || !business[0]) {
         res.statusCode = 404;
@@ -208,6 +208,24 @@ exports.updateBusinessById = function(req, res) {
 
       if (req.body.businessType != null) business[0].businessType = req.body.businessType;
       if (req.body.phone != null) business[0].phone = req.body.phone;
+      if (req.body.rate != null) {
+
+        business[0].rates.push(req.body.rate);
+
+        var totalRate = 0;
+        var numOfRates = business[0].rates.length;
+
+        console.log("numOfRates: " + numOfRates);
+
+        for (var i = 0; i < numOfRates; i++) {
+            totalRate += business[0].rates[i];
+        }
+
+        console.log("totalRate: " + totalRate);
+
+        business[0].averateRate = parseFloat(totalRate/numOfRates);
+        console.log("business[0].averageRate: " + business[0].averageRate);
+      }
 
       return business[0].save(function(err) {
         if(!err) {
@@ -216,7 +234,7 @@ exports.updateBusinessById = function(req, res) {
         } else {
           if(err.name == 'ValidationError') {
             res.statusCode = 400;
-            res.send({ error: 'Validation error' });
+            res.send({ errorName: 'Validation error', error: err });
           } else {
             res.statusCode = 500;
             res.send({ error: 'Server error' });
