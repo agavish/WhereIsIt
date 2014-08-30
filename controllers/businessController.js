@@ -180,6 +180,33 @@ exports.findNearest = function(req, res) {
     });
   };
 
+
+  /**
+   * Find a Business by its id
+   * @param {Object} req HTTP request object.
+   * @param {Object} res HTTP response object.
+   */
+exports.findBusinessById = function(req, res) {
+  console.log("GET - /api/business/:id");
+
+  return Business.find({"_id" : req.params.id}, function(err, business) {
+
+    if (!business || !business[0]) {
+      res.statusCode = 404;
+      console.log("error: Business Not Found");
+      return res.send({ error: 'Business Not Found' });
+    }
+
+    if (!err) {
+      return res.send(business[0]);
+    } else {
+      res.statusCode = 500;
+      console.log('Internal error(%d): %s', res.statusCode, err.message);
+      return res.send({ error: 'Server error' });
+    }
+  });
+}
+
   /**
    * Update a Business by its id
    * @param {Object} req HTTP request object.

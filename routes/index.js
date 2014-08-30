@@ -15,6 +15,7 @@ router.delete('/api/users/:id', userController.deleteUser);
 
 router.get('/api/business/nearest/:coordinates', businessController.findNearest);
 router.get('/api/business/keyword/:keyword', businessController.findBusinessesByKeyword);
+router.get('/api/business/:id', businessController.findBusinessById);
 router.get('/api/business', businessController.findAllBusinesses);
 router.put('/api/business/:id', businessController.updateBusinessById);
 router.post('/api/business', businessController.createNewBusiness);
