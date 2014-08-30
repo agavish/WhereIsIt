@@ -9,7 +9,7 @@ var userController = require('../controllers/userController.js');
 
 router.get('/api/users', userController.findAllUsers);
 router.get('/api/users/:id', userController.findUserById);
-router.put('/api/users/:username', userController.updateUserById);
+router.put('/api/users/:id', userController.updateUserById);
 router.post('/api/users', userController.createNewUser);
 router.delete('/api/users/:id', userController.deleteUser);
 

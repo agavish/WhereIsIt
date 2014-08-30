@@ -86,7 +86,7 @@ exports.updateUserById = function(req, res) {
 
     console.log("PUT - /api/user/:id");
 
-    return User.find({id: req.params.id}, function(err, user) {
+    return User.find({_id: req.params.id}, function(err, user) {
 
       if(!user || !user[0]) {
         res.statusCode = 404;
@@ -97,6 +97,8 @@ exports.updateUserById = function(req, res) {
       if (req.body.firstname != null) user[0].firstname = req.body.firstname;
       if (req.body.lastname != null) user[0].lastname = req.body.lastname;
       if (req.body.password != null) user[0].password = req.body.password;
+      if (req.body.favoriteBusinessID != null) addBusinessToFavorites(user[0],req.body.favoriteBusinessID);
+         // addBusinessToFavorites(user,req.body.favoriteBusinessID);
 
       return user[0].save(function(err) {
         if(!err) {
@@ -148,3 +150,15 @@ exports.deleteUser = function(req, res) {
       })
     });
   };
+
+var addBusinessToFavorites = function (user,id) {
+            var businessArray = user.favoriteBusiness;
+            if (businessArray.indexOf(id) > -1)
+            {
+                businessArray.remove(id);
+            } else {
+                businessArray.add(id);
+            }
+            user.favoriteBusiness = businessArray
+
+};
