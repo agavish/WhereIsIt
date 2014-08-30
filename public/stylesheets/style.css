@@ -18,12 +18,17 @@ input:hover, input:active, input:focus, input:visited {
   outline: 0 !important;
 }
 .loader {
-  background: url('../images/loader.GIF') no-repeat 0 0;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   display: inline-block;
   margin: 0 auto;
   padding: 0;
+  position: relative;
+  top: -2px;
+}
+.loader img {
+  width: 22px;
+  height: 22px;
 }
 #page {
   margin: 0 auto;
@@ -39,6 +44,9 @@ input:hover, input:active, input:focus, input:visited {
 }
 #search-bar .input-group {
   direction: ltr;
+}
+#search-bar .btn {
+  height: 46px;
 }
 #search-input {
   text-align: right;

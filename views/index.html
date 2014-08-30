@@ -53,9 +53,9 @@
       <div id="search-bar">
         <div class="input-group">
           <span class="input-group-btn">
-            <button class="btn btn-default btn-lg" type="button" ng-click="searchBusinesses(keyword)">
+            <button class="btn btn-default btn-lg" type="button" ng-click="searchBusinesses(keyword)" ng-disabled="loading">
               <i class="fa fa-search fa-lg" ng-hide="loading"></i>
-              <span class="loader" ng-show="loading"></span>
+              <span class="loader" ng-show="loading"><img src="../images/loading-spin.svg" /></span>
             </button>
           </span>
           <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" on-enter="searchBusinesses(keyword)" placeholder="חפש בתי עסק, שירותים או מקומות בילוי">
