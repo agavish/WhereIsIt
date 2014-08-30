@@ -10,7 +10,9 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , session = require('cookie-session')
   , passport = require('passport')
-  , facebookAuthService = require('./services/facebookAuthService.js');
+  , facebookAuthService = require('./services/facebookAuthService.js')
+  , docs = require("express-mongoose-docs");
+
 
 mongoose.connect('mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt', function(err, res) {
   if(err) {
@@ -40,6 +42,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', routes);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+// auto generate api documentation
+docs(app, mongoose);
+
+
+
+http.createServer(app).listen(app.get('port'), function () {
+    var splash = function () {/*
+ _    _  _  _  ___  ___   ___    __  ___    __  ____ 
+( \/\/ )( )( )(  _)(  ,) (  _)  (  )/ __)  (  )(_  _)
+ \    /  )__(  ) _) )  \  ) _)   )( \__ \   )(   )(  
+  \/\/  (_)(_)(___)(_)\_)(___)  (__)(___/  (__) (__)                                                 
+                                                  
+         */};
+    console.log(splash.toString().match(/\/\*([\s\S]*)\*\//m)[1]);
+      console.log("listening on port " + app.get('port'));
+  });

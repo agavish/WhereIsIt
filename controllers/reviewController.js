@@ -1,6 +1,9 @@
 // The Review controller
- 
+
+var mongoose = require('mongoose');
 var Review = require('../models/reviewModel.js');
+var Business = require('../models/businessModel.js');
+var User = require('../models/userModel.js');
 
   /**
    * Creates a new Review from the data request
@@ -17,7 +20,7 @@ exports.createNewReview = function(req, res) {
     var content = req.body.content;
 
     // validate the user exists
-    User.findOne({ "_id": userId }, function (err, user) {
+    var user = User.findOne({ "_id": userId }, function (err, user) {
       if (err) {
         var errorMsg = "Could not add the review. No user found with id: " + userId;
         console.log(errorMsg);
@@ -26,13 +29,13 @@ exports.createNewReview = function(req, res) {
     });
 
     // validate the business exists
-    User.findOne({ "_id": businessId }, function (err, business) {
+    var business = Business.findOne({ "_id": businessId }, function (err, business) {
       if (err) {
         var errorMsg = "Could not add the review. No business found with id: " + businessId;
         console.log(errorMsg);
         errors.push(errorMsg);        
       }
-    });    
+    });
 
     if (errors.length > 0) {
       console.log('Error while saving review');
@@ -42,7 +45,7 @@ exports.createNewReview = function(req, res) {
 
     var reviewModel = new Review();
     reviewModel.userId = userId;
-    reviewModel.businessId = businessId;
+    reviewModel.businessId = mongoose.Types.ObjectId(businessId);
     reviewModel.content = content;
     reviewModel.date = new Date();
     reviewModel.save(function(err) {
@@ -54,9 +57,33 @@ exports.createNewReview = function(req, res) {
 
       } else {
         console.log("Review created");
-        return res.send(reviewModel);
       }
     });
+
+    User.update({"_id": userId}, {$push: { reviews: reviewModel } }, function(err) {
+      if (err) {
+        var errorMsg = "Could not add the review to the user " + userId;
+        console.log(errorMsg);
+        errors.push(errorMsg);  
+      }
+    });
+
+    Business.update({"_id": businessId}, {$push: { reviews: reviewModel._id } }, function(err) {
+      if (err) {
+        var errorMsg = "Could not add the review to the business " + businessId;
+        console.log(errorMsg);
+        errors.push(errorMsg);  
+      }
+    });
+
+    if (errors.length > 0) {
+      console.log('Error while saving review');
+      res.send({ errors:errors });
+      return;
+    } else {
+        console.log("Review created");
+        return res.send(reviewModel);
+    }
   };
 
   /**
@@ -89,8 +116,9 @@ exports.createNewReview = function(req, res) {
    * @param {Object} res HTTP response object.
    */
   exports.findReviewsByUserId = function(req, res) {
-    console.log("GET - /review/user/:id");
-    return Review.find({"userId": req.params.id}, function(err, reviews) {
+    console.log("GET - /review/user/:userId");
+
+    return Review.find({"userId": req.params.userId}, function(err, reviews) {
       if(!reviews || !reviews[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Reviews Not found' });
@@ -113,8 +141,8 @@ exports.createNewReview = function(req, res) {
    * @param {Object} res HTTP response object.
    */
   exports.findReviewsByBusinessId = function(req, res) {
-    console.log("GET - /review/business/:id");
-    return Review.find({"businessId": req.params.id}, function(err, reviews) {
+    console.log("GET - /review/business/:businessId");
+    return Review.find({"businessId": req.params.businessId}, function(err, reviews) {
       if(!reviews || !reviews[0]) {
         res.statusCode = 404;
         return res.send({ error: 'Reviews Not found' });
