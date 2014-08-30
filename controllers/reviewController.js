@@ -43,6 +43,7 @@ exports.createNewReview = function(req, res) {
       return;
     }
 
+    // save the new review
     var reviewModel = new Review();
     reviewModel.userId = userId;
     reviewModel.businessId = mongoose.Types.ObjectId(businessId);
@@ -60,6 +61,7 @@ exports.createNewReview = function(req, res) {
       }
     });
 
+    // update the user which created the review with the review
     User.update({"_id": userId}, {$push: { reviews: reviewModel } }, function(err) {
       if (err) {
         var errorMsg = "Could not add the review to the user " + userId;
@@ -68,6 +70,7 @@ exports.createNewReview = function(req, res) {
       }
     });
 
+    // update the business which was reviewed with the review
     Business.update({"_id": businessId}, {$push: { reviews: reviewModel._id } }, function(err) {
       if (err) {
         var errorMsg = "Could not add the review to the business " + businessId;
@@ -76,6 +79,7 @@ exports.createNewReview = function(req, res) {
       }
     });
 
+    // validate no errors and send the review as response
     if (errors.length > 0) {
       console.log('Error while saving review');
       res.send({ errors:errors });
