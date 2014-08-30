@@ -16,7 +16,7 @@ var userSchema = new Schema({
   _id:                   { type: String, required: true },
   firstname:             { type: String, required: true },
   lastname:              { type: String, required: true },
-  email:                 { type: String, required: true },
+  email:                 { type: String },
   username:              { type: String },
   imagePath:             { type: String },
   reviews:               { type: [ Review.Schema ] },
