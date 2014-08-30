@@ -1,0 +1,12 @@
+======= MONGOIMPORT - LOAD BUSINESSES VIA MONGO TERMINAL =======
+1. Run cmd
+2. Go to your mongodb installation directory
+3. Insert this: mongoimport --host kahana.mongohq.com --port 10075 --db WhereIsIt -u Admin -p Admin --collection businesses < businesses.json --jsonArray
+(where businesses.json holds an array of business objects, and is located in your mongo installation directory)
+
+======= DROP COLLECTIONS AND INDEXES =======
+1. Run cmd
+2. Insert this: mongo kahana.mongohq.com:10075/WhereIsIt -u Admin -p Admin
+3. show collections
+4. db.getCollection("businesses").drop()
+(this will drop the collection and all related indexes)

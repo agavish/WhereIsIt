@@ -13,18 +13,9 @@ exports.createNewBusiness = function(req, res) {
 
     console.log('POST - /api/business');
     var body = req.body;
-    var result = [];
+    var newBusiness = fillBusinessModel(body);
 
-    if (body.businesses) {
-      var businesses = body.businesses;
-      for (i = 0; i < businesses.length; i++) {
-        result.push(fillBusinessModel(businesses[i]));
-      }
-    } else {
-      result.push(fillBusinessModel(body));
-    }
-
-    Business.create(result, function(err, result) {
+    Business.create(newBusiness, function(err, result) {
       if(err) {
         console.log('Error while saving businesses: ' + err);
         res.send({ error:err });
@@ -37,28 +28,28 @@ exports.createNewBusiness = function(req, res) {
     });
   };
 
-  fillBusinessModel = function(business) {
-    var businessModel = new Business();
-    businessModel.name = business.name;
-    businessModel.businessType = business.businessType;
-    businessModel.phone = business.phone;
-    businessModel.website = business.website;
-    businessModel.address.city = business.address.city,
-    businessModel.address.street = business.address.street,
-    businessModel.address.homeNumber = business.address.homeNumber,
-    businessModel.address.coordinates = business.address.coordinates,
+fillBusinessModel = function(business) {
+  var businessModel = new Business();
+  businessModel.name = business.name;
+  businessModel.businessType = business.businessType;
+  businessModel.phone = business.phone;
+  businessModel.website = business.website;
+  businessModel.address.city = business.address.city,
+  businessModel.address.street = business.address.street,
+  businessModel.address.homeNumber = business.address.homeNumber,
+  businessModel.address.coordinates = business.address.coordinates,
 
-    businessModel.openHours = [];
-    for (var i=0; i<business.openHours.length; i++) {
-      var currDay = {};
-      currDay.day = business.openHours[i].day;
-      currDay.startHour = business.openHours[i].startHour;
-      currDay.endHour = business.openHours[i].endHour;
-      businessModel.openHours.push(currDay);
-    }
-    
-    return businessModel;
+  businessModel.openHours = [];
+  for (var i=0; i<business.openHours.length; i++) {
+    var currDay = {};
+    currDay.day = business.openHours[i].day;
+    currDay.startHour = business.openHours[i].startHour;
+    currDay.endHour = business.openHours[i].endHour;
+    businessModel.openHours.push(currDay);
   }
+  
+  return businessModel;
+}
 
 
 
