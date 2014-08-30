@@ -23,12 +23,19 @@ module.exports = passport.use(new FacebookStrategy({
       // if the user does not exist
       if (user == null) {
 
+        var facebookEmail = profile.emails;
+        if (facebookEmail && facebookEmail.length > 0) {
+          facebookEmail = facebookEmail[0].value;
+        } else {
+          facebookEmail = "";
+        }
+
         // create a new user from the facebook response
         var user = new User({
           _id: profile.id,
           firstname: profile.name.givenName,
           lastname: profile.name.familyName,
-          email: profile.emails[0].value,
+          email: facebookEmail,
           imagePath: 'https://graph.facebook.com/' + profile.id + '/picture?height=48&width=48'
         });
 
