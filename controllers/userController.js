@@ -171,7 +171,7 @@ var addBusinessToFavorites = function (user,id) {
             {
                 businessArray.remove(id);
             } else {
-                businessArray.add(id);
+                businessArray.push(id);
             }
             user.favoriteBusiness = businessArray
 
