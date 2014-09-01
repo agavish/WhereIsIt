@@ -26,7 +26,7 @@ var app = express();
 
 // all environment
 app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/public/views');
+app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile); // ' avi 8.8
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser());

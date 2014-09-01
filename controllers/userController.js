@@ -166,11 +166,13 @@ var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
 };
 
 var addBusinessToFavorites = function (user,id) {
-  var businessArray = user.favoriteBusiness;
-  if (businessArray.indexOf(id) > -1) {
-    businessArray.remove(id);
-  } else {
-    businessArray.add(id);
-  }
-  user.favoriteBusiness = businessArray
+            var businessArray = user.favoriteBusiness;
+            if (businessArray.indexOf(id) > -1)
+            {
+                businessArray.remove(id);
+            } else {
+                businessArray.add(id);
+            }
+            user.favoriteBusiness = businessArray
+
 };
