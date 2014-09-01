@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="WhereIsIt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- base URL for pretty relative URLs instead of angular's default # -->
+  <base href="/">
+  <title>WhereIsIt</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+  <script src="WhereIsIt.js"></script>
+  <script src="services.js"></script>
+  <script src="controllers.js"></script>
+  <link href="/stylesheets/style.css" rel="stylesheet" />
+
+  <script type="text/javascript">
+    window.user = <%- JSON.stringify(user) %>;
+  </script>
+</head>
+<body ng-controller="mainController">
+  <div id="page">
+
+    <!-- USER BAR -->
+    <div id="user-bar">
+      <button ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" id="login-btn" class="btn btn-primary" type="button">
+        <i class="fa fa-facebook"></i> 
+        <span class="text">התחבר</span>
+      </button>
+      <ul id="user-details" ng-show="session.isLoggedIn">
+        <li>
+          <div class="user-details-wrapper">
+            <div class="user-image"><img src="{{session.currentUser.imagePath}}" class="img-rounded" /></div>
+            <div class="user-name-email">
+              <div class="user-name">{{session.currentUser.firstname}} {{session.currentUser.lastname}}</div>
+              <div class="user-email">{{session.currentUser.email}}</div>
+            </div>
+            <div class="user-caret"><i class="fa fa-chevron-circle-down"></i></div>
+          </div>
+          <ul class="user-menu">
+            <li class="text-muted"><i class="fa fa-history"></i> הצג היסטוריה</li>
+            <li class="text-muted"><i class="fa fa-star"></i> הצג מועדפים</li>
+            <li><span ng-click="session.logout();"><i class="fa fa-power-off"></i> התנתק</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- END USER BAR -->
+
+    <!-- BUSINESSES SECTION -->
+    <div id="businesses-section">
+
+      <!-- SEARCH BAR -->
+      <div id="search-bar" ng-controller="searchBarController">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default btn-lg" type="button" ng-click="search(keyword)" ng-disabled="loading">
+              <i class="fa fa-search fa-lg" ng-hide="loading"></i>
+              <span class="loader" ng-show="loading"><img src="../images/loading-spin.svg" /></span>
+            </button>
+          </span>
+          <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" on-enter="search(keyword)" placeholder="חפש בתי עסק, שירותים או מקומות בילוי">
+        </div>
+      </div>
+      <!-- END SEARCH BAR -->
+
+      <div id="app-view" ng-view></div>
+    </div>
+    <!-- END BUSINESSES SECTION -->
+
+  </div>
+</body>
+</html>
