@@ -59,9 +59,9 @@ exports.findAllUsers = function(req, res) {
    * @param {Object} res HTTP response object.
    */
 exports.findUserById = function(req, res) {
-    console.log("GET - /api/user/:id");
+    console.log("GET - /api/user/");
 
-    return User.find({"_id": req.params.id}, function(err, user) {
+    return User.find({"_id": req.user.id}, function(err, user) {
       if(!user || !user[0]) {
         res.statusCode = 404;
         return res.send({ error: 'User Not found' });
@@ -85,9 +85,9 @@ exports.findUserById = function(req, res) {
    */
 exports.updateUserById = function(req, res) {
 
-    console.log("PUT - /api/user/:id");
+    console.log("PUT - /api/user/");
 
-    return User.find({_id: req.params.id}, function(err, user) {
+    return User.find({_id: req.user.id}, function(err, user) {
 
       if(!user || !user[0]) {
         res.statusCode = 404;
@@ -131,7 +131,7 @@ exports.deleteUser = function(req, res) {
 
     console.log("DELETE - /api/user/:id");
     
-    return User.find({_id: req.params.id}, function(err, user) {
+    return User.find({_id: req.user.id}, function(err, user) {
       
       if(!user || !user[0]) {
         res.statusCode = 404;

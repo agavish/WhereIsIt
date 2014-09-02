@@ -36,6 +36,10 @@ app.config(['$routeProvider', '$locationProvider',
         templateUrl: '/views/partials/search.html',
         controller: 'searchController'
       })
+      .when('/users/:id', {
+        templateUrl: '/views/partials/user.html',
+        controller: 'userController'
+      })
       .otherwise({
         redirectTo: '/'
       });

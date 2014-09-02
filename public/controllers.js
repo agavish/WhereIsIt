@@ -1,5 +1,18 @@
 var controllers = angular.module('controllers', []);
 
+controllers.controller('userController', ['$scope', 'userService', function($scope, userService) {
+  
+  $scope.userProfile = '';
+
+  $scope.getUserById = function() {
+    userService.getUserById()
+    .success(function(data, status) {
+        $scope.userProfile = data;
+      });  
+  }
+  $scope.getUserById();
+}]);
+
 controllers.controller('businessController', ['$scope', '$routeParams', 'businessService', function($scope, $routeParams, businessService) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
