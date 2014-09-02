@@ -5,12 +5,15 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'services', 'controllers'])
   .run(['$rootScope', '$window', 'sessionService',
     function ($rootScope, $window, sessionService) {
     $rootScope.session = sessionService;
+    $rootScope.user = '';
+
     $window.app = {
       authState: function(state, user) {
         $rootScope.$apply(function() {
           switch (state) {
             case 'success':
               sessionService.authSuccess(user);
+              $rootScope.user = user;              
               break;
             case 'failure':
               sessionService.authFailed();
@@ -21,6 +24,7 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'services', 'controllers'])
       };
 
       if ($window.user !== null) {
+        $rootScope.user = $window.user;
         sessionService.authSuccess($window.user);
       }
   }]);

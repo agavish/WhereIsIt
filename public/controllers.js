@@ -1,16 +1,8 @@
 var controllers = angular.module('controllers', []);
 
-controllers.controller('userController', ['$scope', 'userService', function($scope, userService) {
+controllers.controller('userController', ['$scope', '$rootScope', 'userService', function($scope, $rootScope, userService) {
   
-  $scope.userProfile = '';
-
-  $scope.getUserById = function() {
-    userService.getUserById()
-    .success(function(data, status) {
-        $scope.userProfile = data;
-      });  
-  }
-  $scope.getUserById();
+  $scope.user = $rootScope.user;
 }]);
 
 controllers.controller('businessController', ['$scope', '$routeParams', 'businessService', function($scope, $routeParams, businessService) {

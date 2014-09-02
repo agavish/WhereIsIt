@@ -178,25 +178,34 @@ ul#user-details:hover .user-menu {
 .user-menu li.text-muted {
   border-bottom: 1px solid #F2F2F2;
   padding: 8px 0px;
+  color:#999999;
 }
 .user-menu li i.fa {
   display: inline-block;
   margin: 0px 8px 0px 5px;
 }
-.user-menu span {
-  color: #0076be;;
+.user-menu li {
+  color: #0076be;
   border-bottom: 1px solid #F2F2F2;
   padding: 8px 0px;
   display: block;
   width: 100%;
   text-decoration: none;
 }
-.user-menu span:last-child {
+.user-menu li:last-child {
   border-bottom: none;
 }
-.user-menu span:hover {
+.user-menu li:hover {
   cursor: pointer;
   background-color: #ECF2F7;
+}
+.user-menu li.text-muted:hover {
+  cursor: default;
+  background-color: #FFFFFF;
+}
+.user-menu a:hover {
+  text-decoration: none;
+  color:#0076be;
 }
 .businesses-results {
   margin: 25px auto;

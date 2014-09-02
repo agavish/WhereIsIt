@@ -68,8 +68,8 @@ services.factory('businessService', ['$http', function($http) {
 
 services.factory('userService', ['$http', function($http) {
   return {
-    getUserById: function() {
-      return $http({ method: 'GET', url: '/api/users/' + "123123"});
+    getUserById: function(id) {
+      return $http({ method: 'GET', url: '/api/users/' + id });
     }
   };
 }]);
