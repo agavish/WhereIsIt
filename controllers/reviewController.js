@@ -19,6 +19,11 @@ exports.createNewReview = function(req, res) {
     var businessId = req.body.businessId;
     var content = req.body.content;
 
+    if (req.user.id != userId) {
+        res.statusCode = 403;
+        return res.send({ error: 'Fake user' });
+    }
+    
     // validate the user exists
     var user = User.findOne({ "_id": userId }, function (err, user) {
       if (err) {
