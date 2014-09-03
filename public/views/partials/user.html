@@ -1,8 +1,8 @@
-<div class="user-profile" ng-controller="userController">
+<div class="user-profile">
   <ul>
-    <li>{{user.firstname}}</li>
-    <li>{{user.lastname}}</li>
-    <li>{{user.email}}</li>
-    <li><img src="{{user.imagePath}}" /></li>
+    <li>{{session.currentUser.firstname}}</li>
+    <li>{{session.currentUser.lastname}}</li>
+    <li>{{session.currentUser.email}}</li>
+    <li><img ng-src="{{session.currentUser.imagePath}}" /></li>
   </ul>
 </div>

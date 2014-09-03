@@ -2,7 +2,7 @@ var controllers = angular.module('controllers', []);
 
 controllers.controller('userController', ['$scope', '$rootScope', 'userService', function($scope, $rootScope, userService) {
   
-  $scope.user = $rootScope.user;
+  // no need to hold a $scope.user variable, we get the user from the session.currentUser which is stored on the $rootScope
 }]);
 
 controllers.controller('businessController', ['$scope', '$routeParams', 'businessService', function($scope, $routeParams, businessService) {
@@ -19,17 +19,25 @@ controllers.controller('businessController', ['$scope', '$routeParams', 'busines
 
 controllers.controller("searchController", ['$scope', '$rootScope', '$routeParams', 'businessService', function($scope, $rootScope, $routeParams, businessService) {
   $scope.keyword = $routeParams.keyword;
+  $scope.results = [];
+
+  $scope.hasResults = function () {
+    return $scope.results.length > 0;
+  }
+
   $scope.searchBusinessesByKeyword = function (keyword, postion) {
     businessService.getBusinessesByKeyword(keyword, postion)
       .success(function(data, status) {
-        $rootScope.businesses = data;
+        $scope.results = data;
         $rootScope.title = 'תוצאות עבור: ' + keyword;
         $rootScope.loading = false;
+        return;
       })
       .error(function(data, status) {
-        $rootScope.businesses = [];
+        $scope.results = [];
         $rootScope.title = 'לא נמצאו תוצאות עבור: ' + keyword;
         $rootScope.loading = false;
+        return;
       });
   }
 
@@ -41,46 +49,4 @@ controllers.controller("searchBarController", ['$scope', '$rootScope', '$locatio
     $rootScope.loading = true;
     $location.path('/search/' + keyword);
   };
-}]);
-
-controllers.controller("mainController", ['$scope', '$rootScope', function($scope, $rootScope) {
-  $rootScope.position = {
-    latitude: "0",
-    longitude: "0",
-    accuracy: "0"
-  }
-
-  $rootScope.error = "";
-  $rootScope.loading = false;
-  $rootScope.title = "";
-  $rootScope.businesses = [];
-
-  $rootScope.hasBusinesses = function () {
-    return $rootScope.businesses.length > 0;
-  }
-  $scope.isGeolocationSupported = function () {
-    return $rootScope.error == "";
-  }
-  $scope.setPosition = function (position) {
-    $rootScope.position.latitude = position.coords.latitude;
-    $rootScope.position.longitude = position.coords.longitude;
-    $rootScope.position.accuracy = position.coords.accuracy;
-    $rootScope.$apply();
-    // $scope.loading = true;
-    // $scope.getNearestBusinesses();
-  }
-  $scope.initLocation = function () {
-    if (navigator.geolocation) {
-      var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-      };
-      navigator.geolocation.getCurrentPosition($scope.setPosition, null, options);
-    }
-    else {
-      $rootScope.error = "Geolocation is not supported by this browser.";
-    }
-  }
-  $scope.initLocation();
 }]);

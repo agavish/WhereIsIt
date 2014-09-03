@@ -1,33 +1,39 @@
 /**
  * Created by avi on 8/8/2014.
  */
-var app = angular.module('WhereIsIt', ['ngRoute', 'services', 'controllers'])
-  .run(['$rootScope', '$window', 'sessionService',
-    function ($rootScope, $window, sessionService) {
-    $rootScope.session = sessionService;
-    $rootScope.user = '';
+var app = angular.module('WhereIsIt', ['ngRoute', 'services', 'controllers']).run(['$rootScope', '$window', 'sessionService', 'geoLocationService', function ($rootScope, $window, sessionService, geoLocationService) {
 
-    $window.app = {
-      authState: function(state, user) {
-        $rootScope.$apply(function() {
-          switch (state) {
-            case 'success':
-              sessionService.authSuccess(user);
-              $rootScope.user = user;              
-              break;
-            case 'failure':
-              sessionService.authFailed();
-              break;
-            }      
-          });
-        }
-      };
+  // these rootScope variables serves all inner controllers and views
+  $rootScope.session = sessionService;
+  $rootScope.position = '';
+  $rootScope.loading = false;
+  $rootScope.title = "";
 
-      if ($window.user !== null) {
-        $rootScope.user = $window.user;
-        sessionService.authSuccess($window.user);
-      }
-  }]);
+  // authenticate and handle session and logged in user on app startup
+  $window.app = {
+    authState: function(state, user) {
+      $rootScope.$apply(function() {
+        switch (state) {
+          case 'success':
+            sessionService.authSuccess(user);
+            break;
+          case 'failure':
+            sessionService.authFailed();
+            break;
+          }
+      });
+    }
+  };
+
+  if ($window.user !== null) {
+    sessionService.authSuccess($window.user);
+  }
+
+  // try to get the user's geoLocation
+  // if geoLocation is supported, the $rootScope.position will get populated
+  geoLocationService.getPosition();
+
+}]);
 
 app.config(['$routeProvider', '$locationProvider', 
   function($routeProvider, $locationProvider) {
@@ -49,7 +55,7 @@ app.config(['$routeProvider', '$locationProvider',
       });
 
       // use the HTML5 History API
-      $locationProvider.html5Mode(true);
+      // $locationProvider.html5Mode(true);
   }]);
 
 app.directive('onEnter',function() {

@@ -1,7 +1,7 @@
 <!-- SEARCH RESULTS TABLE -->
-<div class="businesses-results" ng-controller="searchController">
+<div class="businesses-results">
   <div class="businesses-results-title"><h2>{{title}}</h2></div>
-  <table class="table table-striped businesses-results-table" ng-show="hasBusinesses()">
+  <table class="table table-striped businesses-results-table" ng-show="hasResults()">
     <thead>
       <tr>
         <th>שם העסק</th>
@@ -11,11 +11,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="business in businesses">
+      <tr ng-repeat="business in results">
         <td><a href="#/business/{{business._id}}">{{business.name}}</a></td>
         <td>{{business.businessType}}</td>
         <td>{{business.address.street}} {{business.address.homeNumber}} {{business.address.city}}</td>
-        <td>{{ isGeolocationSupported() ? ((business.distanceMeters > 1000) ? business.distanceKilometers + ' ק"מ' : business.distanceMeters + " מ'") : "" }}</td>
+        <td>{{ (position) ? ((business.distanceMeters > 1000) ? business.distanceKilometers + ' ק"מ' : business.distanceMeters + " מ'") : "" }}</td>
       </tr>
     </tbody>
   </table>

@@ -73,3 +73,27 @@ services.factory('userService', ['$http', function($http) {
     }
   };
 }]);
+
+services.factory('geoLocationService', ['$rootScope', function($rootScope) {
+  return {
+    setPosition: function (position) {
+      var myPosition = {};
+      myPosition.latitude = position.coords.latitude;
+      myPosition.longitude = position.coords.longitude;
+      myPosition.accuracy = position.coords.accuracy;
+      $rootScope.position = myPosition;
+    },
+    getPosition: function () {
+      if (navigator.geolocation) {
+        var options = {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        };
+        return navigator.geolocation.getCurrentPosition(this.setPosition, null, options);
+      } else {
+        return null;
+      }
+    }
+  };
+}]);
