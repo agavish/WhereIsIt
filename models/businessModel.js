@@ -37,8 +37,6 @@ var businessSchema = new Schema({
 
 // primary key is 'name' + 'address.coordinates'
 businessSchema.index({ 'name': 1, 'address.coordinates': 1}, { unique: true });
-// index name for findBusinessesByKeyword
-businessSchema.index('name');
 // index businessType for findBusinessesByKeyword
 businessSchema.index('businessType');
 // index address.coordinates with 2d for geo spatial queries
