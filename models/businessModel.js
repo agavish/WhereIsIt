@@ -35,10 +35,10 @@ var businessSchema = new Schema({
   reviews     :     { type: [Schema.ObjectId], ref: 'Review' },
 });
 
+// index address.coordinates with 2d for geo spatial queries
+businessSchema.index({ 'address.coordinates': '2dsphere' });
 // primary key is 'name' + 'address.coordinates'
-businessSchema.index({ 'name': 1, 'address.coordinates': 1}, { unique: true });
+businessSchema.index({ 'address.coordinates': 1, 'name': 1 }, { unique: true });
 // index businessType for findBusinessesByKeyword
 businessSchema.index('businessType');
-// index address.coordinates with 2d for geo spatial queries
-businessSchema.index({ 'address.coordinates': '2d' });
 module.exports = mongoose.model('Business', businessSchema);
