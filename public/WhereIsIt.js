@@ -5,7 +5,7 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'services', 'controllers']).ru
 
   // these rootScope variables serves all inner controllers and views
   $rootScope.session = sessionService;
-  $rootScope.position = '';
+  $rootScope.position = null;
   $rootScope.loading = false;
   $rootScope.title = "";
 
@@ -33,6 +33,10 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'services', 'controllers']).ru
   // if geoLocation is supported, the $rootScope.position will get populated
   geoLocationService.getPosition();
 
+  $rootScope.hasPosition = function() {
+    return ($rootScope.position != null);
+  }
+
 }]);
 
 app.config(['$routeProvider', '$locationProvider', 
@@ -42,7 +46,11 @@ app.config(['$routeProvider', '$locationProvider',
         templateUrl: '/views/partials/business.html',
         controller: 'businessController'
       })
-      .when('/search/:keyword', {
+      .when('/search/keyword/:keyword', {
+        templateUrl: '/views/partials/search.html',
+        controller: 'searchController'
+      })
+      .when('/search/nearest', {
         templateUrl: '/views/partials/search.html',
         controller: 'searchController'
       })

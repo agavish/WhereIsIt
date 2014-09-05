@@ -16,6 +16,7 @@ a:hover, a:active, a:focus, a:visited,
 button:hover, button:active, button:focus, button:visited,
 input:hover, input:active, input:focus, input:visited {
   outline: 0 !important;
+  text-decoration: none;
 }
 .loader {
   width: 22px;

@@ -17,8 +17,8 @@ controllers.controller('businessController', ['$scope', '$routeParams', 'busines
   $scope.getBusinessById($scope.businessId);
 }]);
 
-controllers.controller("searchController", ['$scope', '$rootScope', '$routeParams', 'businessService', function($scope, $rootScope, $routeParams, businessService) {
-  $scope.keyword = $routeParams.keyword;
+controllers.controller("searchController", ['$scope', '$rootScope', '$routeParams', '$location', 'businessService', function($scope, $rootScope, $routeParams, $location, businessService) {
+  $scope.keyword = null;
   $scope.results = [];
 
   $scope.hasResults = function () {
@@ -41,12 +41,41 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
       });
   }
 
-  $scope.searchBusinessesByKeyword($scope.keyword, $rootScope.position);
+  $scope.searchNearestBusinesses = function (postion) {
+    businessService.getNearestBusinesses(postion)
+      .success(function(data, status) {
+        $scope.results = data;
+        $rootScope.title = 'עסקים במרחק של עד 1 ק"מ';
+        $rootScope.loading = false;
+        return;
+      })
+      .error(function(data, status) {
+        $scope.results = [];
+        $rootScope.title = 'לא נמצאו עסקים במרחק של עד 1 ק"מ';
+        $rootScope.loading = false;
+        return;
+      });
+  }
+
+  if ($routeParams.keyword) {
+    $scope.keyword = $routeParams.keyword;
+    $scope.searchBusinessesByKeyword($scope.keyword, $rootScope.position);
+  } else if ($location.path().indexOf("nearest") > -1) {
+    $scope.searchNearestBusinesses($rootScope.position);
+  }
+  
 }]);
 
-controllers.controller("searchBarController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
-  $scope.search = function(keyword) {
+controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
+  $scope.delegateSearchByKeyword = function(keyword) {
     $rootScope.loading = true;
-    $location.path('/search/' + keyword);
+    $location.path('/search/keyword/' + keyword);
+  };
+}]);
+
+controllers.controller("searchNearestController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
+  $scope.delegateSearchNearest = function() {
+    $rootScope.loading = true;
+    $location.path('/search/nearest');
   };
 }]);

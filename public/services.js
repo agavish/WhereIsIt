@@ -82,6 +82,7 @@ services.factory('geoLocationService', ['$rootScope', function($rootScope) {
       myPosition.longitude = position.coords.longitude;
       myPosition.accuracy = position.coords.accuracy;
       $rootScope.position = myPosition;
+      $rootScope.$apply();
     },
     getPosition: function () {
       if (navigator.geolocation) {

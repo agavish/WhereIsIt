@@ -49,19 +49,26 @@
     </div>
     <!-- END USER BAR -->
 
-    <!-- SEARCH BAR -->
-    <div id="search-bar" ng-controller="searchBarController">
+    <!-- SEARCH BY KEYWORD BAR -->
+    <div id="search-bar" ng-controller="searchByKeywordBarController">
       <div class="input-group">
         <span class="input-group-btn">
-          <button class="btn btn-default btn-lg" type="button" ng-click="search(keyword)" ng-disabled="loading">
+          <button class="btn btn-default btn-lg" type="button" ng-click="delegateSearchByKeyword(keyword)" ng-disabled="loading">
             <i class="fa fa-search fa-lg" ng-hide="loading"></i>
             <span class="loader" ng-show="loading"><img src="../images/loading-spin.svg" /></span>
           </button>
         </span>
-        <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" on-enter="search(keyword)" placeholder="חפש בתי עסק, שירותים או מקומות בילוי">
+        <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" on-enter="delegateSearchByKeyword(keyword)" placeholder="חפש בתי עסק, שירותים או מקומות בילוי">
       </div>
     </div>
-    <!-- END SEARCH BAR -->
+    <!-- END SEARCH BY KEYWORD BAR -->
+
+    <!-- SEARCH NEAREST BUSINESSES BAR -->
+    <div id="search-nearest-bar" ng-controller="searchNearestController" ng-show="hasPosition()">
+      <span>או:</span>
+      <button type="button" class="btn btn-lg btn-link search-nearest-button" ng-click="delegateSearchNearest()"><i class="fa fa-location-arrow"></i> הצג עסקים קרובים</button>
+    </div>
+    <!-- END SEARCH NEAREST BUSINESSES BAR -->    
 
     <div id="app-view" ng-view></div>
 

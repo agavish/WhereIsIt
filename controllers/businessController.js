@@ -172,13 +172,15 @@ exports.findNearest = function(req, res) {
       if (!err) {
         // by default, mongo gives the distance in km.
         // we'd like to get the distances in meters
-        var result = data.documents[0].results;
-        for (i = 0; i < result.length; i++) {
-          var distance = result[i].dis;
+        var results = data.documents[0].results;
+        var businesses = [];
+        for (i = 0; i < results.length; i++) {
+          var distance = results[i].dis;
           var distanceMeters = Math.ceil(distance * 1000);
-          result[i].distanceMeters = distanceMeters;
+          results[i].obj.distanceMeters = distanceMeters;
+          businesses.push(results[i].obj);
         }
-        return res.send(result);
+        return res.send(businesses);
       } else {
         res.statusCode = 500;
         console.log('Internal error(%d): %s', res.statusCode, err.message);
