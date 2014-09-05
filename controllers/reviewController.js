@@ -13,16 +13,17 @@ var User = require('../models/userModel.js');
 exports.createNewReview = function(req, res) {
 
     console.log('POST - /review');
-    var errors = [];
 
+    if (!req.user) {
+      res.statusCode = 403;
+      console.log('User not logged in, unauthorized',res.statusCode);
+      return res.send({ error: 'User not logged in, unauthorized' });
+    }
+
+    var errors = [];
     var userId = req.body.userId;
     var businessId = req.body.businessId;
     var content = req.body.content;
-
-    if (req.user.id != userId) {
-        res.statusCode = 403;
-        return res.send({ error: 'Fake user' });
-    }
     
     // validate the user exists
     var user = User.findOne({ "_id": userId }, function (err, user) {
@@ -177,17 +178,29 @@ exports.createNewReview = function(req, res) {
   exports.deleteReview = function(req, res) {
 
     console.log("DELETE - /review/:id");
+    if (!req.user) {
+      res.statusCode = 401;
+      console.log('User not logged in, unauthorized',res.statusCode);
+      return res.send({ error: 'User not logged in, unauthorized' });
+    }
     
-    return Review.find({"_id": req.params.id}, function(err, review) {
-      if(!review || !review[0]) {
+    return Review.findOne({"_id": req.params.id}, function(err, review) {
+      if (!review) {
         res.statusCode = 404;
         console.log("error: Review Not Found");
         return res.send({ error: 'Review Not found' });
       }
 
-      return review[0].remove(function(err) {
+      if (req.user._doc.id != review.userId) {
+        res.statusCode = 403;
+        console.log('Session user id does not match the review user id, permission denied',res.statusCode);
+        return res.send({ error: 'Session user id does not match the review user id, permission denied' });
+      }
+
+      return review.remove(function(err) {
         if(!err) {
           console.log('Removed Review');
+          res.statusCode = 200;
           return res.send({ status: 'OK' });
         } else {
           res.statusCode = 500;

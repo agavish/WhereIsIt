@@ -12,6 +12,13 @@ var geolib = require('geolib');
 exports.createNewBusiness = function(req, res) {
 
     console.log('POST - /api/business');
+
+    if (!req.user) {
+      res.statusCode = 403;
+      console.log('User not logged in, unauthorized',res.statusCode);
+      return res.send({ error: 'User not logged in, unauthorized' });
+    }
+
     var body = req.body;
     var newBusiness = fillBusinessModel(body);
 
@@ -215,6 +222,11 @@ exports.findBusinessById = function(req, res) {
 exports.updateBusinessById = function(req, res) {
 
     console.log("PUT - /api/business/:id");
+    if (!req.user) {
+      res.statusCode = 401;
+      console.log('User not logged in, unauthorized',res.statusCode);
+      return res.send({ error: 'User not logged in, unauthorized' });
+    }
 
     return Business.find({"_id": req.params.id}, function(err, business) {
 
@@ -275,52 +287,3 @@ exports.updateBusinessById = function(req, res) {
       });
     });
   };
-
-    /**
-   * Delete a Business by its id
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
-exports.deleteBusiness = function(req, res) {
-
-    console.log("DELETE - /api/business/:id");
-    
-    return Business.find({_id: req.params.id}, function(err, business) {
-      if(!business || !business[0]) {
-        res.statusCode = 404;
-        console.log("error: Business Not Found");
-        return res.send({ error: 'Business Not found' });
-      }
-
-      return business[0].remove(function(err) {
-        if(!err) {
-          console.log('Removed Business');
-          return res.send({ status: 'OK' });
-        } else {
-          res.statusCode = 500;
-          console.log('Internal error(%d): %s',res.statusCode,err.message);
-          return res.send({ error: 'Server error' });
-        }
-      })
-    });
-  };
-
-    /**
-   * Delete all Businesses
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
-// exports.deleteAllBusinesses = function(req, res) {
-
-//     console.log("DELETE - /business");
-//     return Business.collection.remove(function(err) {
-//       if(!err) {
-//         console.log('Removed Businesses');
-//         return res.send({ status: 'OK' });
-//       } else {
-//         res.statusCode = 500;
-//         console.log('Internal error(%d): %s',res.statusCode,err.message);
-//         return res.send({ error: 'Server error' });
-//       }
-//     });
-//   };

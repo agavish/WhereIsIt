@@ -19,8 +19,6 @@ router.get('/api/business/:id', businessController.findBusinessById);
 router.get('/api/business', businessController.findAllBusinesses);
 router.put('/api/business/:id', businessController.updateBusinessById);
 router.post('/api/business', businessController.createNewBusiness);
-router.delete('/api/business/:id', businessController.deleteBusiness);
-// router.delete('/api/business', businessController.deleteAllBusinesses);
 
 router.get('/api/review/:id', reviewController.findReviewById);
 router.get('/api/review/user/:userId', reviewController.findReviewsByUserId);
