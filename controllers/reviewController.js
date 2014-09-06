@@ -187,7 +187,7 @@ exports.deleteReview = function(req, res) {
             return res.send({ error: 'Review Not found' });
         }
 
-        if (req.user._doc.id != review.userId) {
+        if (req.user._doc._id != review.userId) {
             res.statusCode = 403;
             console.log('Session user id does not match the review user id, permission denied',res.statusCode);
             return res.send({ error: 'Session user id does not match the review user id, permission denied' });
