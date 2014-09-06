@@ -70,6 +70,14 @@ controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', 
   $scope.delegateSearchByKeyword = function(keyword) {
     $rootScope.loading = true;
     $location.path('/search/keyword/' + keyword);
+
+    // bypass angular's route provider limitation:
+    // by default, the route provider will be invoked only when the URL changes.
+    // if a user is already at /search/keyword, and he enters the same keyword again,
+    // the route provider will not be invoked again, and there won't be another query.
+    // this addition tells angular that a successfull URL change has occured, and so it will invoke 
+    // the route provider again.
+    $scope.$emit("$routeChangeSuccess");
   };
 }]);
 
@@ -77,5 +85,13 @@ controllers.controller("searchNearestController", ['$scope', '$rootScope', '$loc
   $scope.delegateSearchNearest = function() {
     $rootScope.loading = true;
     $location.path('/search/nearest');
+
+    // bypass angular's route provider limitation:
+    // by default, the route provider will be invoked only when the URL changes.
+    // if a user is already at /search/nearest, and he clicks the button again,
+    // the route provider will not be invoked again, and there won't be another query.
+    // this addition tells angular that a successfull URL change has occured, and so it will invoke 
+    // the route provider again.
+    $scope.$emit("$routeChangeSuccess");
   };
 }]);
