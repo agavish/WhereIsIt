@@ -173,9 +173,27 @@ exports.findReviewsByBusinessId = function(req, res) {
  */
 exports.deleteReview = function(req, res) {
 
-    var deleteReviewFromBusinessCallBackFunction = function(err,status) {
+    var userid ;
+    var businessid ;
+    var reviewToRemove;
+
+    var deleteReivewFromUserCallBackFunction = function (user, err, status) {
+        if (err) { //  unable to remove from for some reason
+            console.log(err);
+            res.result = status;
+            res.send({error: 'Failed to remove review from user'})
+
+        } else if (user) { // we have a user
+            Business.deleteReviewById(businessid, reviewToRemove._id, deleteReviewFromBusinessCallBackFunction);
+
+        } else if (!user) { // in case this review was written by user that was removed
+            Business.deleteReviewById(businessid, reviewToRemove._id, deleteReviewFromBusinessCallBackFunction);
+        }
+    };
+
+    var deleteReviewFromBusinessCallBackFunction = function (err, status) {
         if (err) {
-            switch(status) {
+            switch (status) {
                 case 404:
                     console.log(err);
                     res.result = status;
@@ -197,11 +215,11 @@ exports.deleteReview = function(req, res) {
     console.log("DELETE - /review/:id");
     if (!req.user) {
         res.statusCode = 401;
-        console.log('User not logged in, unauthorized',res.statusCode);
+        console.log('User not logged in, unauthorized', res.statusCode);
         return res.send({ error: 'User not logged in, unauthorized' });
     }
 
-    return Review.findOne({"_id": req.params.id}, function(err, review) {
+    return Review.findOne({"_id": req.params.id}, function (err, review) {
         if (!review) {
             res.statusCode = 404;
             console.log("error: Review Not Found");
@@ -210,40 +228,26 @@ exports.deleteReview = function(req, res) {
 
         if (req.user._doc._id != review.userId) {
             res.statusCode = 403;
-            console.log('Session user id does not match the review user id, permission denied',res.statusCode);
+            console.log('Session user id does not match the review user id, permission denied', res.statusCode);
             return res.send({ error: 'Session user id does not match the review user id, permission denied' });
         }
 
         // we save this parameters before we delete the review
-        var userid = review.userId;
-        var businessid = review.businessId;
-        var reviewToRemove = review;
+        userid = review.userId;
+        businessid = review.businessId;
+        reviewToRemove = review;
 
-        return review.remove(function(err) {
-            if(!err) {
+        return review.remove(function (err) {
+            if (!err) {
                 //remove embedded review from user
-                User.deleteReviewById(userid,reviewToRemove,function(user,err,status) {
-                    if (err) { //  unable to remove from user from some reason
-                        console.log(err);
-                        res.result = status;
-                        res.send({error: 'Failed to remove review from user'})
-
-                    } else if(user) { // we have a user
-                        Business.deleteReviewById(businessid,reviewToRemove._id,deleteReviewFromBusinessCallBackFunction);
-
-                    } else if (!user) { // in case this review was written by user that was removed
-                        Business.deleteReviewById(businessid,reviewToRemove._id,deleteReviewFromBusinessCallBackFunction);
-                    }
-                });
+                User.deleteReviewById(userid, reviewToRemove,deleteReivewFromUserCallBackFunction);
 
             } else {
                 res.statusCode = 500;
-                console.log('Internal error(%d): %s',res.statusCode,err.message);
+                console.log('Internal error(%d): %s', res.statusCode, err.message);
                 return res.send({ error: 'Server error' });
             }
-        })
+        });
     });
-
-
-};
+}
 
