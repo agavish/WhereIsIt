@@ -91,7 +91,7 @@ exports.updateUserById = function(req, res) {
       console.log('User not logged in, unauthorized',res.statusCode);
       return res.send({ error: 'User not logged in, unauthorized' });
     }
-    if (req.user._doc.id != req.params.id) {
+    if (req.user._doc._id != req.params.id) {
       res.statusCode = 403;
       console.log('User id does not match session user id, permission denied',res.statusCode);
       return res.send({ error: 'User id does not match session user id, permission denied' });
@@ -147,7 +147,7 @@ exports.deleteUser = function(req, res) {
       return res.send({ error: 'User not logged in, unauthorized' });
     }
 
-    if (req.user._doc.id != req.params.id) {
+    if (req.user._doc._id != req.params.id) {
       res.statusCode = 403;
       console.log('User id does not match session user id, permission denied',res.statusCode);
       return res.send({ error: 'User id does not match session user id, permission denied' });
