@@ -5,208 +5,248 @@ var Review = require('../models/reviewModel.js');
 var Business = require('../models/businessModel.js');
 var User = require('../models/userModel.js');
 
-  /**
-   * Creates a new Review from the data request
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
+/**
+ * Creates a new Review from the data request
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
 exports.createNewReview = function(req, res) {
 
     console.log('POST - /review');
 
     if (!req.user) {
-      res.statusCode = 403;
-      console.log('User not logged in, unauthorized',res.statusCode);
-      return res.send({ error: 'User not logged in, unauthorized' });
+        res.statusCode = 403;
+        console.log('User not logged in, unauthorized',res.statusCode);
+        return res.send({ error: 'User not logged in, unauthorized' });
     }
 
     var errors = [];
     var userId = req.body.userId;
     var businessId = req.body.businessId;
     var content = req.body.content;
-    
+
     // validate the user exists
     var user = User.findOne({ "_id": userId }, function (err, user) {
-      if (err) {
-        var errorMsg = "Could not add the review. No user found with id: " + userId;
-        console.log(errorMsg);
-        errors.push(errorMsg);        
-      }
-    });
+        if (err) {
+            var errorMsg = "Could not add the review. No user found with id: " + userId;
+            console.log(errorMsg);
+            errors.push(errorMsg);
+        }
+        if (user) {
+            // validate the business exists
 
-    // validate the business exists
-    var business = Business.findOne({ "_id": businessId }, function (err, business) {
-      if (err) {
-        var errorMsg = "Could not add the review. No business found with id: " + businessId;
-        console.log(errorMsg);
-        errors.push(errorMsg);        
-      }
-    });
+            var business = Business.findOne({ "_id": businessId }, function (err, business) {
+                if (err) {
+                    var errorMsg = "Could not add the review. No business found with id: " + businessId;
+                    console.log(errorMsg);
+                    errors.push(errorMsg);
+                }
 
-    if (errors.length > 0) {
-      console.log('Error while saving review');
-      res.send({ errors:errors });
-      return;
-    }
+                if (business) {
+                    // save the new review
+                    var reviewModel = new Review();
+                    reviewModel.userId = userId;
+                    reviewModel.businessId = mongoose.Types.ObjectId(businessId);
+                    reviewModel.content = content;
+                    reviewModel.date = new Date();
+                    reviewModel.save(function(err) {
 
-    // save the new review
-    var reviewModel = new Review();
-    reviewModel.userId = userId;
-    reviewModel.businessId = mongoose.Types.ObjectId(businessId);
-    reviewModel.content = content;
-    reviewModel.date = new Date();
-    reviewModel.save(function(err) {
+                        if(err) {
+                            console.log('Error while saving review: ' + err);
+                            res.send({ error:err });
 
-      if(err) {
-        console.log('Error while saving review: ' + err);
-        res.send({ error:err });
-        return;
 
-      } else {
-        console.log("Review created");
-      }
-    });
+                        } else {
+                            // update the user which created the review with the review
+                            User.update({"_id": userId}, {$push: { reviews: reviewModel } }, function(err) {
+                                if (err) {
+                                    var errorMsg = "Could not add the review to the user " + userId;
+                                    console.log(errorMsg);
+                                    errors.push(errorMsg);
+                                }
+                            });
 
-    // update the user which created the review with the review
-    User.update({"_id": userId}, {$push: { reviews: reviewModel } }, function(err) {
-      if (err) {
-        var errorMsg = "Could not add the review to the user " + userId;
-        console.log(errorMsg);
-        errors.push(errorMsg);  
-      }
-    });
+                            // update the business which was reviewed with the review
+                            Business.update({"_id": businessId}, {$push: { reviews: reviewModel._id } }, function(err) {
+                                if (err) {
+                                    var errorMsg = "Could not add the review to the business " + businessId;
+                                    console.log(errorMsg);
+                                    errors.push(errorMsg);
+                                }
+                            });
 
-    // update the business which was reviewed with the review
-    Business.update({"_id": businessId}, {$push: { reviews: reviewModel._id } }, function(err) {
-      if (err) {
-        var errorMsg = "Could not add the review to the business " + businessId;
-        console.log(errorMsg);
-        errors.push(errorMsg);  
-      }
-    });
+                            // validate no errors and send the review as response
+                            if (errors.length > 0) {
+                                console.log('Error while saving review');
+                                res.send({ errors:errors });
 
-    // validate no errors and send the review as response
-    if (errors.length > 0) {
-      console.log('Error while saving review');
-      res.send({ errors:errors });
-      return;
-    } else {
-        console.log("Review created");
-        return res.send(reviewModel);
-    }
-  };
+                            } else {
+                                console.log("Review created");
+                                return res.send(reviewModel);
+                            }
+                        }
+                    });
+                }
+            });
+        }});
+};
 
-  /**
-   * Find and retrieves a single review by its id
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
-  exports.findReviewById = function(req, res) {
+/**
+ * Find and retrieves a single review by its id
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
+exports.findReviewById = function(req, res) {
     console.log("GET - /review/:id");
     return Review.find({"_id": req.params.id}, function(err, review) {
-      if(!review || !review[0]) {
-        res.statusCode = 404;
-        return res.send({ error: 'Review Not found' });
-      }
+        if(!review || !review[0]) {
+            res.statusCode = 404;
+            return res.send({ error: 'Review Not found' });
+        }
 
-      if(!err) {
-        return res.send(review[0]);
-      } else {
+        if(!err) {
+            return res.send(review[0]);
+        } else {
 
-        res.statusCode = 500;
-        console.log('Internal error(%d): %s', res.statusCode, err.message);
-        return res.send({ error: 'Server error' });
-      }
+            res.statusCode = 500;
+            console.log('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
+        }
     });
-  };
+};
 
-  /**
-   * Find and retrieves all reviews by userId.
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
-  exports.findReviewsByUserId = function(req, res) {
+/**
+ * Find and retrieves all reviews by userId.
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
+exports.findReviewsByUserId = function(req, res) {
     console.log("GET - /review/user/:userId");
 
     return Review.find({"userId": req.params.userId}, function(err, reviews) {
-      if(!reviews || !reviews[0]) {
-        res.statusCode = 404;
-        return res.send({ error: 'Reviews Not found' });
-      }
+        if(!reviews || !reviews[0]) {
+            res.statusCode = 404;
+            return res.send({ error: 'Reviews Not found' });
+        }
 
-      if(!err) {
-        return res.send(reviews);
-      } else {
+        if(!err) {
+            return res.send(reviews);
+        } else {
 
-        res.statusCode = 500;
-        console.log('Internal error(%d): %s', res.statusCode, err.message);
-        return res.send({ error: 'Server error' });
-      }
+            res.statusCode = 500;
+            console.log('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
+        }
     });
-  };
+};
 
-  /**
-   * Find and retrieves all reviews by businessId.
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
-  exports.findReviewsByBusinessId = function(req, res) {
+/**
+ * Find and retrieves all reviews by businessId.
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
+exports.findReviewsByBusinessId = function(req, res) {
     console.log("GET - /review/business/:businessId");
     return Review.find({"businessId": req.params.businessId}, function(err, reviews) {
-      if(!reviews || !reviews[0]) {
-        res.statusCode = 404;
-        return res.send({ error: 'Reviews Not found' });
-      }
+        if(!reviews || !reviews[0]) {
+            res.statusCode = 404;
+            return res.send({ error: 'Reviews Not found' });
+        }
 
-      if(!err) {
-        return res.send(reviews);
-      } else {
+        if(!err) {
+            return res.send(reviews);
+        } else {
 
-        res.statusCode = 500;
-        console.log('Internal error(%d): %s', res.statusCode, err.message);
-        return res.send({ error: 'Server error' });
-      }
+            res.statusCode = 500;
+            console.log('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
+        }
     });
-  };
+};
 
 
-  /**
-   * Delete a Review by its id
-   * @param {Object} req HTTP request object.
-   * @param {Object} res HTTP response object.
-   */
-  exports.deleteReview = function(req, res) {
+
+/**
+ * Delete a Review by its id
+ * @param {Object} req HTTP request object.
+ * @param {Object} res HTTP response object.
+ */
+exports.deleteReview = function(req, res) {
 
     console.log("DELETE - /review/:id");
     if (!req.user) {
-      res.statusCode = 401;
-      console.log('User not logged in, unauthorized',res.statusCode);
-      return res.send({ error: 'User not logged in, unauthorized' });
+        res.statusCode = 401;
+        console.log('User not logged in, unauthorized',res.statusCode);
+        return res.send({ error: 'User not logged in, unauthorized' });
     }
-    
+
     return Review.findOne({"_id": req.params.id}, function(err, review) {
-      if (!review) {
-        res.statusCode = 404;
-        console.log("error: Review Not Found");
-        return res.send({ error: 'Review Not found' });
-      }
-
-      if (req.user._doc.id != review.userId) {
-        res.statusCode = 403;
-        console.log('Session user id does not match the review user id, permission denied',res.statusCode);
-        return res.send({ error: 'Session user id does not match the review user id, permission denied' });
-      }
-
-      return review.remove(function(err) {
-        if(!err) {
-          console.log('Removed Review');
-          res.statusCode = 200;
-          return res.send({ status: 'OK' });
-        } else {
-          res.statusCode = 500;
-          console.log('Internal error(%d): %s',res.statusCode,err.message);
-          return res.send({ error: 'Server error' });
+        if (!review) {
+            res.statusCode = 404;
+            console.log("error: Review Not Found");
+            return res.send({ error: 'Review Not found' });
         }
-      })
+
+        if (req.user._doc.id != review.userId) {
+            res.statusCode = 403;
+            console.log('Session user id does not match the review user id, permission denied',res.statusCode);
+            return res.send({ error: 'Session user id does not match the review user id, permission denied' });
+        }
+
+        var userid = review.userId;
+        var businessid = review.businessId;
+        var reviewToRemove = review;
+        return review.remove(function(err) {
+            if(!err) {
+                //remove embedded review from user
+                User.findOne({"_id":userid}, function(err,user) {
+                    if (err) {
+                        console.log(err);
+                        res.result = 404;
+                        res.send({error: 'Failed to remove review from user'})
+                    }
+                    else if (user) {
+                        var index = user.reviews.indexOf(reviewToRemove);
+                        //The second parameter of splice is the number of elements to remove
+                        user.reviews.splice(index, 1);
+                        user.save(function(err) {
+                            if (err) {
+                                res.statusCode = 500;
+                                console.log('Failed to update user (remove review)', res.statusCode, err.message);
+                                return res.send({ error: 'Server error' });
+                            } else {
+                                //remove reference review from business
+                                Business.findOne({"_id": businessid}, function(err,business) {
+                                    if (err) {
+                                        console.log(err);
+                                        res.result = 404;
+                                        res.send({error: 'Failed to remove review from business'});
+                                    } else if (business) {
+                                        index = business.reviews.indexOf(reviewToRemove._id);
+                                        business.reviews.splice(index,1);
+                                        business.save(function(err) {
+                                            if (err) {
+                                                res.statusCode = 500;
+                                                console.log('Failed to update user (remove review)', res.statusCode, err.message);
+                                                return res.send({ error: 'Server error' });
+                                            } else {
+                                                console.log('Removed Review');
+                                                res.statusCode = 200;
+                                                return res.send({ status: 'OK' });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+            } else {
+                res.statusCode = 500;
+                console.log('Internal error(%d): %s',res.statusCode,err.message);
+                return res.send({ error: 'Server error' });
+            }
+        })
     });
-  };
+};
