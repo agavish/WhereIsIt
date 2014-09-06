@@ -184,7 +184,29 @@ var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
 
     var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
     lastVisitedArray.push(castedBusinessObjectId);
-  }
+  } 
+
+  user.lastVisitedBusiness = lastVisitedArray;
+  user.save(function(err) {
+
+      if(err) {
+        console.log('Error while updating user: ' + err);
+
+      } else {
+        console.log("User updated with last visited business: " + castedBusinessObjectId);
+      }
+    });
+};
+
+exports.updateUserLastVisitedBusiness = function(userId, businessId) {
+  var user = User.find({"_id": userId}, function (err, user) {
+    console.log(user);
+    if (err || !user || !user[0]) {
+      return null;
+    } else {
+      addLastVisitedBusiness(user[0], businessId);
+    }
+  });
 };
 
 var addBusinessToFavorites = function (user,id) {

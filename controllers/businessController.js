@@ -3,6 +3,7 @@
 var Business = require('../models/businessModel.js');
 var mongoose = require('mongoose');
 var geolib = require('geolib');
+var userController = require('../controllers/userController.js');
 
   /**
    * Creates a new Business from the data request
@@ -207,6 +208,10 @@ exports.findBusinessById = function(req, res) {
     }
 
     if (!err) {
+      if (req.user) {
+        console.log("req.user != null");
+        userController.updateUserLastVisitedBusiness(req.user.id, req.param.id);
+      }
       return res.send(business[0]);
     } else {
       res.statusCode = 500;
