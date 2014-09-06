@@ -26,6 +26,7 @@ exports.createNewBusiness = function(req, res) {
     Business.create(newBusiness, function(err, result) {
       if(err) {
         console.log('Error while saving businesses: ' + err);
+        res.statusCode = 500;
         res.send({ error:err });
         return;
 
