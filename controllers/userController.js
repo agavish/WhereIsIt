@@ -177,14 +177,12 @@ exports.deleteUser = function(req, res) {
 var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
   var lastVisitedArray = user.lastVisitedBusiness;
 
-  if (lastVisitedArray.indexOf(lastVisitedBusinessId) == -1) {
-    if (lastVisitedArray.length >= 10) {
-      lastVisitedArray.shift(); // remove most old visited business
-    } 
+  while (lastVisitedArray.length >= 10) {
+    lastVisitedArray.shift();
+  }
 
-    var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
-    lastVisitedArray.push(castedBusinessObjectId);
-  } 
+  var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
+  lastVisitedArray.push(castedBusinessObjectId);
 
   user.lastVisitedBusiness = lastVisitedArray;
   user.save(function(err) {
@@ -200,7 +198,6 @@ var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
 
 exports.updateUserLastVisitedBusiness = function(userId, businessId) {
   var user = User.find({"_id": userId}, function (err, user) {
-    console.log(user);
     if (err || !user || !user[0]) {
       return null;
     } else {
