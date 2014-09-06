@@ -173,6 +173,27 @@ exports.findReviewsByBusinessId = function(req, res) {
  */
 exports.deleteReview = function(req, res) {
 
+    var deleteReviewFromBusinessCallBackFunction = function(err,status) {
+        if (err) {
+            switch(status) {
+                case 404:
+                    console.log(err);
+                    res.result = status;
+                    res.send({error: 'Failed to remove review from business'});
+                    break;
+                case 500:
+                    res.statusCode = status;
+                    console.log('Failed to update user (remove review)', res.statusCode, err.message);
+                    return res.send({ error: 'Server error' });
+                    break;
+            }
+        } else {
+            console.log('Removed Review');
+            res.statusCode = 200;
+            return res.send({ status: 'OK' });
+        }
+    };
+
     console.log("DELETE - /review/:id");
     if (!req.user) {
         res.statusCode = 401;
@@ -193,52 +214,25 @@ exports.deleteReview = function(req, res) {
             return res.send({ error: 'Session user id does not match the review user id, permission denied' });
         }
 
+        // we save this parameters before we delete the review
         var userid = review.userId;
         var businessid = review.businessId;
         var reviewToRemove = review;
+
         return review.remove(function(err) {
             if(!err) {
                 //remove embedded review from user
-                User.findOne({"_id":userid}, function(err,user) {
-                    if (err) {
+                User.deleteReviewById(userid,reviewToRemove,function(user,err,status) {
+                    if (err) { //  unable to remove from user from some reason
                         console.log(err);
-                        res.result = 404;
+                        res.result = status;
                         res.send({error: 'Failed to remove review from user'})
-                    }
-                    else if (user) {
-                        var index = user.reviews.indexOf(reviewToRemove);
-                        //The second parameter of splice is the number of elements to remove
-                        user.reviews.splice(index, 1);
-                        user.save(function(err) {
-                            if (err) {
-                                res.statusCode = 500;
-                                console.log('Failed to update user (remove review)', res.statusCode, err.message);
-                                return res.send({ error: 'Server error' });
-                            } else {
-                                //remove reference review from business
-                                Business.findOne({"_id": businessid}, function(err,business) {
-                                    if (err) {
-                                        console.log(err);
-                                        res.result = 404;
-                                        res.send({error: 'Failed to remove review from business'});
-                                    } else if (business) {
-                                        index = business.reviews.indexOf(reviewToRemove._id);
-                                        business.reviews.splice(index,1);
-                                        business.save(function(err) {
-                                            if (err) {
-                                                res.statusCode = 500;
-                                                console.log('Failed to update user (remove review)', res.statusCode, err.message);
-                                                return res.send({ error: 'Server error' });
-                                            } else {
-                                                console.log('Removed Review');
-                                                res.statusCode = 200;
-                                                return res.send({ status: 'OK' });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
+
+                    } else if(user) { // we have a user
+                        Business.deleteReviewById(businessid,reviewToRemove._id,deleteReviewFromBusinessCallBackFunction);
+
+                    } else if (!user) { // in case this review was written by user that was removed
+                        Business.deleteReviewById(businessid,reviewToRemove._id,deleteReviewFromBusinessCallBackFunction);
                     }
                 });
 
@@ -249,4 +243,7 @@ exports.deleteReview = function(req, res) {
             }
         })
     });
+
+
 };
+

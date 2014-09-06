@@ -24,5 +24,23 @@ var userSchema = new Schema({
   lastVisitedBusiness:   { type: [ Schema.ObjectId ], ref: 'Business' }
 });
 
+userSchema.statics.deleteReviewById = function (userId,reviewToRemove,callback) {
+    this.findOne({"_id": userId}, function (err, user) {
+        if (err) {
+            callback(user, err,404);
+        } else if (!user) {
+            callback(user, err);
+        } else if (user) {
+            var index = user.reviews.indexOf(reviewToRemove);
+            //The second parameter of splice is the number of elements to remove
+            user.reviews.splice(index, 1);
+            user.save(function (err) {
+                callback(user, err);
+            });
+        }
+    });
+};
+
+
 module.exports = mongoose.model('User', userSchema);
 

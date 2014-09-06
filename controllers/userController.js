@@ -161,8 +161,14 @@ exports.deleteUser = function(req, res) {
         return res.send({ error: 'User Not found' });
       }
 
+      var userToRemoveId = user._id;
       return user[0].remove(function(err) {
         if(!err) {
+            //remove all reviews of this user from db
+
+
+
+            //remove all reviews of this user from business
           console.log('Removed User');
           return res.send({ status: 'OK' });
         } else {

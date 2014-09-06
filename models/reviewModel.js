@@ -14,7 +14,7 @@ var reviewSchema = new Schema({
     userId     : { type: String, required: true },
     businessId : { type: ObjectId, ref: 'Business', required: true },
     content    : { type: String, required: true },
-    date       : Date,
+    date       : Date
 });
 
 module.exports = mongoose.model('Review', reviewSchema);
