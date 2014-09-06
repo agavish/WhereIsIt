@@ -57,10 +57,10 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
       });
   }
 
-  if ($routeParams.keyword) {
+  if ($location.path().indexOf("/keyword/") > -1 && $routeParams.keyword) {
     $scope.keyword = $routeParams.keyword;
     $scope.searchBusinessesByKeyword($scope.keyword, $rootScope.position);
-  } else if ($location.path().indexOf("nearest") > -1) {
+  } else if ($location.path().indexOf("/nearest") > -1) {
     $scope.searchNearestBusinesses($rootScope.position);
   }
   
@@ -69,29 +69,35 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
 controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
   $scope.delegateSearchByKeyword = function(keyword) {
     $rootScope.loading = true;
-    $location.path('/search/keyword/' + keyword);
-
-    // bypass angular's route provider limitation:
-    // by default, the route provider will be invoked only when the URL changes.
-    // if a user is already at /search/keyword, and he enters the same keyword again,
-    // the route provider will not be invoked again, and there won't be another query.
-    // this addition tells angular that a successfull URL change has occured, and so it will invoke 
-    // the route provider again.
-    $scope.$emit("$routeChangeSuccess");
-  };
-}]);
-
-controllers.controller("searchNearestController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
-  $scope.delegateSearchNearest = function() {
-    $rootScope.loading = true;
-    $location.path('/search/nearest');
-
+    var currentPath = $location.path();
     // bypass angular's route provider limitation:
     // by default, the route provider will be invoked only when the URL changes.
     // if a user is already at /search/nearest, and he clicks the button again,
     // the route provider will not be invoked again, and there won't be another query.
     // this addition tells angular that a successfull URL change has occured, and so it will invoke 
     // the route provider again.
-    $scope.$emit("$routeChangeSuccess");
+    if (currentPath === '/search/keyword/' + keyword) {
+      $scope.$emit("$routeChangeSuccess");  
+    } else {
+      $location.path('/search/keyword/' + keyword);
+    }
+  };
+}]);
+
+controllers.controller("searchNearestController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
+  $scope.delegateSearchNearest = function() {
+    $rootScope.loading = true;
+    var currentPath = $location.path();
+    // bypass angular's route provider limitation:
+    // by default, the route provider will be invoked only when the URL changes.
+    // if a user is already at /search/nearest, and he clicks the button again,
+    // the route provider will not be invoked again, and there won't be another query.
+    // this addition tells angular that a successfull URL change has occured, and so it will invoke 
+    // the route provider again.
+    if (currentPath === '/search/nearest') {
+      $scope.$emit("$routeChangeSuccess");  
+    } else {
+      $location.path('/search/nearest');
+    }
   };
 }]);
