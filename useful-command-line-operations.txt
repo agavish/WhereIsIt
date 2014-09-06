@@ -10,3 +10,14 @@
 3. show collections
 4. db.getCollection("businesses").drop()
 (this will drop the collection and all related indexes)
+
+======= Connect to http://mobedu5.mtacloud.co.il/ ========
+ssh webstud@modedu5.mtacloud.co.il
+(I'll tell u the password :-) )
+
+======= Manage WhereIsIt app in modedu5.mtacloud.co.il ======
+./whereisit.sh start
+./whereisit.sh stop
+
+======= IMPORT businesses.json to Cloud MongoDB ======
+mongoimport --host localhost --port 27017 --db WhereIsIt --collection businesses < businesses.json --jsonArray
