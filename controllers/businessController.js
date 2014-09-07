@@ -210,8 +210,7 @@ exports.findBusinessById = function(req, res) {
 
     if (!err) {
       if (req.user) {
-        console.log("req.user != null");
-        userController.updateUserLastVisitedBusiness(req.user.id, req.param.id);
+        userController.updateUserLastVisitedBusiness(req.user.id, req.params.id);
       }
       return res.send(business[0]);
     } else {

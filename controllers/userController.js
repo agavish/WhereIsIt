@@ -61,7 +61,7 @@ exports.findAllUsers = function(req, res) {
 exports.findUserById = function(req, res) {
     console.log("GET - /api/user/");
 
-    return User.find({"_id": req.user.id}, function(err, user) {
+    return User.find({"_id": req.params.id}, function(err, user) {
       if(!user || !user[0]) {
         res.statusCode = 404;
         return res.send({ error: 'User Not found' });
@@ -97,7 +97,7 @@ exports.updateUserById = function(req, res) {
       return res.send({ error: 'User id does not match session user id, permission denied' });
     }
 
-    return User.find({_id: req.user.id}, function(err, user) {
+    return User.find({_id: req.params.id}, function(err, user) {
 
       if(!user || !user[0]) {
         res.statusCode = 404;
@@ -153,7 +153,7 @@ exports.deleteUser = function(req, res) {
       return res.send({ error: 'User id does not match session user id, permission denied' });
     }
     
-    return User.find({_id: req.user.id}, function(err, user) {
+    return User.find({_id: req.params.id}, function(err, user) {
       
       if(!user || !user[0]) {
         res.statusCode = 404;
@@ -183,23 +183,31 @@ exports.deleteUser = function(req, res) {
 var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
   var lastVisitedArray = user.lastVisitedBusiness;
 
-  while (lastVisitedArray.length >= 10) {
+  // validate there are no more than 10 businesses in the array
+  while (lastVisitedArray.length > 10) {
     lastVisitedArray.shift();
   }
 
+  // if the business is already in the last visited businesses, do nothing
+  if (lastVisitedArray.indexOf(lastVisitedBusinessId) > -1) {
+    console.log('User update with last visited business: No action. businessId ' + lastVisitedBusinessId + ' already in lastVisitedBusinesses');
+    return;
+  }
+
+  // else, remove the oldest visited business, and insert a new one
   var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
+  lastVisitedArray.shift();
   lastVisitedArray.push(castedBusinessObjectId);
 
   user.lastVisitedBusiness = lastVisitedArray;
   user.save(function(err) {
+    if(err) {
+      console.log('Error while updating user: ' + err);
 
-      if(err) {
-        console.log('Error while updating user: ' + err);
-
-      } else {
-        console.log("User updated with last visited business: " + castedBusinessObjectId);
-      }
-    });
+    } else {
+      console.log("User updated with last visited business: " + castedBusinessObjectId);
+    }
+  });
 };
 
 exports.updateUserLastVisitedBusiness = function(userId, businessId) {
@@ -213,13 +221,11 @@ exports.updateUserLastVisitedBusiness = function(userId, businessId) {
 };
 
 var addBusinessToFavorites = function (user,id) {
-            var businessArray = user.favoriteBusiness;
-            if (businessArray.indexOf(id) > -1)
-            {
-                businessArray.remove(id);
-            } else {
-                businessArray.add(id);
-            }
-            user.favoriteBusiness = businessArray
-
+  var businessArray = user.favoriteBusiness;
+  if (businessArray.indexOf(id) > -1) {
+    businessArray.remove(id);
+  } else {
+    businessArray.push(id);
+  }
+  user.favoriteBusiness = businessArray
 };
