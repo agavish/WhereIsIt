@@ -183,20 +183,19 @@ exports.deleteUser = function(req, res) {
 var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
   var lastVisitedArray = user.lastVisitedBusiness;
 
-  // validate there are no more than 10 businesses in the array
-  while (lastVisitedArray.length > 10) {
-    lastVisitedArray.shift();
-  }
-
   // if the business is already in the last visited businesses, do nothing
-  if (lastVisitedArray.indexOf(lastVisitedBusinessId) > -1) {
+  if (lastVisitedArray && lastVisitedArray.indexOf(lastVisitedBusinessId) > -1) {
     console.log('User update with last visited business: No action. businessId ' + lastVisitedBusinessId + ' already in lastVisitedBusinesses');
     return;
   }
 
-  // else, remove the oldest visited business, and insert a new one
+  // validate there are no more than 9 businesses in the array (make room for a new business)
+  while (lastVisitedArray.length >= 10) {
+    lastVisitedArray.shift();
+  }
+
+  // insert a new business
   var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
-  lastVisitedArray.shift();
   lastVisitedArray.push(castedBusinessObjectId);
 
   user.lastVisitedBusiness = lastVisitedArray;
