@@ -65,11 +65,12 @@
 
     <!-- SEARCH NEAREST BUSINESSES BAR -->
     <div id="search-nearest-bar" ng-controller="searchNearestController" ng-show="hasPosition()">
-      <span>או:</span>
+      <div>או</div>
       <button type="button" class="btn btn-lg btn-link search-nearest-button" ng-click="delegateSearchNearest()"><i class="fa fa-location-arrow"></i> הצג עסקים קרובים</button>
     </div>
     <!-- END SEARCH NEAREST BUSINESSES BAR -->    
 
+    <div id="page-title" ng-hide="loading"><h2>{{title}}</h2></div>
     <div id="app-view" ng-view></div>
 
   </div>

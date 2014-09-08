@@ -54,7 +54,7 @@ input:hover, input:active, input:focus, input:visited {
   direction: rtl;
 }
 #user-bar {
-  margin: 0 auto 25px;
+  margin: 0 auto 15px;
   float: left;
   width: 100%;
 }
@@ -203,7 +203,7 @@ ul#user-details:hover .user-menu {
   background-color: #ECF2F7;
 }
 .businesses-results {
-  margin: 25px auto;
+  margin: 5px auto;
   float: left;
   width: 100%;
 }
@@ -212,10 +212,39 @@ ul#user-details:hover .user-menu {
   text-align: right;
 }
 .businesses-results-table {
-  margin:40px auto 0;
+  margin:0 auto;
+}
+.businesses-results-table th,
+.businesses-results-table td {
+  padding:8px 2px !important;
 }
 .businesses-results-table,
 .businesses-results-table *
  {
   text-align: right !important;
+}
+#search-nearest-bar {
+  float: left;
+  width: 100%;
+  margin: 5px 0;
+}
+.search-nearest-button {
+  color: #0076be !important;
+  padding: 0 16px !important;
+  text-decoration: none !important;
+}
+button.search-nearest-button:hover {
+  color: #0076be !important;
+  text-decoration: none !important;
+}
+#page-title {
+  width: 100%;
+  font-size: 18px;
+  text-align: right;
+  margin: 30px 0 0;
+  float: left;
+}
+#app-view {
+  width: 100%;
+  float: left; 
 }
