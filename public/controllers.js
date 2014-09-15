@@ -1,17 +1,22 @@
 var controllers = angular.module('controllers', []);
 
-controllers.controller('userController', ['$scope', '$rootScope', 'userService', function($scope, $rootScope, userService) {
+controllers.controller('userController', ['$scope', '$rootScope', function($scope, $rootScope) {
   
   // no need to hold a $scope.user variable, we get the user from the session.currentUser which is stored on the $rootScope
+  $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
 }]);
 
-controllers.controller('businessController', ['$scope', '$routeParams', 'businessService', function($scope, $routeParams, businessService) {
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', function($scope, $rootScope, $routeParams, businessService) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
   $scope.getBusinessById = function(businessId) {
+    $rootScope.loading = true;
     businessService.getBusinessById(businessId)
     .success(function(data, status) {
         $scope.business = data;
+        $rootScope.title = $scope.business.name;
+        $rootScope.loading = false;
+        return;
       });  
   }
   $scope.getBusinessById($scope.businessId);
@@ -26,6 +31,7 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
   }
 
   $scope.searchBusinessesByKeyword = function (keyword, postion) {
+    $rootScope.loading = true;
     businessService.getBusinessesByKeyword(keyword, postion)
       .success(function(data, status) {
         $scope.results = data;
@@ -42,6 +48,7 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
   }
 
   $scope.searchNearestBusinesses = function (postion) {
+    $rootScope.loading = true;
     businessService.getNearestBusinesses(postion)
       .success(function(data, status) {
         $scope.results = data;
@@ -68,7 +75,6 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
 
 controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
   $scope.delegateSearchByKeyword = function(keyword) {
-    $rootScope.loading = true;
     var currentPath = $location.path();
     // bypass angular's route provider limitation:
     // by default, the route provider will be invoked only when the URL changes.
@@ -86,7 +92,6 @@ controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', 
 
 controllers.controller("searchNearestController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
   $scope.delegateSearchNearest = function() {
-    $rootScope.loading = true;
     var currentPath = $location.path();
     // bypass angular's route provider limitation:
     // by default, the route provider will be invoked only when the URL changes.

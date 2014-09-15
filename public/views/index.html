@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WhereIsIt</title>
+  <base href="/"></base>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>
@@ -51,15 +52,17 @@
 
     <!-- SEARCH BY KEYWORD BAR -->
     <div id="search-bar" ng-controller="searchByKeywordBarController">
-      <div class="input-group">
-        <span class="input-group-btn">
-          <button class="btn btn-default btn-lg" type="button" ng-click="delegateSearchByKeyword(keyword)" ng-disabled="loading">
-            <i class="fa fa-search fa-lg" ng-hide="loading"></i>
-            <span class="loader" ng-show="loading"><img src="../images/loading-spin.svg" /></span>
-          </button>
-        </span>
-        <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" on-enter="delegateSearchByKeyword(keyword)" placeholder="חפש בתי עסק, שירותים או מקומות בילוי">
-      </div>
+      <form ng-submit="delegateSearchByKeyword(keyword)">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default btn-lg" ng-disabled="loading">
+              <i class="fa fa-search fa-lg" ng-hide="loading"></i>
+              <span class="loader" ng-show="loading"><img src="../images/loading-spin.svg" /></span>
+            </button>
+          </span>
+          <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" placeholder="חפש בתי עסק, שירותים או מקומות בילוי" ng-required="true" />
+        </div>
+      </form>
     </div>
     <!-- END SEARCH BY KEYWORD BAR -->
 
@@ -72,7 +75,7 @@
 
     <div id="page-title" ng-hide="loading"><h2>{{title}}</h2></div>
     <div id="app-view" ng-view></div>
-
+    
   </div>
 </body>
 </html>

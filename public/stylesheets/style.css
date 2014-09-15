@@ -116,7 +116,7 @@ input:hover, input:active, input:focus, input:visited {
 }
 .user-name-email {
   float: left;
-  text-align: right;
+  text-align: left;
   margin: 7px 10px 0 0;
 }
 .user-name {
