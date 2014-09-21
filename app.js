@@ -13,9 +13,9 @@ var express = require('express')
   , facebookAuthService = require('./services/facebookAuthService.js')
   , docs = require("express-mongoose-docs");
 
-// dev: mongodb://Admin:Admin@kahana.mongohq.com:10075
+// dev: mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt
 // prod (mta cluster): localhost:27017/WhereIsIt
-mongoose.connect('mongodb://Admin1:Admin1@lennon.mongohq.com:10085/app28304691', function(err, res) {
+mongoose.connect('mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt', function(err, res) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
