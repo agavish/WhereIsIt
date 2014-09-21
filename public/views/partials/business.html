@@ -1,26 +1,54 @@
 <div class="business-profile">
   <div class="row">
-    <div class="col-lg-7">
+    <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">פרטי העסק</h3>
         </div>
         <div class="panel-body">
-          <ul>
-            <li>{{business.name}}</li>
-            <li>{{business.businessType}}</li>
-            <li>{{business.phone}}</li>
-            <li>{{business.website}}</li>
+          <ul class="business-profile-properties">
+            <li>
+              <div class="business-profile-key">שם</div>
+              <div class="business-profile-value">{{ business.name }}</div>
+            </li>
+            <li>
+              <div class="business-profile-key">קטגוריה</div>
+              <div class="business-profile-value">{{ business.businessType }}</div>
+            </li>
+            <li ng-show="business.address.street || business.address.homeNumber || business.address.city">
+              <div class="business-profile-key">כתובת</div>
+              <div class="business-profile-value">{{ business.address.street ? business.address.street : '' }} {{ business.address.homeNumber ? business.address.homeNumber : ''}} {{ business.address.city ? business.address.city : '' }}</div>
+            </li>
+            <li ng-show="business.phone">
+              <div class="business-profile-key">טלפון</div>
+              <div class="business-profile-value">{{business.phone}}</div>
+            </li>
+            <li ng-show="business.website">
+              <div class="business-profile-key">אתר אינטרנט</div>
+              <div class="business-profile-value ltr"><a href="{{business.website}}" target="_blank">{{business.website}}</a></div>
+            </li>
+            <li ng-show="business.openHours && business.openHours.length > 0">
+              <div class="business-profile-key">שעות פתיחה</div>
+              <div class="business-profile-value">
+                <ul>
+                  <li ng-repeat="day in business.openHours">
+                    <div>{{day.day}}: {{day.startHour}} - {{day.endHour}}</div>
+                  </li>
+                </ul>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="col-lg-5">
+    <div class="col-lg-8">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">איך מגיעים?</h3>
         </div>
-        <div class="panel-body">HERE WILL BE GOOGLE MAPS</div>
+        <div class="panel-body">
+          <iframe class="business-profile-directions" ng-src="{{ getGoogleMapsEmbedURL() }}"></iframe>
+        </div>
       </div>
     </div>
   </div>

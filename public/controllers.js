@@ -6,7 +6,7 @@ controllers.controller('userController', ['$scope', '$rootScope', function($scop
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
 }]);
 
-controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', function($scope, $rootScope, $routeParams, businessService) {
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', '$sce', function($scope, $rootScope, $routeParams, businessService, $sce) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
   $scope.getBusinessById = function(businessId) {
@@ -19,6 +19,19 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         return;
       });  
   }
+
+  $scope.getGoogleMapsEmbedURL = function() {
+    var url = "";
+    if ($rootScope.position) {
+      url += "https://www.google.com/maps/embed/v1/directions?";
+      url += "key=AIzaSyDWApw_dyQHYl7KNAN-KbYNrQUgRgY83sk";
+      url += "&origin=" + $rootScope.position.latitude + "," + $rootScope.position.longitude;
+      url += "&destination=" + $scope.business.address.coordinates[1] + "," + $scope.business.address.coordinates[0];
+      url += "&language=he";
+    }
+    return $sce.trustAsResourceUrl(url);
+  }
+
   $scope.getBusinessById($scope.businessId);
 }]);
 
