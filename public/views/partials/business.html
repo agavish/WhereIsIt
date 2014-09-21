@@ -1,9 +1,27 @@
 <div class="business-profile">
-  <ul>
-    <li>{{business._id}}</li>
-    <li>{{business.name}}</li>
-    <li>{{business.businessType}}</li>
-    <li>{{business.phone}}</li>
-    <li>{{business.website}}</li>
-  </ul>
+  <div class="row">
+    <div class="col-lg-7">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">פרטי העסק</h3>
+        </div>
+        <div class="panel-body">
+          <ul>
+            <li>{{business.name}}</li>
+            <li>{{business.businessType}}</li>
+            <li>{{business.phone}}</li>
+            <li>{{business.website}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">איך מגיעים?</h3>
+        </div>
+        <div class="panel-body">HERE WILL BE GOOGLE MAPS</div>
+      </div>
+    </div>
+  </div>
 </div>

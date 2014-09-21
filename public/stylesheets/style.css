@@ -1,5 +1,11 @@
 @import url(http://fonts.googleapis.com/earlyaccess/alefhebrew.css);
 
+@media all and (min-width: 1200px) {
+  .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+    float: right;
+  }
+}
+
 html {
   overflow-y: scroll;
 }
@@ -341,4 +347,8 @@ button.search-nearest-button:hover {
 #app-view {
   width: 100%;
   float: left; 
+}
+.business-profile {
+  direction: rtl;
+  text-align: right;
 }
