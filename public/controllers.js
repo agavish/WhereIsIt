@@ -6,9 +6,24 @@ controllers.controller('userController', ['$scope', '$rootScope', function($scop
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
 }]);
 
+<<<<<<< HEAD
 controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, $sce, $location, googleMapsApiService) {
+=======
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce) {
+>>>>>>> e54b7dad8c7effa8e550e151a80361ae3c3d8af6
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
+
+  $scope.dayDisplay = {
+    1: "א",
+    2: "ב",
+    3: "ג",
+    4: "ד",
+    5: "ה",
+    6: "ו",
+    7: "ש'"
+  }
+
   $scope.getBusinessById = function(businessId) {
     $rootScope.loading = true;
     businessService.getBusinessById(businessId)
@@ -16,6 +31,7 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.business = data;
         $rootScope.title = $scope.business.name;
         $rootScope.loading = false;
+<<<<<<< HEAD
         return;
       }); 
   }
@@ -33,6 +49,25 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         var location = data.results[0].geometry.location;
         $scope.business.address.coordinates[0] = location.lng;
         $scope.business.address.coordinates[1] = location.lat;
+      });
+=======
+        $scope.getReviewsByBusinessId(businessId);
+      });  
+>>>>>>> e54b7dad8c7effa8e550e151a80361ae3c3d8af6
+  }
+
+  $scope.getReviewsByBusinessId = function(businessId) {
+    $rootScope.loading = true;
+    reviewService.getReviewsByBusinessId(businessId)
+    .success(function(data, status) {
+        $scope.business.reviews = data;
+        $rootScope.loading = false;
+        return;
+      })
+    .error(function(data, status) {
+        $scope.business.reviews = [];
+        $rootScope.loading = false;
+        return;
       });
   }
 
