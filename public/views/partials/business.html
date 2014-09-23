@@ -25,14 +25,15 @@
             </li>
             <li ng-show="business.website">
               <div class="business-profile-key">אתר אינטרנט</div>
-              <div class="business-profile-value ltr"><a href="{{business.website}}" target="_blank">{{business.website}}</a></div>
+              <div class="business-profile-value ltr"><a href="{{business.website}}" target="_blank">{{business.website}}</a>
+              </div>
             </li>
             <li ng-show="business.openHours && business.openHours.length > 0">
               <div class="business-profile-key">שעות פתיחה</div>
               <div class="business-profile-value">
                 <ul>
                   <li ng-repeat="day in business.openHours">
-                    <div>{{day.day}}: {{day.startHour}} - {{day.endHour}}</div>
+                    <div>{{dayDisplay[day.day]}}: {{day.startHour}} - {{day.endHour}}</div>
                   </li>
                 </ul>
               </div>
@@ -48,6 +49,25 @@
         </div>
         <div class="panel-body">
           <iframe class="business-profile-directions" ng-src="{{ getGoogleMapsEmbedURL() }}"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">ביקורות</h3>
+        </div>
+        <div class="panel-body">
+          <ul ng-show="business.reviews && business.reviews.length > 0">
+            <li ng-repeat="review in business.reviews">
+              <div>{{ review.content }}</div>
+            </li>
+          </ul>
+          <div ng-show="business.reviews && business.reviews.length == 0">
+            <span class="no-businesses text-muted">לעסק זה עוד אין ביקורות</span>
+          </div>
         </div>
       </div>
     </div>

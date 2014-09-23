@@ -74,6 +74,14 @@ services.factory('userService', ['$http', function($http) {
   };
 }]);
 
+services.factory('reviewService', ['$http', function($http) {
+  return {
+    getReviewsByBusinessId: function(businessId) {
+      return $http({ method: 'GET', url: '/api/review/business/' + businessId });
+    }
+  };
+}]);
+
 services.factory('geoLocationService', ['$rootScope', function($rootScope) {
   return {
     setPosition: function (position) {

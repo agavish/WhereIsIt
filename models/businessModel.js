@@ -32,7 +32,7 @@ var businessSchema = new Schema({
     }],
   averateRate:      { type: Number, default: 0 },
   description:      { type: String },
-  reviews     :     { type: [Schema.ObjectId], ref: 'Review' }
+  reviews     :     [ { type: Schema.ObjectId, ref: 'Review' } ]
 });
 
 // index address.coordinates with 2d for geo spatial queries

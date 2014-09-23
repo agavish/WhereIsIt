@@ -147,16 +147,19 @@ exports.findReviewsByUserId = function(req, res) {
  */
 exports.findReviewsByBusinessId = function(req, res) {
     console.log("GET - /review/business/:businessId");
-    return Review.find({"businessId": req.params.businessId}, function(err, reviews) {
-        if(!reviews || !reviews[0]) {
+
+    return Business
+    .findOne({"_id": req.params.businessId})
+    .populate('reviews')
+    .exec(function (err, business) {
+        if(!business || !business.reviews) {
             res.statusCode = 404;
             return res.send({ error: 'Reviews Not found' });
         }
 
         if(!err) {
-            return res.send(reviews);
+            return res.send(business.reviews);
         } else {
-
             res.statusCode = 500;
             console.log('Internal error(%d): %s', res.statusCode, err.message);
             return res.send({ error: 'Server error' });

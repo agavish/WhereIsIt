@@ -6,9 +6,20 @@ controllers.controller('userController', ['$scope', '$rootScope', function($scop
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
 }]);
 
-controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', '$sce', function($scope, $rootScope, $routeParams, businessService, $sce) {
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
+
+  $scope.dayDisplay = {
+    1: "א",
+    2: "ב",
+    3: "ג",
+    4: "ד",
+    5: "ה",
+    6: "ו",
+    7: "ש'"
+  }
+
   $scope.getBusinessById = function(businessId) {
     $rootScope.loading = true;
     businessService.getBusinessById(businessId)
@@ -16,8 +27,23 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.business = data;
         $rootScope.title = $scope.business.name;
         $rootScope.loading = false;
-        return;
+        $scope.getReviewsByBusinessId(businessId);
       });  
+  }
+
+  $scope.getReviewsByBusinessId = function(businessId) {
+    $rootScope.loading = true;
+    reviewService.getReviewsByBusinessId(businessId)
+    .success(function(data, status) {
+        $scope.business.reviews = data;
+        $rootScope.loading = false;
+        return;
+      })
+    .error(function(data, status) {
+        $scope.business.reviews = [];
+        $rootScope.loading = false;
+        return;
+      });
   }
 
   $scope.getGoogleMapsEmbedURL = function() {
