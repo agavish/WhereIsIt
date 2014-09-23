@@ -6,7 +6,7 @@ controllers.controller('userController', ['$scope', '$rootScope', function($scop
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
 }]);
 
-controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', '$sce', function($scope, $rootScope, $routeParams, businessService, $sce) {
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, $sce, $location, googleMapsApiService) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
   $scope.getBusinessById = function(businessId) {
@@ -17,7 +17,23 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $rootScope.title = $scope.business.name;
         $rootScope.loading = false;
         return;
-      });  
+      }); 
+  }
+
+  $scope.updateBusiness = function() {
+    businessService.updateBusinessById($scope.business)
+    .success(function(data, status) {
+      $location.path('/business/' + $scope.business._id);
+    });
+  }
+
+  $scope.getBusinessCoordinatesByAddress = function() {
+    googleMapsApiService.getCoordinatesByAddress($scope.business.address)
+      .success(function(data,status) {
+        var location = data.results[0].geometry.location;
+        $scope.business.address.coordinates[0] = location.lng;
+        $scope.business.address.coordinates[1] = location.lat;
+      });
   }
 
   $scope.getGoogleMapsEmbedURL = function() {

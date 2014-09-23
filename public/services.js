@@ -62,6 +62,9 @@ services.factory('businessService', ['$http', function($http) {
     },
     getBusinessById: function(businessId) {
       return $http({ method: 'GET', url: '/api/business/' + businessId  });
+    },
+    updateBusinessById: function(business) {
+      return $http({ method: 'PUT', url: '/api/business/' + business._id  , data: business });
     }
   };
 }]);
@@ -70,6 +73,16 @@ services.factory('userService', ['$http', function($http) {
   return {
     getUserById: function(id) {
       return $http({ method: 'GET', url: '/api/users/' + id });
+    }
+  };
+}]);
+
+services.factory('googleMapsApiService', ['$http', function($http) {
+
+  return {
+    getCoordinatesByAddress: function(address) {
+      var addressString = address.city + ' ' + address.street + ' ' + address.homeNumber;
+      return $http({ method: 'GET', url: 'http://maps.google.com/maps/api/geocode/json?address=' + addressString + '&language=he' });
     }
   };
 }]);

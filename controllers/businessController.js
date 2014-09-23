@@ -245,6 +245,7 @@ exports.updateBusinessById = function(req, res) {
 
       if (req.body.businessType != null) business[0].businessType = req.body.businessType;
       if (req.body.phone != null) business[0].phone = req.body.phone;
+      if (req.body.address != null) business[0].address = req.body.address;
       if (req.body.rate != null) {
 
         // check if current userId already rated the business

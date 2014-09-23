@@ -46,6 +46,10 @@ app.config(['$routeProvider', '$locationProvider',
         templateUrl: '/views/partials/business.html',
         controller: 'businessController'
       })
+      .when('/business/:businessId/update', {
+        templateUrl: '/views/partials/businessUpdate.html',
+        controller: 'businessController'
+      })
       .when('/search/keyword/:keyword', {
         templateUrl: '/views/partials/search.html',
         controller: 'searchController'

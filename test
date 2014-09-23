@@ -1,0 +1,7 @@
+
+if [ "git show 73e2cf411b59e869a4ad06012d32ae34db57eb88 | grep securi" == false  ] ; then
+	echo "pattern failed";
+	exit 1
+else
+	echo "ok"
+fi
