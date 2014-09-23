@@ -6,11 +6,7 @@ controllers.controller('userController', ['$scope', '$rootScope', function($scop
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
 }]);
 
-<<<<<<< HEAD
-controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, $sce, $location, googleMapsApiService) {
-=======
-controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce) {
->>>>>>> e54b7dad8c7effa8e550e151a80361ae3c3d8af6
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce, $location, googleMapsApiService) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = '';
 
@@ -31,7 +27,6 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.business = data;
         $rootScope.title = $scope.business.name;
         $rootScope.loading = false;
-<<<<<<< HEAD
         return;
       }); 
   }
@@ -50,13 +45,9 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.business.address.coordinates[0] = location.lng;
         $scope.business.address.coordinates[1] = location.lat;
       });
-=======
-        $scope.getReviewsByBusinessId(businessId);
-      });  
->>>>>>> e54b7dad8c7effa8e550e151a80361ae3c3d8af6
   }
 
-  $scope.getReviewsByBusinessId = function(businessId) {
+ $scope.getReviewsByBusinessId = function(businessId) {
     $rootScope.loading = true;
     reviewService.getReviewsByBusinessId(businessId)
     .success(function(data, status) {

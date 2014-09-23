@@ -77,19 +77,20 @@ services.factory('userService', ['$http', function($http) {
   };
 }]);
 
-<<<<<<< HEAD
 services.factory('googleMapsApiService', ['$http', function($http) {
 
   return {
     getCoordinatesByAddress: function(address) {
       var addressString = address.city + ' ' + address.street + ' ' + address.homeNumber;
       return $http({ method: 'GET', url: 'http://maps.google.com/maps/api/geocode/json?address=' + addressString + '&language=he' });
-=======
+    }
+  };
+}]);
+
 services.factory('reviewService', ['$http', function($http) {
   return {
     getReviewsByBusinessId: function(businessId) {
       return $http({ method: 'GET', url: '/api/review/business/' + businessId });
->>>>>>> e54b7dad8c7effa8e550e151a80361ae3c3d8af6
     }
   };
 }]);
