@@ -31,6 +31,7 @@
         <i class="fa fa-facebook"></i> 
         <span class="text">התחבר</span>
       </button>
+
       <ul id="user-details" ng-show="session.isLoggedIn">
         <li>
           <div class="user-details-wrapper">
@@ -51,6 +52,15 @@
       </ul>
     </div>
     <!-- END USER BAR -->
+
+    <!-- ADD BUSINESS BAR -->
+    <div id="add-business-bar">
+       <a ng-show="session.isLoggedIn" href="#/business/create/new" class="btn btn-primary">
+        <i class="fa fa-plus"></i> 
+        <span class="text">הוסף עסק</span>
+      </a>
+    </div>
+    <!-- END ADD BUSINESS BAR-->
 
     <!-- SEARCH BY KEYWORD BAR -->
     <div id="search-bar" ng-controller="searchByKeywordBarController">

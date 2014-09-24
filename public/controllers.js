@@ -31,6 +31,13 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
       }); 
   }
 
+  $scope.createBusiness = function() {
+    businessService.createBusiness($scope.business)
+    .success(function(data, status) {
+      $location.path('/business/' + $scope.business._id);
+    });
+  }
+
   $scope.updateBusiness = function() {
     businessService.updateBusinessById($scope.business)
     .success(function(data, status) {

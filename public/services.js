@@ -44,6 +44,9 @@ services.factory('sessionService', ['$rootScope', '$window', '$http',
 
 services.factory('businessService', ['$http', function($http) {
   return {
+    createBusiness: function() {
+      return $http({ method: 'POST', url: '/api/business/' , data: business });
+    },
     getBusinessesByKeyword: function(keyword, position) {
       var latitude = '';
       var longitude = '';

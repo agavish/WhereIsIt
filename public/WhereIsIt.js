@@ -42,7 +42,11 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'se
 app.config(['$routeProvider', '$locationProvider', 
   function($routeProvider, $locationProvider) {
     $routeProvider.
-      when('/business/:businessId', {
+      when('/business/create/new', {
+        templateUrl: '/views/partials/businessCreate.html',
+        controller: 'businessController'
+      })
+      .when('/business/:businessId', {
         templateUrl: '/views/partials/business.html',
         controller: 'businessController'
       })
