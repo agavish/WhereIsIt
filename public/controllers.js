@@ -1,9 +1,13 @@
 var controllers = angular.module('controllers', []);
 
-controllers.controller('userController', ['$scope', '$rootScope', function($scope, $rootScope) {
+controllers.controller('userController', ['$scope', '$rootScope', 'sessionService',  function($scope, $rootScope, sessionService) {
   
   // no need to hold a $scope.user variable, we get the user from the session.currentUser which is stored on the $rootScope
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
+
+  $scope.isLoggedIn = function() {
+    return sessionService.isLoggedIn();
+  }
 }]);
 
 controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce, $location, googleMapsApiService) {

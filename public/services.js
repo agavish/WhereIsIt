@@ -6,6 +6,9 @@ services.factory('sessionService', ['$rootScope', '$window', '$http',
     init: function () {
       this.resetSession();
     },
+    isLoggedIn: function() {
+      return this.isLoggedIn;
+    },
     resetSession: function() {
       this.currentUser = null;
       this.isLoggedIn = false;
