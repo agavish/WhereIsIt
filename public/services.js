@@ -44,7 +44,7 @@ services.factory('sessionService', ['$rootScope', '$window', '$http',
 
 services.factory('businessService', ['$http', function($http) {
   return {
-    createBusiness: function() {
+    createBusiness: function(business) {
       return $http({ method: 'POST', url: '/api/business/' , data: business });
     },
     getBusinessesByKeyword: function(keyword, position) {

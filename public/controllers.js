@@ -31,10 +31,18 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
       }); 
   }
 
-  $scope.createBusiness = function() {
-    businessService.createBusiness($scope.business)
+  $scope.createBusiness = function(business) {
+
+    business.address.coordinates = [];
+
+    var data = googleMapsApiService.getCoordinatesByAddress(business.address);
+    var location = data.results[0].geometry.location;
+    business.address.coordinates[0] = location.lng;
+    business.address.coordinates[1] = location.lat;
+
+    businessService.createBusiness(business)
     .success(function(data, status) {
-      $location.path('/business/' + $scope.business._id);
+      $location.path('/business/' + data._id);
     });
   }
 
@@ -51,6 +59,7 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         var location = data.results[0].geometry.location;
         $scope.business.address.coordinates[0] = location.lng;
         $scope.business.address.coordinates[1] = location.lat;
+        return;
       });
   }
 
@@ -81,7 +90,9 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     return $sce.trustAsResourceUrl(url);
   }
 
-  $scope.getBusinessById($scope.businessId);
+  if ($scope.businessId) {
+    $scope.getBusinessById($scope.businessId);
+  }
 }]);
 
 controllers.controller("searchController", ['$scope', '$rootScope', '$routeParams', '$location', 'businessService', function($scope, $rootScope, $routeParams, $location, businessService) {

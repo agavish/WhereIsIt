@@ -4,7 +4,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">פרטי העסק</h3>
-          <button type="button" class="btn btn-primary pull-left" ng-click="createBusiness()">
+          <button type="button" class="btn btn-primary pull-left" ng-click="createBusiness(business)">
               <i class="fa fa-check"></i>
           </button>
         </div>
@@ -13,86 +13,86 @@
             <li>
               <div class="business-profile-key">שם</div>
               <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.name }}" ng-model="business.name" required />
+                <input class="form-control" type="text" ng-model="business.name" required />
               </div>
             </li>
             <li>
               <div class="business-profile-key">קטגוריה</div>
               <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.businessType }}" ng-model="business.businessType" required />
+                <input class="form-control" type="text" ng-model="business.businessType" required />
               </div>
             </li>
-            <li ng-show="business.address.street || business.address.homeNumber || business.address.city">
+            <li>
               <div class="business-profile-key">כתובת</div>
               <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.address.city }}" ng-model="business.address.city" required ng-blur="getBusinessCoordinatesByAddress()" />
-                <input class="form-control" type="text" value="{{ business.address.street }}" ng-model="business.address.street" required ng-blur="getBusinessCoordinatesByAddress()" />
-                <input class="form-control" type="text" value="{{ business.address.homeNumber }}" ng-model="business.address.homeNumber" required ng-blur="getBusinessCoordinatesByAddress()" />
+                <input class="form-control" type="text" ng-model="business.address.city" required  />
+                <input class="form-control" type="text" ng-model="business.address.street" required  />
+                <input class="form-control" type="text" ng-model="business.address.homeNumber" required  />
               </div>
             </li>
-            <li ng-show="business.phone">
+            <li>
               <div class="business-profile-key">טלפון</div>
               <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.phone }}" ng-model="business.phone"/>
+                <input class="form-control" type="text" ng-model="business.phone"/>
               </div>
             </li>
-            <li ng-show="business.website">
+            <li>
               <div class="business-profile-key">אתר אינטרנט</div>
               <div class="business-profile-value ltr">
-                <input class="form-control" type="text" value="{{ business.website }}" ng-model="business.website"/>
+                <input class="form-control" type="text" ng-model="business.website"/>
               </div>
             </li>
-            <li ng-show="business.openHours && business.openHours.length > 0">
+            <li>
               <div class="business-profile-key">שעות פתיחה</div>
               <div class="business-profile-value">
                 <ul>
                   <li>
                     <div>1:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[0].startHour }}" ng-model="business.openHours.day[0].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[0].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[0].endHour }}" ng-model="business.openHours.day[0].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[0].endHour"/> 
                     </div>
                   </li>
                   <li>
                     <div>2:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[1].startHour }}" ng-model="business.openHours.day[1].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[1].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[1].endHour }}" ng-model="business.openHours.day[1].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[1].endHour"/> 
                     </div>
                   </li>
                   <li>
                     <div>3:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[2].startHour }}" ng-model="business.openHours.day[2].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[2].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[2].endHour }}" ng-model="business.openHours.day[2].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[2].endHour"/> 
                     </div>
                   </li>
                   <li>
                     <div>4:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[3].startHour }}" ng-model="business.openHours.day[3].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[3].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[3].endHour }}" ng-model="business.openHours.day[3].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[3].endHour"/> 
                     </div>
                   </li>
                   <li>
                     <div>5:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[4].startHour }}" ng-model="business.openHours.day[4].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[4].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[4].endHour }}" ng-model="business.openHours.day[4].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[4].endHour"/> 
                     </div>
                   </li>
                   <li>
                     <div>6:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[5].startHour }}" ng-model="business.openHours.day[5].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[5].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[5].endHour }}" ng-model="business.openHours.day[5].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[5].endHour"/> 
                     </div>
                   </li>
                   <li>
                     <div>7:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[6].startHour }}" ng-model="business.openHours.day[6].startHour"/>
+                     <input class="form-control" type="text" ng-model="business.openHours.day[6].startHour"/>
                       - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[6].endHour }}" ng-model="business.openHours.day[6].endHour"/> 
+                     <input class="form-control" type="text" ng-model="business.openHours.day[6].endHour"/> 
                     </div>
                   </li>
                 </ul>

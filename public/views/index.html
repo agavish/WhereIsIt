@@ -54,12 +54,14 @@
     <!-- END USER BAR -->
 
     <!-- ADD BUSINESS BAR -->
-    <div id="add-business-bar">
-       <a ng-show="session.isLoggedIn" href="#/business/create/new" class="btn btn-primary">
+    
+    <div id="add-business-bar" ng-show="session.isLoggedIn" ng-controller="businessController">
+       <a href="#/business/create/new" class="btn btn-primary">
         <i class="fa fa-plus"></i> 
-        <span class="text">הוסף עסק</span>
+        הוסף עסק
       </a>
     </div>
+    
     <!-- END ADD BUSINESS BAR-->
 
     <!-- SEARCH BY KEYWORD BAR -->
