@@ -6,12 +6,10 @@ services.factory('sessionService', ['$rootScope', '$window', '$http',
     init: function () {
       this.resetSession();
     },
-    isLoggedIn: function() {
-      return this.isLoggedIn;
-    },
     resetSession: function() {
       this.currentUser = null;
       this.isLoggedIn = false;
+      $rootScope.isLoggedIn = false;
     },
     facebookLogin: function() {
       var url = '/auth/facebook',
@@ -31,6 +29,7 @@ services.factory('sessionService', ['$rootScope', '$window', '$http',
     authSuccess: function(userData) {
       this.currentUser = userData;
       this.isLoggedIn = true;
+      $rootScope.isLoggedIn = true;
       $rootScope.$emit('session-changed');
     },
     authFailed: function() {
