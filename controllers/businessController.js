@@ -115,6 +115,7 @@ exports.findBusinessesByKeyword = function(req, res) {
               { latitude : myLatitude, longitude : myLongitude },
               { latitude : businessLatitude, longitude : businessLongitude }
             );
+            var distanceKilometers = 0;
             if (distanceMeters > 1000) {
               distanceKilometers = distanceMeters/1000;
               distanceKilometers = distanceKilometers.toFixed(2);
@@ -235,22 +236,31 @@ exports.updateBusinessById = function(req, res) {
       return res.send({ error: 'User not logged in, unauthorized' });
     }
 
-    return Business.find({"_id": req.params.id}, function(err, business) {
+    return Business.findOne({"_id": req.params.id}, function(err, business) {
 
-      if(!business || !business[0]) {
+      if(!business) {
         res.statusCode = 404;
         console.log("error: Business Not Found");
         return res.send({ error: 'Business Not found' });
       }
 
-      if (req.body.businessType != null) business[0].businessType = req.body.businessType;
-      if (req.body.phone != null) business[0].phone = req.body.phone;
-      if (req.body.address != null) business[0].address = req.body.address;
-      if (req.body.rate != null) {
+      if (req.body.businessType) business.businessType = req.body.businessType;
+      if (req.body.phone) business.phone = req.body.phone;
+      if (req.body.address) business.address = req.body.address;
+
+      // we override the openHours array completely.
+      // it is the client's responsibility to send the entire updated information.
+      if (req.body.openHours && req.body.openHours.length > 0) {
+        business.openHours = new Array();
+        for (var i=0; i < req.body.openHours.length; i++) {
+          business.openHours.addToSet(req.body.openHours[i]);
+        }
+      }
+      if (req.body.rate) {
 
         // check if current userId already rated the business
-        for(var i=0; i < business[0].rates.length; i++) {
-          if (business[0].rates[i].userId == req.body.userId) {
+        for(var i=0; i < business.rates.length; i++) {
+          if (business.rates[i].userId == req.body.userId) {
             res.statusCode = 500;
             console.log("error: user id %d already rated business id %d", req.body.userId, req.params.id);
             return res.send({ error: "User already rated that business" });
@@ -263,19 +273,19 @@ exports.updateBusinessById = function(req, res) {
           rate: req.body.rate
         }
 
-        business[0].rates.push(newRate);
+        business.rates.push(newRate);
 
         var totalRate = 0;
-        var numOfRates = business[0].rates.length;
+        var numOfRates = business.rates.length;
 
         for (var i = 0; i < numOfRates; i++) {
-            totalRate += business[0].rates[i].rate;
+            totalRate += business.rates[i].rate;
         }
 
-        business[0].averateRate = parseFloat(totalRate/numOfRates);
+        business.averateRate = parseFloat(totalRate/numOfRates);
       }
 
-      return business[0].save(function(err) {
+      return business.save(function(err) {
         if(!err) {
           console.log('Business Updated');
           return res.send({ status: 'OK', business:business });

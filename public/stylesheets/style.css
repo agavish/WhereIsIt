@@ -14,17 +14,6 @@ body {
   direction: rtl;
   margin: 0 auto;
 }
-/*
-  position: relative;
-  overflow: hidden;
-  background: #1d2b64;
-  background: radial-gradient(circle farthest-side at right bottom,#fefdfe 5%,#f8cdda 25%,#1d2b64 80%,#0e153a 98%);
-}
-
-body::after {
-  background: linear-gradient(rgba(14,21,58,0),rgba(14,21,58,0.1));
-}
-*/
 a {
   color: #0076be;
 }
@@ -39,6 +28,9 @@ button:hover, button:active, button:focus, button:visited,
 input:hover, input:active, input:focus, input:visited {
   outline: 0 !important;
   text-decoration: none;
+}
+select[disabled] {
+  background-color: #e8e8e8;
 }
 .ltr {
   direction: ltr;
@@ -351,7 +343,8 @@ button.search-nearest-button:hover {
 }
 #app-view {
   width: 100%;
-  float: left; 
+  float: left;
+  margin-bottom: 25px;
 }
 .business-profile {
   direction: rtl;
@@ -359,7 +352,7 @@ button.search-nearest-button:hover {
   margin: 13px auto 0;
 }
 .business-profile-properties {
-  display: table;
+  float: right;
 }
 .business-profile-properties > li {
   margin: 10px 0;
@@ -367,9 +360,14 @@ button.search-nearest-button:hover {
 .business-profile-key {
   font-weight: bold;
   vertical-align: top;
+  width: 100%;
+  float: right;
 }
 .business-profile-value {
   vertical-align: top;
+  width: 100%;
+  float: right;
+  margin: 2px 0 15px;
 }
 .business-profile-key:after {
   content: ':';
@@ -383,4 +381,23 @@ button.search-nearest-button:hover {
   text-align: center;
   display: block;
   margin: 5px auto;
+}
+.business-profile-form-inline .col {
+  padding-right: 3px;
+  padding-left: 3px;
+}
+.business-profile-form-inline .col:first-child {
+  padding-right: 0 !important;
+}
+.business-profile-form-inline .col:last-child {
+  padding-left: 0 !important;
+}
+.business-form-label {
+  display: inline-block;
+  width: 50px;
+}
+.business-profile-value input[type=checkbox] {
+  position: relative;
+  top: 2px;
+  margin: 0 0 0 7px;
 }

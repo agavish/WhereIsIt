@@ -73,3 +73,22 @@ app.config(['$routeProvider', '$locationProvider',
       // use the HTML5 History API
       $locationProvider.html5Mode(true);
   }]);
+
+app.directive('googleautocomplete', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, model) {
+      var options = {
+        types: [],
+        componentRestrictions: {}
+      };
+      scope.googlePlace = new google.maps.places.Autocomplete(element[0], options);
+
+      google.maps.event.addListener(scope.googlePlace, 'place_changed', function() {
+        scope.$apply(function() {
+          model.$setViewValue(element.val());
+        });
+      });
+    }
+  };
+});

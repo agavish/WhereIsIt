@@ -1,107 +1,84 @@
 <div class="business-profile">
-  <div class="row">
-    <div class="col-lg-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">פרטי העסק</h3>
-          <button type="button" class="btn btn-primary pull-left" ng-click="updateBusiness()">
-              <i class="fa fa-check"></i>
-          </button>
-        </div>
-        <div class="panel-body">
-          <ul class="business-profile-properties">
-            <li>
-              <div class="business-profile-key">שם</div>
-              <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.name }}" ng-model="business.name" required />
-              </div>
-            </li>
-            <li>
-              <div class="business-profile-key">קטגוריה</div>
-              <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.businessType }}" ng-model="business.businessType" required />
-              </div>
-            </li>
-            <li ng-show="business.address.street || business.address.homeNumber || business.address.city">
-              <div class="business-profile-key">כתובת</div>
-              <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.address.city }}" ng-model="business.address.city" required ng-blur="getBusinessCoordinatesByAddress()" />
-                <input class="form-control" type="text" value="{{ business.address.street }}" ng-model="business.address.street" required ng-blur="getBusinessCoordinatesByAddress()" />
-                <input class="form-control" type="text" value="{{ business.address.homeNumber }}" ng-model="business.address.homeNumber" required ng-blur="getBusinessCoordinatesByAddress()" />
-              </div>
-            </li>
-            <li ng-show="business.phone">
-              <div class="business-profile-key">טלפון</div>
-              <div class="business-profile-value">
-                <input class="form-control" type="text" value="{{ business.phone }}" ng-model="business.phone"/>
-              </div>
-            </li>
-            <li ng-show="business.website">
-              <div class="business-profile-key">אתר אינטרנט</div>
-              <div class="business-profile-value ltr">
-                <input class="form-control" type="text" value="{{ business.website }}" ng-model="business.website"/>
-              </div>
-            </li>
-            <li ng-show="business.openHours && business.openHours.length > 0">
-              <div class="business-profile-key">שעות פתיחה</div>
-              <div class="business-profile-value">
-                <ul>
-                  <li>
-                    <div>1:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[0].startHour }}" ng-model="business.openHours.day[0].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[0].endHour }}" ng-model="business.openHours.day[0].endHour"/> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>2:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[1].startHour }}" ng-model="business.openHours.day[1].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[1].endHour }}" ng-model="business.openHours.day[1].endHour"/> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>3:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[2].startHour }}" ng-model="business.openHours.day[2].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[2].endHour }}" ng-model="business.openHours.day[2].endHour"/> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>4:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[3].startHour }}" ng-model="business.openHours.day[3].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[3].endHour }}" ng-model="business.openHours.day[3].endHour"/> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>5:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[4].startHour }}" ng-model="business.openHours.day[4].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[4].endHour }}" ng-model="business.openHours.day[4].endHour"/> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>6:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[5].startHour }}" ng-model="business.openHours.day[5].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[5].endHour }}" ng-model="business.openHours.day[5].endHour"/> 
-                    </div>
-                  </li>
-                  <li>
-                    <div>7:
-                     <input class="form-control" type="text" value="{{ business.openHours.day[6].startHour }}" ng-model="business.openHours.day[6].startHour"/>
-                      - 
-                     <input class="form-control" type="text" value="{{ business.openHours.day[6].endHour }}" ng-model="business.openHours.day[6].endHour"/> 
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
+  <form ng-submit="updateBusiness()">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">פרטי העסק</h3>
+          </div>
+          <div class="panel-body">
+            <div class="col-lg-6">
+              <ul class="business-profile-properties">
+                <li>
+                  <div class="business-profile-key">שם</div>
+                  <div class="business-profile-value">
+                    <input class="form-control" type="text" value="{{ business.name }}" ng-model="business.name" placeholder="שם" required />
+                  </div>
+                </li>
+                <li>
+                  <div class="business-profile-key">קטגוריה</div>
+                  <div class="business-profile-value">
+                    <select class="form-control" value={{ business.businessType }} ng-model="business.businessType" placeholder="קטגוריה" required>
+                      <option ng-repeat="businessType in businessTypes" value="{{businessType}}">{{businessType}}</option>
+                    </select>
+                  </div>
+                </li>
+                <li>
+                  <div class="business-profile-key">כתובת</div>
+                  <div class="business-profile-value">
+                    <input class="form-control" type="text" value="{{ displayAddress }}" name="displayAddress" id="displayAddress" ng-model="displayAddress" placeholder="רחוב ומס' בית, עיר" required googleautocomplete />
+                  </div>
+                </li>
+                <li>
+                  <div class="business-profile-key">טלפון</div>
+                  <div class="business-profile-value">
+                    <input class="form-control" type="text" value="{{ business.phone }}" ng-model="business.phone" placeholder="טלפון" />
+                  </div>
+                </li>
+                <li>
+                  <div class="business-profile-key">אתר אינטרנט</div>
+                  <div class="business-profile-value">
+                    <input class="form-control" type="text" value="{{ business.website }}" ng-model="business.website" placeholder="אתר אינטרנט" />
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-5 col-lg-pull-1">
+              <ul class="business-profile-properties">
+                <li>
+                  <div class="business-profile-key">תיאור העסק</div>
+                  <div class="business-profile-value">
+                    <textarea class="form-control" ng-model="business.description" placeholder="תיאור העסק">{{ business.description }}</textarea>
+                  </div>
+                </li>
+                <li>
+                  <div class="business-profile-key">שעות פתיחה</div>
+                  <div class="business-profile-value">
+                    <ul>
+                      <li ng-repeat="(day, dayInfo) in displayOpenHours">
+                          <input type="hidden" value="{{day}}" />
+                          <input type="checkbox" value="{{ dayInfo.opened }}" ng-model="dayInfo.opened" ng-checked="dayInfo.opened" />
+                          <label class="control-label business-form-label">{{ dayInfo.displayDay }}</label>
+                          <span>פתיחה:</span>
+                          <select value="{{ dayInfo.startHour }}" ng-model="dayInfo.startHour" ng-disabled="!dayInfo.opened">
+                            <option ng-repeat="hour in hours" value="{{hour}}" ng-selected="dayInfo.startHour == hour">{{hour}}</option>
+                          </select>
+                          <span>סגירה:</span>
+                          <select value="{{ dayInfo.endHour }}" ng-model="dayInfo.endHour" ng-disabled="!dayInfo.opened">
+                            <option ng-repeat="hour in hours" value="{{hour}}" ng-selected="dayInfo.endHour == hour">{{hour}}</option>
+                          </select>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="col-lg-12">
+        <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fa fa-check"></i> שמור שינויים</button>
+      </div>
     </div>
-    
-  </div>
+  </form>
 </div>
