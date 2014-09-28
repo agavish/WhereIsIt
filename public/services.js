@@ -79,11 +79,11 @@ services.factory('userService', ['$http', function($http) {
         getUserById: function(id) {
             return $http({ method: 'GET', url: '/api/users/' + id });
         },
-        getLastVisitedBusiness: function(id) {
-            return $http({ method: 'GET', url: '/api/users/LastVisitedBusiness/' + id });
+        getLastVisitedBusinessesByUserId: function(id) {
+            return $http({ method: 'GET', url: '/api/users/last-visited-businesses/' + id });
         },
-        getFavoriteBusiness: function (id) {
-            return $http({ method: 'GET', url: '/api/users/FavoriteBusiness/' + id });
+        getFavoriteBusinessesByUserId: function (id) {
+            return $http({ method: 'GET', url: '/api/users/favorite-businesses/' + id });
         }
     };
 }]);

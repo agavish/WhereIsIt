@@ -20,8 +20,8 @@ var userSchema = new Schema({
   username:              { type: String },
   imagePath:             { type: String },
   reviews:               { type: [ Review.Schema ] },
-  favoriteBusiness:      [ {type:  Schema.ObjectId , ref: 'Business' }],
-  lastVisitedBusiness:   [ {type:  Schema.ObjectId , ref: 'Business' }]
+  favoriteBusinesses:    [ { type:  Schema.ObjectId , ref: 'Business' } ],
+  lastVisitedBusinesses: [ { type:  Schema.ObjectId , ref: 'Business' } ]
 });
 
 userSchema.statics.deleteReviewById = function (userId,reviewToRemove,callback) {

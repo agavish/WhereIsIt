@@ -36,20 +36,20 @@ exports.createNewUser = function(req, res) {
   };
 
 
-exports.getFavoriteBusinessByUserId = function(req,res) {
-    console.log("GET - /user/FavoriteBusiness/");
+exports.findFavoriteBusinessesByUserId = function(req,res) {
+    console.log("GET - /users/favorite-businesses/:id");
 
     return User
         .findOne({"_id": req.params.id})
-        .populate('favoriteBusiness')
+        .populate('favoriteBusinesses')
         .exec( function (err,user) {
-            if(!user || !user.favoriteBusiness) {
+            if(!user || !user.favoriteBusinesses) {
                 res.statusCode = 404;
                 return res.send({ error: 'Reviews Not found' });
             }
 
             if(!err) {
-                return res.send(user.favoriteBusiness);
+                return res.send(user.favoriteBusinesses);
             } else {
                 res.statusCode = 500;
                 console.log('Internal error(%d): %s', res.statusCode, err.message);
@@ -58,20 +58,20 @@ exports.getFavoriteBusinessByUserId = function(req,res) {
         });
 };
 
-exports.getLastVisitedBusinessUserId = function(req,res) {
-    console.log("GET - /users/LastVisitedBusiness/");
+exports.findLastVisitedBusinessesByUserId = function(req,res) {
+    console.log("GET - /users/last-visited-businesses/:id");
 
     return User
         .findOne({"_id": req.params.id})
-        .populate('lastVisitedBusiness')
+        .populate('lastVisitedBusinesses')
         .exec( function (err,user) {
-            if(!user || !user.lastVisitedBusiness) {
+            if(!user || !user.lastVisitedBusinesses) {
                 res.statusCode = 404;
-                return res.send({ error: 'Reviews Not found' });
+                return res.send({ error: 'User last businesses not found' });
             }
 
             if(!err) {
-                return res.send(user.lastVisitedBusiness);
+                return res.send(user.lastVisitedBusinesses);
             } else {
                 res.statusCode = 500;
                 console.log('Internal error(%d): %s', res.statusCode, err.message);
@@ -226,7 +226,7 @@ exports.deleteUser = function(req, res) {
   };
 
 var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
-  var lastVisitedArray = user.lastVisitedBusiness;
+  var lastVisitedArray = user.lastVisitedBusinesses;
 
   // if the business is already in the last visited businesses, do nothing
   if (lastVisitedArray && lastVisitedArray.indexOf(lastVisitedBusinessId) > -1) {
@@ -243,7 +243,7 @@ var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
   var castedBusinessObjectId = mongoose.Types.ObjectId(lastVisitedBusinessId);
   lastVisitedArray.push(castedBusinessObjectId);
 
-  user.lastVisitedBusiness = lastVisitedArray;
+  user.lastVisitedBusinesses = lastVisitedArray;
   user.save(function(err) {
     if(err) {
       console.log('Error while updating user: ' + err);
@@ -265,11 +265,11 @@ exports.updateUserLastVisitedBusiness = function(userId, businessId) {
 };
 
 var addBusinessToFavorites = function (user,id) {
-  var businessArray = user.favoriteBusiness;
-  if (businessArray.indexOf(id) > -1) {
-    businessArray.remove(id);
+  var businessesArray = user.favoriteBusinesses;
+  if (businessesArray.indexOf(id) > -1) {
+    businessesArray.remove(id);
   } else {
-    businessArray.push(id);
+    businessesArray.push(id);
   }
-  user.favoriteBusiness = businessArray
+  user.favoriteBusinesses = businessesArray;
 };
