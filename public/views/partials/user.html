@@ -9,9 +9,6 @@
                         <strong>אימייל</strong><br>
                         <a href="mailto:#">{{session.currentUser.email}}</a>
                     </address>
-                    <btn type="button" class="btn btn-default btn-lg editButton">
-                        <span class="glyphicon glyphicon-edit"></span> ערוך פרטי משתמש
-                    </btn>
                 </div>
             </div>
         </div>
@@ -24,7 +21,7 @@
             <div class="col-md-12" align="right">
 
                 <ol>
-                    <li ng-repeat="bis in session.currentUser.lastVisitedBusiness">
+                    <li ng-repeat="bis in lastVisited track by $index">
                         <div>{{bis.name}}</div>
                     </li>
                 </ol>
@@ -38,7 +35,7 @@
             <div class="panel-body" >
                 <div class="col-md-12" align="right">
                     <ol>
-                        <li ng-repeat="bis in session.currentUser.favoriteBusiness">
+                        <li ng-repeat="bis in favoriteBusiness track by $index">
                             <div>{{bis.name}}</div>
                         </li>
                     </ol>

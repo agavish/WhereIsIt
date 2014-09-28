@@ -35,6 +35,51 @@ exports.createNewUser = function(req, res) {
     });
   };
 
+
+exports.getFavoriteBusinessByUserId = function(req,res) {
+    console.log("GET - /user/FavoriteBusiness/");
+
+    return User
+        .findOne({"_id": req.params.id})
+        .populate('favoriteBusiness')
+        .exec( function (err,user) {
+            if(!user || !user.favoriteBusiness) {
+                res.statusCode = 404;
+                return res.send({ error: 'Reviews Not found' });
+            }
+
+            if(!err) {
+                return res.send(user.favoriteBusiness);
+            } else {
+                res.statusCode = 500;
+                console.log('Internal error(%d): %s', res.statusCode, err.message);
+                return res.send({ error: 'Server error' });
+            }
+        });
+};
+
+exports.getLastVisitedBusinessUserId = function(req,res) {
+    console.log("GET - /users/LastVisitedBusiness/");
+
+    return User
+        .findOne({"_id": req.params.id})
+        .populate('lastVisitedBusiness')
+        .exec( function (err,user) {
+            if(!user || !user.lastVisitedBusiness) {
+                res.statusCode = 404;
+                return res.send({ error: 'Reviews Not found' });
+            }
+
+            if(!err) {
+                return res.send(user.lastVisitedBusiness);
+            } else {
+                res.statusCode = 500;
+                console.log('Internal error(%d): %s', res.statusCode, err.message);
+                return res.send({ error: 'Server error' });
+            }
+        });
+};
+
   /**
    * Find and retrieves all users
    * @param {Object} req HTTP request object.

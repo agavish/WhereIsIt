@@ -9,6 +9,8 @@ var userController = require('../controllers/userController.js');
 
 router.get('/api/users', userController.findAllUsers);
 router.get('/api/users/:id', userController.findUserById);
+router.get('/api/users/FavoriteBusiness',userController.getFavoriteBusinessByUserId)
+router.get('/api/users/LastVisitedBusiness',userController.getLastVisitedBusinessUserId)
 router.put('/api/users/:id', userController.updateUserById);
 router.post('/api/users', userController.createNewUser);
 router.delete('/api/users/:id', userController.deleteUser);
