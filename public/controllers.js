@@ -10,6 +10,7 @@ controllers.controller('userController', ['$scope', '$rootScope','userService', 
         $rootScope.loading = true;
         userService.getLastVisitedBusiness($rootScope.session.currentUser._id)
             .success(function(data, status) {
+                console.log(data)
                 $scope.lastVisited = data;
                 $rootScope.loading = false;
                 return;
@@ -24,6 +25,7 @@ controllers.controller('userController', ['$scope', '$rootScope','userService', 
         $rootScope.loading = true;
         userService.getFavoriteBusiness($rootScope.session.currentUser._id)
             .success(function(data, status) {
+                console.log(data)
                 $scope.favoriteBusiness = data;
                 $rootScope.loading = false;
                 return;
