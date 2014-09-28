@@ -1,8 +1,49 @@
 <div class="user-profile">
-  <ul>
-    <li>{{session.currentUser.firstname}}</li>
-    <li>{{session.currentUser.lastname}}</li>
-    <li>{{session.currentUser.email}}</li>
-    <li><img ng-src="{{session.currentUser.imagePath}}" /></li>
-  </ul>
+    <div class = "row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class = "col-md-12" align="right">
+                    <img src="{{session.currentUser.imagePath}}" class="img-circle">
+                    <address>
+                        <strong>אימייל</strong><br>
+                        <a href="mailto:#">{{session.currentUser.email}}</a>
+                    </address>
+                    <btn type="button" class="btn btn-default btn-lg editButton">
+                        <span class="glyphicon glyphicon-edit"></span> ערוך פרטי משתמש
+                    </btn>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading" align="right"><strong>עסקים אחרונים שנצפו</strong><br></div>
+        <div class="panel-body">
+            <div class="col-md-12" align="right">
+
+                <ol>
+                    <li ng-repeat="bis in session.currentUser.lastVisitedBusiness">
+                        <div>{{bis.name}}</div>
+                    </li>
+                </ol>
+            </div>
+         </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" align="right">
+                <strong>מועדפים</strong><br>
+            </div>
+            <div class="panel-body" >
+                <div class="col-md-12" align="right">
+                    <ol>
+                        <li ng-repeat="bis in session.currentUser.favoriteBusiness">
+                            <div>{{bis.name}}</div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

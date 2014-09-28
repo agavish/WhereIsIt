@@ -186,10 +186,11 @@ exports.deleteReview = function(req, res) {
             res.result = status;
             res.send({error: 'Failed to remove review from user'})
 
-        } else if (user) { // we have a user
+        } else if (user) { // we have a user - > delete from business
             Business.deleteReviewById(businessid, reviewToRemove._id, deleteReviewFromBusinessCallBackFunction);
 
-        } else if (!user) { // in case this review was written by user that was removed
+        } else if (!user) { // in case this review was written by user that was removed - > delete from business
+
             Business.deleteReviewById(businessid, reviewToRemove._id, deleteReviewFromBusinessCallBackFunction);
         }
     };

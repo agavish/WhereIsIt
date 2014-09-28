@@ -4,6 +4,7 @@ controllers.controller('userController', ['$scope', '$rootScope', function($scop
   
   // no need to hold a $scope.user variable, we get the user from the session.currentUser which is stored on the $rootScope
   $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
+
 }]);
 
 controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce, $location, googleMapsApiService) {
