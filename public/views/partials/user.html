@@ -1,48 +1,48 @@
 <div class="user-profile">
-  <div class="row">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <div class="col-md-12" align="right">
-          <img src="{{session.currentUser.imagePath}}" class="img-circle">
-          <address>
-            <strong>אימייל</strong>
-            <br>
-            <a href="mailto:{{session.currentUser.email}}">{{session.currentUser.email}}</a>
-          </address>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-md-12" align="right">
+                    <img src="{{session.currentUser.imagePath}}" class="img-circle">
+                    <address>
+                        <strong>אימייל</strong>
+                        <br>
+                        <a href="mailto:{{session.currentUser.email}}">{{session.currentUser.email}}</a>
+                    </address>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="panel panel-default">
-      <div class="panel-heading">עסקים אחרונים שנצפו</div>
-      <div class="panel-body">
-        <div class="col-md-12">
-          <ol ng-show="lastVisitedBusinesses && lastVisitedBusinesses.length > 0">
-            <li ng-repeat="lastVisitedBusiness in lastVisitedBusinesses">
-              <div>{{lastVisitedBusiness.name}}</div>
-            </li>
-          </ol>
-          <div ng-show="lastVisitedBusinesses && lastVisitedBusinesses.length == 0">
-            <span class="empty-panel text-muted">עוד לא נצפו עסקים</span>
-          </div>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">עסקים אחרונים שנצפו</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <ol ng-show="lastVisitedBusinesses && lastVisitedBusinesses.length > 0">
+                        <li ng-repeat="lastVisitedBusiness in lastVisitedBusinesses">
+                            <div><a href="#/business/{{lastVisitedBusiness._id}}">{{lastVisitedBusiness.name}}</a></div>
+                        </li>
+                    </ol>
+                    <div ng-show="lastVisitedBusinesses && lastVisitedBusinesses.length == 0">
+                        <span class="empty-panel text-muted">עוד לא נצפו עסקים</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">מועדפים</div>
-      <div class="panel-body">
-        <div class="col-md-12" align="right">
-          <ol ng-show="favoriteBusinesses && favoriteBusinesses.length > 0">
-            <li ng-repeat="favoriteBusiness in favoriteBusinesses">
-              <div>{{favoriteBusiness.name}}</div>
-            </li>
-          </ol>
-          <div ng-show="favoriteBusinesses && favoriteBusinesses.length == 0">
-            <span class="empty-panel text-muted">אין עדיין עסקים מועדפים</span>
-          </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">מועדפים</div>
+            <div class="panel-body">
+                <div class="col-md-12" align="right">
+                    <ol ng-show="favoriteBusinesses && favoriteBusinesses.length > 0">
+                        <li ng-repeat="favoriteBusiness in favoriteBusinesses">
+                            <div><a href="#/business/{{favoriteBusiness._id}}">{{favoriteBusiness.name}}</a></div>
+                        </li>
+                    </ol>
+                    <div ng-show="favoriteBusinesses && favoriteBusinesses.length == 0">
+                        <span class="empty-panel text-muted">אין עדיין עסקים מועדפים</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
