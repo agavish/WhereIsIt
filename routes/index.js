@@ -13,6 +13,7 @@ router.get('/api/users/favorite-businesses/:id', userController.findFavoriteBusi
 router.get('/api/users/last-visited-businesses/:id',userController.findLastVisitedBusinessesByUserId)
 router.put('/api/users/:id', userController.updateUserById);
 router.post('/api/users', userController.createNewUser);
+router.post('/api/users/add-favorite-businesses/:id',userController.addBusinessToFavorites)
 router.delete('/api/users/:id', userController.deleteUser);
 
 router.get('/api/business/nearest/:coordinates', businessController.findNearest);

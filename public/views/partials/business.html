@@ -7,6 +7,9 @@
           <a class="btn btn-primary pull-left" href="#/business/{{business._id}}/update" ng-show="isLoggedIn">
               <i class="fa fa-pencil"></i>
           </a>
+          <button type="button" class="btn btn-primary pull-left" onclick="addBusinessToFavorites(currentUser,business._id)">
+              <span class="glyphicon glyphicon-star-empty"></span>
+          </button>
         </div>
         <div class="panel-body">
           <ul class="business-profile-properties">

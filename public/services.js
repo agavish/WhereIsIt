@@ -70,6 +70,9 @@ services.factory('businessService', ['$http', function($http) {
         },
         updateBusinessById: function(business) {
             return $http({ method: 'PUT', url: '/api/business/' + business._id  , data: business });
+        },
+        addToFavorites: function (user,businessId) {
+            return $http({})
         }
     };
 }]);
