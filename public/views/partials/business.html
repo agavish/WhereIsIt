@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="col-lg-8">
-      <div class="panel panel-default">
+      <div class="panel panel-default" ng-show="hasPosition()">
         <div class="panel-heading">
           <h3 class="panel-title">איך מגיעים?</h3>
         </div>
@@ -72,10 +72,6 @@
           <div class="business-map-directions" googledirections ng-model="business.address.coordinates"></div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-12">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">ביקורות</h3>
