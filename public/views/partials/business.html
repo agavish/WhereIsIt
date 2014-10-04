@@ -4,12 +4,6 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">פרטי העסק</h3>
-          <a class="btn btn-primary pull-left" href="#/business/{{business._id}}/update" ng-show="isLoggedIn">
-              <i class="fa fa-pencil"></i>
-          </a>
-          <button type="button" class="btn btn-primary pull-left" onclick="addBusinessToFavorites(currentUser,business._id)">
-              <span class="glyphicon glyphicon-star-empty"></span>
-          </button>
         </div>
         <div class="panel-body">
           <ul class="business-profile-properties">
@@ -47,6 +41,27 @@
           </ul>
         </div>
       </div>
+      <div class="panel panel-default" ng-show="session.isLoggedIn">
+        <div class="panel-body">
+          <ul class="business-actions">
+            <li>
+              <a href="#/business/{{business._id}}/update" class="btn btn-primary btn-lg btn-block">
+                <i class="fa fa-pencil"></i> ערוך פרטי עסק
+              </a>
+            </li>
+            <li>
+              <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="addBusinessToFavorites()">
+                <i class="fa fa-star {{favoriteBusiness ? 'business-favorite' : ''}}"></i> {{favoriteBusiness ? 'הסר מהמועדפים' : 'הוסף למועדפים'}}
+              </button>
+            </li>
+            <li>
+              <a href="#/business/create/new" class="btn btn-primary btn-lg btn-block">
+                <i class="fa fa-plus"></i> הוסף עסק חדש
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="col-lg-8">
       <div class="panel panel-default">
@@ -54,7 +69,7 @@
           <h3 class="panel-title">איך מגיעים?</h3>
         </div>
         <div class="panel-body">
-          <iframe class="business-profile-directions" ng-src="{{ getGoogleMapsEmbedURL() }}"></iframe>
+          <div class="business-map-directions" googledirections ng-model="business.address.coordinates"></div>
         </div>
       </div>
     </div>
@@ -72,7 +87,7 @@
             </li>
           </ul>
           <div ng-show="business.reviews && business.reviews.length == 0">
-            <span class="empty-panel text-muted">לעסק זה עוד אין ביקורות</span>
+            <span class="empty-panel text-muted">לעסק זה אין עדיין ביקורות</span>
           </div>
         </div>
       </div>

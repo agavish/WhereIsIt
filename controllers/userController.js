@@ -142,21 +142,21 @@ exports.updateUserById = function(req, res) {
       return res.send({ error: 'User id does not match session user id, permission denied' });
     }
 
-    return User.find({_id: req.params.id}, function(err, user) {
+    return User.findOne({_id: req.params.id}, function(err, user) {
 
-      if(!user || !user[0]) {
+      if(!user) {
         res.statusCode = 404;
         console.log("error: User Not Found");
         return res.send({ error: 'User Not found' });
       }
 
-      if (req.body.firstname != null) user[0].firstname = req.body.firstname;
-      if (req.body.lastname != null) user[0].lastname = req.body.lastname;
-      if (req.body.password != null) user[0].password = req.body.password;
-      if (req.body.favoriteBusinessID != null) addBusinessToFavorites(user[0],req.body.favoriteBusinessID);
-      if (req.body.lastVisitedBusinessId != null) addLastVisitedBusiness(user[0],req.body.lastVisitedBusinessId);
+      if (req.body.firstname != null) user.firstname = req.body.firstname;
+      if (req.body.lastname != null) user.lastname = req.body.lastname;
+      if (req.body.password != null) user.password = req.body.password;
+      if (req.body.favoriteBusinessId != null) addBusinessToFavorites(user,req.body.favoriteBusinessId);
+      if (req.body.lastVisitedBusinessId != null) addLastVisitedBusiness(user,req.body.lastVisitedBusinessId);
 
-      return user[0].save(function(err) {
+      return user.save(function(err) {
         if(!err) {
           console.log('User Updated');
           return res.send({ status: 'OK', user:user });
@@ -198,16 +198,16 @@ exports.deleteUser = function(req, res) {
       return res.send({ error: 'User id does not match session user id, permission denied' });
     }
     
-    return User.find({_id: req.params.id}, function(err, user) {
+    return User.findOne({_id: req.params.id}, function(err, user) {
       
-      if(!user || !user[0]) {
+      if(!user) {
         res.statusCode = 404;
         console.log("error: User Not Found");
         return res.send({ error: 'User Not found' });
       }
 
       var userToRemoveId = user._id;
-      return user[0].remove(function(err) {
+      return user.remove(function(err) {
         if(!err) {
             //remove all reviews of this user from db
 
@@ -255,21 +255,21 @@ var addLastVisitedBusiness = function (user,lastVisitedBusinessId) {
 };
 
 exports.updateUserLastVisitedBusiness = function(userId, businessId) {
-  var user = User.find({"_id": userId}, function (err, user) {
-    if (err || !user || !user[0]) {
+  var user = User.findOne({"_id": userId}, function (err, user) {
+    if (err || !user) {
       return null;
     } else {
-      addLastVisitedBusiness(user[0], businessId);
+      addLastVisitedBusiness(user, businessId);
     }
   });
 };
 
-var addBusinessToFavorites = function (user,id) {
+var addBusinessToFavorites = function (user, businessId) {
   var businessesArray = user.favoriteBusinesses;
-  if (businessesArray.indexOf(id) > -1) {
-    businessesArray.remove(id);
+  if (businessesArray.indexOf(businessId) > -1) {
+    businessesArray.remove(businessId);
   } else {
-    businessesArray.push(id);
+    businessesArray.push(businessId);
   }
   user.favoriteBusinesses = businessesArray;
 };

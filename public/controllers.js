@@ -43,10 +43,9 @@ controllers.controller('userController', ['$scope', '$rootScope', 'userService',
   }
 ]);
 
-controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$sce', '$location', 'googleMapsApiService', function($scope, $rootScope, $routeParams, businessService, reviewService, $sce, $location, googleMapsApiService) {
+controllers.controller('businessController', ['$scope', '$rootScope', '$routeParams', 'businessService', 'reviewService', '$location', 'userService', function($scope, $rootScope, $routeParams, businessService, reviewService, $location, userService) {
   $scope.businessId = $routeParams.businessId;
   $scope.business = {};
-  $scope.googlePlace;
   $scope.displayAddress = "";
   $scope.displayOpenHours = {
     1: { opened: true, displayDay: "ראשון", startHour: "09:00", endHour: "19:00"},
@@ -57,13 +56,25 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     6: { opened: true, displayDay: "שישי", startHour: "09:00", endHour: "19:00"},
     7: { opened: true, displayDay: "שבת", startHour: "09:00", endHour: "19:00"}
   };
-
   $scope.displayDay={1:"א",2:"ב",3:"ג",4:"ד",5:"ה",6:"ו",7:"ש"};
   $scope.businessTypes=["אוניברסיטה","אצטדיון","באולינג","בית חולים","בית מרקחת","בית משפט","בית ספר","בית קולנוע","בית קפה","בנק","בריאות","גלריה לאומנות","גן/פארק","דואר","חדר כושר","חנות","חנות אופניים","חנות אלכוהול","חנות אלקטרוניקה","חנות בגדים","חנות כלבו","חנות לבית","חנות לחומרי בניין","חנות לחיות מחמד","חנות נוחות","חנות נעליים","חנות ספרים","חנות פרחים","חנות רהיטים","חנות תכשיטים","חנייה","חשמלאים","כספומט","לינה ואירוח","מאפייה","מועדון לילה","מזון","מכבסה","מנעולנים","מסעדה","משטרה","משלוחי אוכל","סוחר רכב","סוכנות ביטוח","סוכנות נדלן","סוכנות נסיעות","סופרמרקט","סלון יופי","ספרייה","עורכי דין","פאב","פיזיותרפיסט","פיננסים","צבעים","קבלן","קמפינג","קניון/מרכז מסחרי","רואה חשבון","רופא","רופא שיניים","שטיפת מכוניות","שרברב","תחנת דלק","תחנת מוניות","תחנת רכבת","תיקון מכוניות/מוסך"];
   $scope.hours=["00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30","06:00","06:30","07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"];
+  $scope.favoriteBusiness = false;
 
-  $scope.addBusinessToFavorites = function(businessId) {
-
+  $scope.addBusinessToFavorites = function() {
+    var userId = $rootScope.session.currentUser._id;
+    var businessId = $scope.businessId;
+    userService.addBusinessToFavorites(userId, businessId)
+    .success(function(data, status) {
+        $rootScope.session.currentUser = data.user;
+        var currentFavorite = $scope.favoriteBusiness;
+        if (currentFavorite) {
+          $scope.favoriteBusiness = false;
+        } else {
+          $scope.favoriteBusiness = true;
+        }
+        return;
+      });
   }
 
   $scope.getBusinessById = function(businessId) {
@@ -72,8 +83,9 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     .success(function(data, status) {
         $scope.business = data;
         $rootScope.title = $scope.business.name;
-        $scope.setDisplayAddress();
-        $scope.setDisplayOpenHours();
+        $scope.initDisplayAddress();
+        $scope.initDisplayOpenHours();
+        $scope.initFavoriteBusiness();
         $rootScope.loading = false;
         $scope.getReviewsByBusinessId(businessId);
         return;
@@ -114,16 +126,6 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     });
   }
 
-  $scope.getBusinessCoordinatesByAddress = function() {
-    googleMapsApiService.getCoordinatesByAddress($scope.business.address)
-      .success(function(data,status) {
-        var location = data.results[0].geometry.location;
-        $scope.business.address.coordinates[0] = location.lng;
-        $scope.business.address.coordinates[1] = location.lat;
-        return;
-      });
-  }
-
  $scope.getReviewsByBusinessId = function(businessId) {
     $rootScope.loading = true;
     reviewService.getReviewsByBusinessId(businessId)
@@ -137,18 +139,6 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $rootScope.loading = false;
         return;
       });
-  }
-
-  $scope.getGoogleMapsEmbedURL = function() {
-    var url = "";
-    if ($rootScope.position) {
-      url += "https://www.google.com/maps/embed/v1/directions?";
-      url += "key=AIzaSyDWApw_dyQHYl7KNAN-KbYNrQUgRgY83sk";
-      url += "&origin=" + $rootScope.position.latitude + "," + $rootScope.position.longitude;
-      url += "&destination=" + $scope.business.address.coordinates[1] + "," + $scope.business.address.coordinates[0];
-      url += "&language=he";
-    }
-    return $sce.trustAsResourceUrl(url);
   }
 
   $scope.$watch('displayAddress', function() {
@@ -187,13 +177,13 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     }
   }
 
-  $scope.setDisplayAddress = function() {
+  $scope.initDisplayAddress = function() {
     $scope.displayAddress = $scope.business.address.street ? $scope.business.address.street : "";
     $scope.displayAddress += $scope.business.address.homeNumber ? " " + $scope.business.address.homeNumber : "";
     $scope.displayAddress += $scope.business.address.city ? " " + $scope.business.address.city : "";
   }
 
-  $scope.setDisplayOpenHours = function() {
+  $scope.initDisplayOpenHours = function() {
     // initialize all days to closed
     for (day in $scope.displayOpenHours) {
       $scope.displayOpenHours[day].opened = false;
@@ -207,7 +197,16 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.displayOpenHours[day].startHour = openHours[i].startHour;
         $scope.displayOpenHours[day].endHour = openHours[i].endHour;
       }
-      $scope.$apply();
+    }
+  }
+
+  $scope.initFavoriteBusiness = function() {
+    if ($rootScope.session.isLoggedIn) {
+      var user = $rootScope.session.currentUser;
+      var favoriteBusinesses = user.favoriteBusinesses;
+      if (favoriteBusinesses && favoriteBusinesses.indexOf($scope.businessId) > -1) {
+        $scope.favoriteBusiness = true;
+      }
     }
   }
 
@@ -291,7 +290,7 @@ controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', 
     var currentPath = $location.path();
     // bypass angular's route provider limitation:
     // by default, the route provider will be invoked only when the URL changes.
-    // if a user is already at /search/nearest, and he clicks the button again,
+    // if a user is already at /search/keyword, and he clicks the button again,
     // the route provider will not be invoked again, and there won't be another query.
     // this addition tells angular that a successfull URL change has occured, and so it will invoke 
     // the route provider again.
