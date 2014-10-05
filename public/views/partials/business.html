@@ -69,7 +69,13 @@
           <h3 class="panel-title">איך מגיעים?</h3>
         </div>
         <div class="panel-body">
-          <div class="business-map-directions" googledirections ng-model="business.address.coordinates"></div>
+          <div id="google-directions-map" class="business-map-directions" ng-model="business.address.coordinates"></div>
+          <div class="google-directions-travel-modes">
+            <button type="button" class="google-directions-travel-mode-btn btn btn-default" ng-click="getDirections('DRIVING')"><i class="fa fa-car fa-lg"></i> <span class="google-directions-travel-mode-btn-text">ברכב</span></button>
+            <button type="button" class="google-directions-travel-mode-btn btn btn-default" ng-click="getDirections('WALKING')"><i class="fa fa-male fa-lg"></i> <span class="google-directions-travel-mode-btn-text">ברגל</span></button>
+            <button type="button" class="google-directions-travel-mode-btn btn btn-default" ng-click="getDirections('TRANSIT')"><i class="fa fa-bus fa-lg"></i> <span class="google-directions-travel-mode-btn-text">בתחב"צ</span></button>
+          </div>
+          <div id="google-directions-panel"></div>
         </div>
       </div>
       <div class="panel panel-default">

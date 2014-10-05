@@ -60,6 +60,7 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
   $scope.businessTypes=["אוניברסיטה","אצטדיון","באולינג","בית חולים","בית מרקחת","בית משפט","בית ספר","בית קולנוע","בית קפה","בנק","בריאות","גלריה לאומנות","גן/פארק","דואר","חדר כושר","חנות","חנות אופניים","חנות אלכוהול","חנות אלקטרוניקה","חנות בגדים","חנות כלבו","חנות לבית","חנות לחומרי בניין","חנות לחיות מחמד","חנות נוחות","חנות נעליים","חנות ספרים","חנות פרחים","חנות רהיטים","חנות תכשיטים","חנייה","חשמלאים","כספומט","לינה ואירוח","מאפייה","מועדון לילה","מזון","מכבסה","מנעולנים","מסעדה","משטרה","משלוחי אוכל","סוחר רכב","סוכנות ביטוח","סוכנות נדלן","סוכנות נסיעות","סופרמרקט","סלון יופי","ספרייה","עורכי דין","פאב","פיזיותרפיסט","פיננסים","צבעים","קבלן","קמפינג","קניון/מרכז מסחרי","רואה חשבון","רופא","רופא שיניים","שטיפת מכוניות","שרברב","תחנת דלק","תחנת מוניות","תחנת רכבת","תיקון מכוניות/מוסך"];
   $scope.hours=["00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30","06:00","06:30","07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"];
   $scope.favoriteBusiness = false;
+  var myPosition = $rootScope.position;
 
   $scope.addBusinessToFavorites = function() {
     var userId = $rootScope.session.currentUser._id;
@@ -223,6 +224,66 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.business.openHours.push(dayOpenHours);
       }
     }
+  }
+
+  $scope.$watch('business.address.coordinates', function(oldCoordinates, newCoordinates) {
+    if (oldCoordinates || newCoordinates) {
+      $scope.getDirections('WALKING');
+    }
+  });
+
+  $scope.getDirections = function(travelMode) {
+    var start = myPosition.latitude + "," + myPosition.longitude;
+    var end = $scope.business.address.coordinates[1] + "," + $scope.business.address.coordinates[0];
+    var request = {
+      origin: start,
+      destination: end,
+      travelMode: google.maps.TravelMode[travelMode]
+    };
+    directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+      }
+    });
+  }
+
+  // private function for the google maps directions component
+  function getPosition() {
+    if ("geolocation" in navigator) {
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      navigator.geolocation.getCurrentPosition(success, null, options);
+    }
+  }
+
+  // private function for the google maps directions component
+  function success(position) {
+    myPosition = position.coords;
+    googleDirectionsInit();
+  }
+
+  // private function for the google maps directions component
+  function googleDirectionsInit() {
+    var mapOptions = {
+      zoom: 18,
+      center: new google.maps.LatLng(myPosition.latitude, myPosition.longitude)
+    };
+    $scope.googleMap = new google.maps.Map(document.getElementById('google-directions-map'), mapOptions);
+    directionsDisplay.setMap($scope.googleMap);
+    var directionsPanel = document.getElementById('google-directions-panel');
+    directionsDisplay.setPanel(directionsPanel);
+  }
+
+  // init the google maps directions component
+  var directionsService = new google.maps.DirectionsService();
+  var directionsDisplay = new google.maps.DirectionsRenderer();
+  if (!myPosition) {
+    getPosition();        
+  } else {
+    googleDirectionsInit();
   }
 
   var currentPath = $location.path();

@@ -1,7 +1,8 @@
 /**
  * Created by avi on 8/8/2014.
  */
-var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'services', 'controllers']).run(['$rootScope', '$window', 'sessionService', 'geoLocationService', function ($rootScope, $window, sessionService, geoLocationService) {
+var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'services', 'controllers'])
+                    .run(['$rootScope', '$window', 'sessionService', 'geoLocationService', function ($rootScope, $window, sessionService, geoLocationService) {
 
   // these rootScope variables serves all inner controllers and views
   $rootScope.session = sessionService;
@@ -91,69 +92,6 @@ app.directive('googleautocomplete', function() {
           model.$setViewValue(element.val());
         });
       });
-    }
-  };
-});
-
-app.directive('googledirections', function() {
-  return {
-    require: 'ngModel',
-    link: function(scope, element, attrs, model) {
-      var directionsService = new google.maps.DirectionsService();
-      var directionsDisplay = new google.maps.DirectionsRenderer();
-      var myPosition = scope.$root.position;
-      if (!myPosition) {
-        getPosition();        
-      } else {
-        init();
-      }
-
-      function getPosition() {
-        if ("geolocation" in navigator) {
-          var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-          };
-          navigator.geolocation.getCurrentPosition(success, null, options);
-        }
-      }
-
-      function success(position) {
-        myPosition = position.coords;
-        init();
-      }
-
-      function init() {
-        var mapOptions = {
-          zoom: 18,
-          center: new google.maps.LatLng(myPosition.latitude, myPosition.longitude)
-        };
-        scope.googleMap = new google.maps.Map(element[0], mapOptions);
-        scope.googleDirections = {};
-        directionsDisplay.setMap(scope.googleMap);
-      }
-
-      scope.$watch('business.address.coordinates', function(oldCoordinates, newCoordinates) {
-        if (oldCoordinates || newCoordinates) {
-          getDirections();
-        }
-      });
-
-      function getDirections() {
-        var start = myPosition.latitude + "," + myPosition.longitude;
-        var end = scope.business.address.coordinates[1] + "," + scope.business.address.coordinates[0];
-        var request = {
-          origin: start,
-          destination: end,
-          travelMode: google.maps.TravelMode.DRIVING
-        };
-        directionsService.route(request, function(response, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-          }
-        });
-      }
     }
   };
 });

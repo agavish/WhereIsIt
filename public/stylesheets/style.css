@@ -9,6 +9,9 @@
   .business-profile-value select {
     width: 50px;
   }
+  .google-directions-travel-mode-btn {
+    width: 30% !important;
+  }
 }
 html {
   overflow-y: scroll;
@@ -411,4 +414,42 @@ button.search-nearest-button:hover {
 }
 .business-actions li {
   margin: 4px 0;
+}
+/* GOOGLE MAPS DIRECTIONS */
+.adp, .adp table {
+  font-family: 'Alef Hebrew', Arial, Helvetica, sans-serif !important;
+}
+.adp-warnbox {
+  display: none;
+}
+.adp-summary {
+  font-weight: bold;
+  padding: 6px;
+}
+.adp-directions {
+  width: 100%;
+}
+/* END GOOGLE MAPS DIRECTIONS */
+.google-directions-travel-modes {
+  margin: 25px auto;
+  text-align: center;
+}
+.google-directions-travel-mode-btn {
+  margin: 0;
+  width: 125px;
+  border: 1px solid #E8E8E8;
+  color: #0076be !important;
+  background-color: #FFF;
+}
+.google-directions-travel-mode-btn:hover,
+.google-directions-travel-mode-btn:active,
+.google-directions-travel-mode-btn:focus,
+.google-directions-travel-mode-btn.active {
+  background-color: #ECF2F7;
+  border: 1px solid #E8E8E8;
+  color: #0076be !important;
+}
+.google-directions-travel-mode-btn-text {
+  display: block;
+  white-space: normal;
 }
