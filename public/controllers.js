@@ -6,6 +6,7 @@ controllers.controller('userController', ['$scope', '$rootScope', 'userService',
     $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
     $scope.lastVisitedBusinesses = [];
     $scope.favoriteBusinesses = [];
+    $scope.reviewBusinesses = [];
 
     $scope.getLastVisitedBusinessesByUserId = function(userId) {
       $rootScope.loading = true;
@@ -37,9 +38,25 @@ controllers.controller('userController', ['$scope', '$rootScope', 'userService',
         });
     }
 
+    $scope.getReviewedBusinessesByUserId = function(userId) {
+        $rootScope.loading = true;
+        userService.getReviewedBusinessesByUserId(userId)
+            .success(function(data, status) {
+                $scope.reviewBusinesses = data;
+                $rootScope.loading = false;
+                return;
+            })
+            .error(function(data, status) {
+                $scope.reviewBusinesses = [];
+                $rootScope.loading = false;
+                return;
+            });
+    }
+
     var userId = $rootScope.session.currentUser._id;
     $scope.getLastVisitedBusinessesByUserId(userId);
     $scope.getFavoriteBusinessesByUserId(userId);
+    $scope.getReviewedBusinessesByUserId(userId);
   }
 ]);
 

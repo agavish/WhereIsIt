@@ -122,6 +122,12 @@ services.factory('userService', ['$http',
           url: '/api/users/' + userId,
           data: userData
         });
+      },
+      getReviewedBusinessesByUserId: function(id) {
+        return $http({
+          method: 'GET',
+          url: '/api/review/user/' + id
+        });
       }
     };
   }

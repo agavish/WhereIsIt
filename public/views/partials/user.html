@@ -1,5 +1,6 @@
 <div class="user-profile">
     <div clas="row">
+        <div class="panel-heading col-md-3" align="right">ביקורות</div>
         <div class="panel-heading col-md-6" align="right">מועדפים</div>
         <div class="panel-heading col-md-3" align="right">עסקים אחרונים שנצפו</div>
         <div class="panel-heading col-md-3" align="right" >פרטי משתמש</div>
@@ -7,6 +8,17 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-body">
+                <div class="col-md-3" align="right">
+                    <ol ng-show="reviewBusinesses && reviewBusinesses.length > 0">
+                        <li ng-repeat="reviewBusiness in reviewBusinesses">
+                            <div>{{reviewBusiness.content}}</a>
+                            </div>
+                        </li>
+                    </ol>
+                    <div ng-show="reviewBusinesses && reviewBusinesses.length == 0">
+                        <span class="empty-panel text-muted">אין עדיין ביקורות לעסקים</span>
+                    </div>
+                </div>
                 <div class="col-md-6" align="right">
                     <ol ng-show="favoriteBusinesses && favoriteBusinesses.length > 0">
                         <li ng-repeat="favoriteBusiness in favoriteBusinesses">
