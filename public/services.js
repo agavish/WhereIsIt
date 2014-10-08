@@ -135,6 +135,13 @@ services.factory('reviewService', ['$http',
           method: 'GET',
           url: '/api/review/business/' + businessId
         });
+      },
+      addBusinessReview: function(userId, businessId, review) {
+          return $http({
+              method: 'POST',
+              url: '/api/business/' + businessId + '/review/' + userId,
+              data: review
+          })
       }
     };
   }

@@ -25,7 +25,7 @@ router.post('/api/business', businessController.createNewBusiness);
 router.get('/api/review/:id', reviewController.findReviewById);
 router.get('/api/review/user/:userId', reviewController.findReviewsByUserId);
 router.get('/api/review/business/:businessId', reviewController.findReviewsByBusinessId);
-router.post('/api/review', reviewController.createNewReview);
+router.post('/api/business/:businessId/review/:userId', reviewController.createNewReview);
 router.delete('/api/review/:id', reviewController.deleteReview);
 
 // redirect the user to facebook for authentication.  when complete,

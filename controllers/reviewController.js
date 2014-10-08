@@ -21,9 +21,9 @@ exports.createNewReview = function(req, res) {
     }
 
     var errors = [];
-    var userId = req.body.userId;
-    var businessId = req.body.businessId;
-    var content = req.body.content;
+    var userId = req.params.userId;
+    var businessId = req.params.businessId;
+    var content = req.body.review;
 
     // validate the user exists
     var user = User.findOne({ "_id": userId }, function (err, user) {
