@@ -1,8 +1,8 @@
 /**
  * Created by avi on 8/8/2014.
  */
-var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'services', 'controllers'])
-                    .run(['$rootScope', '$window', 'sessionService', 'geoLocationService', function ($rootScope, $window, sessionService, geoLocationService) {
+var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angularMoment', 'services', 'controllers'])
+                    .run(['$rootScope', '$window', 'sessionService', 'geoLocationService', 'amMoment', function ($rootScope, $window, sessionService, geoLocationService, amMoment) {
 
   // these rootScope variables serves all inner controllers and views
   $rootScope.session = sessionService;
@@ -39,6 +39,11 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'se
   }
 
   $rootScope.getPosition();
+
+  // angular moment is used to translate Date objetcs to meaningful strings.
+  // it supports localization, and in particular, it has hebrew translations.
+  // see business.html under partials, in the business reviews section. 
+  amMoment.changeLocale('he');
 
 }]);
 

@@ -157,12 +157,17 @@ exports.findReviewsByBusinessId = function(req, res) {
             return res.send({ error: 'Reviews Not found' });
         }
 
-        if(!err) {
-            return res.send(business.reviews);
-        } else {
-            res.statusCode = 500;
-            console.log('Internal error(%d): %s', res.statusCode, err.message);
-            return res.send({ error: 'Server error' });
+        if (!err) {
+          Review.populate(business.reviews, {path:'userId'}, function(err, reviews) {
+            if (!err) {
+              return res.send(reviews);
+            }
+          });     
+        }
+        if (err) {
+          res.statusCode = 500;
+          console.log('Internal error(%d): %s', res.statusCode, err.message);
+          return res.send({ error: 'Server error' });
         }
     });
 };

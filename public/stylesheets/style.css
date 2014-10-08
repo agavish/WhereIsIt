@@ -24,7 +24,7 @@ body {
 a {
   color: #0076be;
 }
-ul, ol ,li {
+ul, ol, li {
   list-style-type: none;
   list-style: none;
   padding: 0;
@@ -429,6 +429,13 @@ button.search-nearest-button:hover {
 .adp-directions {
   width: 100%;
 }
+.adp-legal {
+  display: none;
+}
+.adp-placemark {
+  background-color: transparent;
+  border: none;
+}
 /* END GOOGLE MAPS DIRECTIONS */
 .google-directions-travel-modes {
   margin: 25px auto;
@@ -452,4 +459,49 @@ button.search-nearest-button:hover {
 .google-directions-travel-mode-btn-text {
   display: block;
   white-space: normal;
+}
+.add-business-review {
+  margin: 30px auto 0;
+  float: right;
+  width: 100%;
+}
+.add-business-review textarea {
+  height: 100px;
+}
+.add-business-review button[type=submit] {
+  margin: 5px 0 0;
+}
+.review {
+  margin: 0 0 12px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #E8E8E8;
+}
+.review:last-child {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.review-header {
+  vertical-align: middle;
+}
+.review-user-image {
+  width: 36px;
+  height: 36px;
+  vertical-align: middle;
+}
+.review-username {
+  font-weight: bold;
+  font-style: italic;
+  margin: 0 5px 0 10px;
+  vertical-align: middle;
+}
+.review-timeago {
+  color: #AAAAAA;
+  font-size: 13px;
+  vertical-align: middle;
+}
+.review-content {
+  padding-right: 45px;
+  white-space: pre-line;
+  text-align: justify;
 }

@@ -83,18 +83,23 @@
           <h3 class="panel-title">ביקורות</h3>
         </div>
         <div class="panel-body">
-          <ul ng-show="business.reviews && business.reviews.length > 0">
-            <li ng-repeat="review in business.reviews">
-              <div>{{ review.content }}</div>
+          <ol ng-show="business.reviews && business.reviews.length > 0">
+            <li ng-repeat="review in business.reviews" class="review">
+              <div class="review-header">
+                <img ng-src="{{ review.userId.imagePath }}" class="review-user-image img-rounded" />
+                <span class="review-username">{{ review.userId.firstname }} {{ review.userId.lastname }}</span>
+                <span class="review-timeago" am-time-ago="review.date"></span>
+              </div>
+              <div class="review-content">{{ review.content }}</div>
             </li>
-          </ul>
+          </ol>
           <div ng-show="business.reviews && business.reviews.length == 0">
             <span class="empty-panel text-muted">לעסק זה אין עדיין ביקורות</span>
           </div>
           <div class="add-business-review" ng-show="isLoggedIn">
             <form ng-submit="addBusinessReview()">
               <textarea class="form-control" placeholder="כתוב ביקורת על עסק זה" ng-model="businessReview" ng-required="true"></textarea>
-              <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fa fa-plus"></i> הוסף ביקורת</button>
+              <button type="submit" class="btn btn-primary pull-left"><i class="fa fa-plus"></i> הוסף ביקורת</button>
             </form>
           </div>
         </div>
