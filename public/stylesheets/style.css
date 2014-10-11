@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/earlyaccess/alefhebrew.css);
+@import url(http://fonts.googleapis.com/css?family=Patua+One);
 
 @media all and (min-width: 1200px) {
   .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
@@ -20,6 +21,9 @@ body {
   font: 14px 'Alef Hebrew', Arial, Helvetica, sans-serif;
   direction: rtl;
   margin: 0 auto;
+}
+.font-patua-one {
+  font-family: 'Patua One', cursive;
 }
 a {
   color: #0076be;
@@ -162,8 +166,16 @@ select[disabled] {
   float: left;
   width: 100%;
 }
-#login-btn {
+#logo {
+  font: 28px 'Patua One', cursive;
+  color: #555555;
   float: left;
+  direction: ltr;
+  margin: 0;
+  cursor: default;
+}
+#login-btn {
+  float: right;
   background: #4c69ba;
   background: -webkit-gradient(linear, center top, center bottom, from(#4c69ba), to(#3b55a0));
   background: -webkit-linear-gradient(#4c69ba, #3b55a0);
@@ -194,10 +206,10 @@ select[disabled] {
   font-weight: bold;
 }
 #user-details {
-  float: left;
+  float: right;
   position: relative;
   padding: 0;
-  margin: 0;
+  margin: 4px 0 0;
   z-index: 2;
   padding: 0 0 10px;
 }
@@ -215,13 +227,13 @@ select[disabled] {
   margin-right:10px;
 }
 .user-image img {
-  height: 48px;
-  width: 48px;
+  height: 28px;
+  width: 28px;
 }
 .user-name-email {
   float: left;
   text-align: left;
-  margin: 7px 10px 0 0;
+  margin: 0px 10px 0 0;
 }
 .user-name {
   font-weight: bold;
@@ -233,7 +245,7 @@ select[disabled] {
 }
 .user-caret {
   float: left;
-  margin: 8px 2px 0 0;
+  margin: 2px 2px 0 0;
 }
 .user-menu {
   display: none;
