@@ -62,17 +62,15 @@ select[disabled] {
 .fade-content {
   opacity: 0;
 }
-.fade-content.fade-in:not(.ng-leave) {
+.fade-content.fade-in:not(.ng-leave):not(.ng-leave-active):not(.ng-enter):not(.ng-enter-active) {
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
+  opacity: 1;
 }
 .fade-content.ng-enter {
   opacity: 0;
-}
-.fade-content.fade-in {
-  opacity: 1;
 }
 .fade-content.ng-leave {
   opacity: 1;
