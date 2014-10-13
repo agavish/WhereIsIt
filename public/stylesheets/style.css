@@ -533,3 +533,9 @@ button.search-nearest-button:hover {
 .business-user-rate * {
   outline: 0 !important;
 }
+.user-profile {
+  direction: rtl;
+}
+.user-profile .panel {
+  min-height: 150px;
+}

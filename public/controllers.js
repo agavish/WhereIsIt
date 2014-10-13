@@ -401,7 +401,11 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
     $scope.keyword = $routeParams.keyword;
     $scope.searchBusinessesByKeyword($scope.keyword, $rootScope.position);
   } else if ($location.path().indexOf("/nearest") > -1) {
-    $scope.searchNearestBusinesses($rootScope.position);
+    $rootScope.$watch('position', function(newPosition, oldPosition) {
+      if (newPosition) {
+        $scope.searchNearestBusinesses(newPosition);
+      }
+    });
   }
   
 }]);
