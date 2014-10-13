@@ -2,7 +2,6 @@ var controllers = angular.module('controllers', []);
 
 controllers.controller('userController', ['$scope', '$rootScope', 'userService', function($scope, $rootScope, userService) {
 
-    // no need to hold a $scope.user variable, we get the user from the session.currentUser which is stored on the $rootScope
     $rootScope.title = $rootScope.session.currentUser.firstname + " " + $rootScope.session.currentUser.lastname;
     $scope.lastVisitedBusinesses = [];
     $scope.favoriteBusinesses = [];
@@ -75,6 +74,7 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     7: { opened: true, displayDay: "שבת", startHour: "09:00", endHour: "19:00"}
   };
   $scope.displayDay={1:"א",2:"ב",3:"ג",4:"ד",5:"ה",6:"ו",7:"ש"};
+  $scope.userRate = 0;
   $scope.businessTypes=["אוניברסיטה","אצטדיון","באולינג","בית חולים","בית מרקחת","בית משפט","בית ספר","בית קולנוע","בית קפה","בנק","בריאות","גלריה לאומנות","גן/פארק","דואר","חדר כושר","חנות","חנות אופניים","חנות אלכוהול","חנות אלקטרוניקה","חנות בגדים","חנות כלבו","חנות לבית","חנות לחומרי בניין","חנות לחיות מחמד","חנות נוחות","חנות נעליים","חנות ספרים","חנות פרחים","חנות רהיטים","חנות תכשיטים","חנייה","חשמלאים","כספומט","לינה ואירוח","מאפייה","מועדון לילה","מזון","מכבסה","מנעולנים","מסעדה","משטרה","משלוחי אוכל","סוחר רכב","סוכנות ביטוח","סוכנות נדלן","סוכנות נסיעות","סופרמרקט","סלון יופי","ספרייה","עורכי דין","פאב","פיזיותרפיסט","פיננסים","צבעים","קבלן","קמפינג","קניון/מרכז מסחרי","רואה חשבון","רופא","רופא שיניים","שטיפת מכוניות","שרברב","תחנת דלק","תחנת מוניות","תחנת רכבת","תיקון מכוניות/מוסך"];
   $scope.hours=["00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30","06:00","06:30","07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"];
   $scope.favoriteBusiness = false;
@@ -120,6 +120,7 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         $scope.initDisplayAddress();
         $scope.initDisplayOpenHours();
         $scope.initFavoriteBusiness();
+        $scope.initRate();
         $rootScope.loading = false;
         $scope.getReviewsByBusinessId(businessId);
         return;
@@ -156,6 +157,8 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     $scope.setOpenHours();
     businessService.updateBusinessById($scope.business)
     .success(function(data, status) {
+      $scope.business.rates = data.business.rates;
+      $scope.business.averageRate = Number(data.business.averageRate).toFixed(2);
       $location.path('/business/' + $scope.business._id);
     });
   }
@@ -174,15 +177,6 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
         return;
       });
   }
-
-  $scope.$watch('displayAddress', function() {
-      if ($scope.googlePlace) {
-        var place = $scope.googlePlace.getPlace();
-        if (place) {
-          $scope.fillInAddress(place);
-        }
-      }
-   });
 
   $scope.fillInAddress = function(place) {
     // get home number
@@ -244,6 +238,20 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     }
   }
 
+  $scope.initRate = function() {
+    $scope.business.averageRate = Number($scope.business.averageRate).toFixed(2);
+    if ($rootScope.session.isLoggedIn) {
+      var user = $rootScope.session.currentUser;
+      var rates = $scope.business.rates;
+      for (var i=0; i<rates.length; i++) {
+        if (rates[i].userId == user._id) {
+          $scope.userRate = rates[i].rate;
+          break;
+        }
+      }
+    }
+  }
+
   $scope.setOpenHours = function() {
     $scope.business.openHours = [];
     for (var i=1; i <= Object.keys($scope.displayOpenHours).length ;i++) {
@@ -259,11 +267,15 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     }
   }
 
-  $scope.$watch('business.address.coordinates', function(oldCoordinates, newCoordinates) {
-    if (oldCoordinates || newCoordinates) {
-      $scope.getDirections('DRIVING');
+  $scope.setRate = function() {
+    if ($rootScope.session.isLoggedIn) {
+      var user = $rootScope.session.currentUser;
+      $scope.business.userRate = {};
+      $scope.business.userRate.userId = user._id;
+      $scope.business.userRate.rate = $scope.userRate;
+      $scope.updateBusiness();
     }
-  });
+  }
 
   $scope.getDirections = function(travelMode) {
     var start = myPosition.latitude + "," + myPosition.longitude;
@@ -326,6 +338,21 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
   } else if (currentPath === '/business/create/new') {
     $scope.createEmptyBusiness();
   }
+
+  $scope.$watch('displayAddress', function() {
+    if ($scope.googlePlace) {
+      var place = $scope.googlePlace.getPlace();
+      if (place) {
+        $scope.fillInAddress(place);
+      }
+    }
+   });
+
+  $scope.$watch('business.address.coordinates', function(newCoordinates, oldCoordinates) {
+    if (oldCoordinates || newCoordinates) {
+      $scope.getDirections('DRIVING');
+    }
+  });
 }]);
 
 controllers.controller("searchController", ['$scope', '$rootScope', '$routeParams', '$location', 'businessService', function($scope, $rootScope, $routeParams, $location, businessService) {

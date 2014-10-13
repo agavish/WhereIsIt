@@ -30,7 +30,8 @@ var businessSchema = new Schema({
     userId: String,
     rate: { type: Number, default: 0, max: 5 }
     }],
-  averateRate:      { type: Number, default: 0 },
+  averageRate:      { type: Number, default: 0 },
+  totalRate:        { type: Number, default: 0 },
   description:      { type: String },
   reviews     :     [ { type: Schema.ObjectId, ref: 'Review' } ]
 });

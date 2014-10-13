@@ -386,6 +386,7 @@ button.search-nearest-button:hover {
   width: 100%;
   float: right;
   margin: 2px 0 15px;
+  word-break: break-word;
 }
 .business-profile-key:after {
   content: ':';
@@ -470,15 +471,15 @@ button.search-nearest-button:hover {
   display: block;
   white-space: normal;
 }
-.add-business-review {
+.business-add-review {
   margin: 30px auto 0;
   float: right;
   width: 100%;
 }
-.add-business-review textarea {
+.business-add-review textarea {
   height: 100px;
 }
-.add-business-review button[type=submit] {
+.business-add-review button[type=submit] {
   margin: 5px 0 0;
 }
 .review {
@@ -514,4 +515,21 @@ button.search-nearest-button:hover {
   padding-right: 45px;
   white-space: pre-line;
   text-align: justify;
+}
+.business-add-rate {
+  text-align: center;
+}
+.business-average-rate {
+  font-size: 24px;
+  font-weight: bold;
+}
+.business-user-rate-label {
+  direction: rtl;
+}
+.business-user-rate {
+  margin:20px auto 0;
+  direction: ltr;
+}
+.business-user-rate * {
+  outline: 0 !important;
 }

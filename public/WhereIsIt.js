@@ -1,7 +1,7 @@
 /**
  * Created by avi on 8/8/2014.
  */
-var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angularMoment', 'services', 'controllers'])
+var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angularMoment', 'ui.bootstrap', 'services', 'controllers'])
                     .run(['$rootScope', '$window', 'sessionService', 'geoLocationService', 'amMoment', function ($rootScope, $window, sessionService, geoLocationService, amMoment) {
 
   // these rootScope variables serves all inner controllers and views

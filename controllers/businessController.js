@@ -256,33 +256,38 @@ exports.updateBusinessById = function(req, res) {
           business.openHours.addToSet(req.body.openHours[i]);
         }
       }
-      if (req.body.rate) {
+
+      if (req.body.userRate) {
+
+        var totalRate = business.totalRate;
+        var newRater = true;
 
         // check if current userId already rated the business
         for(var i=0; i < business.rates.length; i++) {
-          if (business.rates[i].userId == req.body.userId) {
-            res.statusCode = 500;
-            console.log("error: user id %d already rated business id %d", req.body.userId, req.params.id);
-            return res.send({ error: "User already rated that business" });
+          if (business.rates[i].userId == req.body.userRate.userId) {
+            // subtract the old user rate from the total rate 
+            totalRate = totalRate - business.rates[i].rate;
+            // add the new user rate to the total rate 
+            totalRate = totalRate + req.body.userRate.rate;
+            // override the user old rate with the new one
+            business.rates[i].rate = req.body.userRate.rate;
+            newRater = false;
+            break;
           }
         }
 
-        // user didn't rate that business yet, creating a new rate
-        var newRate = {
-          userId: req.body.userId,
-          rate: req.body.rate
+        if (newRater) {
+          var newRate = {
+            userId: req.body.userRate.userId,
+            rate: req.body.userRate.rate
+          }
+          totalRate = totalRate + req.body.userRate.rate;
+          business.rates.push(newRate);
         }
 
-        business.rates.push(newRate);
-
-        var totalRate = 0;
         var numOfRates = business.rates.length;
-
-        for (var i = 0; i < numOfRates; i++) {
-            totalRate += business.rates[i].rate;
-        }
-
-        business.averateRate = parseFloat(totalRate/numOfRates);
+        business.totalRate = totalRate;
+        business.averageRate = parseFloat(totalRate/numOfRates).toFixed(2);
       }
 
       return business.save(function(err) {

@@ -41,7 +41,23 @@
           </ul>
         </div>
       </div>
-      <div class="panel panel-default" ng-show="session.isLoggedIn">
+      <div class="panel panel-default business-add-rate">
+        <div class="panel-body">
+          <div ng-show="business.rates.length == 0">
+            <span class="empty-panel text-muted">לעסק זה אין עדיין דירוגים</span>
+          </div>
+          <div ng-show="business.rates.length > 0" class="business-average-rate-wrapper">
+            <div>דירוג ממוצע:</div>
+            <div class="business-average-rate">{{ business.averageRate }}</div>
+            <div>({{ business.rates.length }} מדרגים)</div>
+          </div>
+          <div class="business-user-rate" ng-show="isLoggedIn">
+            <div class="business-user-rate-label">הדירוג שלי:</div>
+            <rating ng-model="userRate" state-on="'fa fa-lg fa-star'" state-off="'fa fa-lg fa-star-o'" ng-click="setRate()"></rating>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" ng-show="isLoggedIn">
         <div class="panel-body">
           <ul class="business-actions">
             <li>
@@ -51,7 +67,7 @@
             </li>
             <li>
               <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="addBusinessToFavorites()">
-                <i class="fa fa-star {{favoriteBusiness ? 'business-favorite' : ''}}"></i> {{favoriteBusiness ? 'הסר מהמועדפים' : 'הוסף למועדפים'}}
+                <i class="fa fa-heart {{favoriteBusiness ? 'business-favorite' : ''}}"></i> {{favoriteBusiness ? 'הסר מהמועדפים' : 'הוסף למועדפים'}}
               </button>
             </li>
             <li>
@@ -96,7 +112,7 @@
           <div ng-show="business.reviews && business.reviews.length == 0">
             <span class="empty-panel text-muted">לעסק זה אין עדיין ביקורות</span>
           </div>
-          <div class="add-business-review" ng-show="isLoggedIn">
+          <div class="business-add-review" ng-show="isLoggedIn">
             <form ng-submit="addBusinessReview()">
               <textarea class="form-control" placeholder="כתוב ביקורת על עסק זה" ng-model="businessReview" ng-required="true"></textarea>
               <button type="submit" class="btn btn-primary pull-left"><i class="fa fa-plus"></i> הוסף ביקורת</button>
