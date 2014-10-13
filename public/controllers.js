@@ -7,6 +7,10 @@ controllers.controller('userController', ['$scope', '$rootScope', 'userService',
     $scope.favoriteBusinesses = [];
     $scope.reviewBusinesses = [];
 
+    $scope.showReviewContent = function(content) {
+        return content.length > 10 ? (content.substr(0,10) + " ...") : content;
+    }
+
     $scope.getLastVisitedBusinessesByUserId = function(userId) {
       $rootScope.loading = true;
       userService.getLastVisitedBusinessesByUserId(userId)

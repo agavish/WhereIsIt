@@ -56,7 +56,7 @@
             <li ng-repeat="reviewBusiness in reviewBusinesses">
                   <div><a href="#/business/{{reviewBusiness.businessId._id}}">{{reviewBusiness.businessId.name}}</a>
                    -
-                  {{reviewBusiness.content}}</div>
+                  {{showReviewContent(reviewBusiness.content)}}</div>
             </li>
           </ol>
           <div ng-show="reviewBusinesses && reviewBusinesses.length == 0">
