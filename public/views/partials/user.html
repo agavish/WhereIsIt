@@ -6,6 +6,7 @@
           <h3 class="panel-title">פרטי משתמש</h3>
         </div>
         <div class="panel-body">
+
           <img ng-src="{{session.currentUser.imagePath}}" class="img-circle">
           <div><a href="mailto:{{session.currentUser.email}}">{{session.currentUser.email}}</a></div>
         </div>
@@ -53,7 +54,11 @@
         <div class="panel-body">
           <ol ng-show="reviewBusinesses && reviewBusinesses.length > 0">
             <li ng-repeat="reviewBusiness in reviewBusinesses">
-              <div>{{reviewBusiness.content}}</a></div>
+              <div>
+                  <div><a href="#/business/{{reviewBusiness.businessId._id}}">{{reviewBusiness.businessId.name}}</a></div>
+                  <div>{{reviewBusiness.content}}</a></div>
+              </div>
+
             </li>
           </ol>
           <div ng-show="reviewBusinesses && reviewBusinesses.length == 0">

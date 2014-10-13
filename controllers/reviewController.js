@@ -120,24 +120,26 @@ exports.findReviewById = function(req, res) {
  * @param {Object} req HTTP request object.
  * @param {Object} res HTTP response object.
  */
-exports.findReviewsByUserId = function(req, res) {
-    console.log("GET - /review/user/:userId");
+exports.findReviewsByUserId = function(req,res) {
+    console.log("GET - /users/favorite-businesses/:id");
 
-    return Review.find({"userId": req.params.userId}, function(err, reviews) {
-        if(!reviews || !reviews[0]) {
-            res.statusCode = 404;
-            return res.send({ error: 'Reviews Not found' });
-        }
+    return Review
+        .find({"userId": req.params.userId})
+        .populate('businessId')
+        .exec( function (err,reviews) {
+            if(!reviews || !reviews[0]) {
+                res.statusCode = 404;
+                return res.send({ error: 'Reviews Not found' });
+            }
 
-        if(!err) {
-            return res.send(reviews);
-        } else {
-
-            res.statusCode = 500;
-            console.log('Internal error(%d): %s', res.statusCode, err.message);
-            return res.send({ error: 'Server error' });
-        }
-    });
+            if(!err) {
+                return res.send(reviews);
+            } else {
+                res.statusCode = 500;
+                console.log('Internal error(%d): %s', res.statusCode, err.message);
+                return res.send({ error: 'Server error' });
+            }
+        });
 };
 
 /**
