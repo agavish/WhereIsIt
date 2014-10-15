@@ -54,9 +54,10 @@
         <div class="panel-body">
           <ol ng-show="reviewBusinesses && reviewBusinesses.length > 0">
             <li ng-repeat="reviewBusiness in reviewBusinesses">
-                  <div><a href="#/business/{{reviewBusiness.businessId._id}}">{{reviewBusiness.businessId.name}}</a>
-                   -
-                  {{showReviewContent(reviewBusiness.content)}}</div>
+                  <div>
+                    <a href="#/business/{{reviewBusiness.businessId._id}}#{{reviewBusiness._id}}">{{reviewBusiness.businessId.name}}</a>
+                    -{{showReviewContent(reviewBusiness.content)}}
+                  </div>
             </li>
           </ol>
           <div ng-show="reviewBusinesses && reviewBusinesses.length == 0">

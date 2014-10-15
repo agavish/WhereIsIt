@@ -100,3 +100,16 @@ app.directive('googleautocomplete', function() {
     }
   };
 });
+
+app.directive('scrolltoanchor', ['$timeout', '$location', '$anchorScroll', function($timeout, $location, $anchorScroll) {
+  return {
+    link: function(scope, element, attrs, model) {
+      $timeout(function() {
+        var currentHash = $location.hash();
+        if (currentHash) {
+          $('html, body').animate({scrollTop: $("#"+currentHash).offset().top}, 1000);
+        }
+      }, 0);
+    }
+  };
+}]);

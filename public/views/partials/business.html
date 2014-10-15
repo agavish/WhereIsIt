@@ -1,4 +1,4 @@
-<div class="business-profile">
+<div class="business-profile" scrolltoanchor>
   <div class="row">
     <div class="col-lg-4">
       <div class="panel panel-default">
@@ -100,7 +100,7 @@
         </div>
         <div class="panel-body">
           <ol ng-show="business.reviews && business.reviews.length > 0">
-            <li ng-repeat="review in business.reviews" class="review">
+            <li ng-repeat="review in business.reviews" id="{{ review._id }}" class="review" scrolltoanchor>
               <div class="review-header">
                 <img ng-src="{{ review.userId.imagePath }}" class="review-user-image img-rounded" />
                 <span class="review-username">{{ review.userId.firstname }} {{ review.userId.lastname }}</span>
