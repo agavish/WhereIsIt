@@ -84,7 +84,10 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
   $scope.favoriteBusiness = false;
   $scope.businessReview = "";
 
+  // init the google maps directions component
   var myPosition = $rootScope.position;
+  var directionsService = null;
+  var directionsDisplay = null;
 
   $scope.addBusinessReview = function() {
     var userId = $rootScope.session.currentUser._id;
@@ -142,7 +145,7 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
   $scope.createEmptyBusiness = function() {
     $scope.business = {
       name: "",
-      businessType: "",
+      businessType: $scope.businessTypes[0],
       address : {
         homeNumber: "",
         street: "",
@@ -185,13 +188,19 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
   $scope.fillInAddress = function(place) {
     // get home number
     var streetNumberComponent = $scope.getAddressComponentByType(place, "street_number");
-    $scope.business.address.homeNumber = streetNumberComponent.short_name;
+    if (streetNumberComponent) {
+      $scope.business.address.homeNumber = streetNumberComponent.short_name;  
+    }
     // get street
     var routeComponent = $scope.getAddressComponentByType(place, "route");
-    $scope.business.address.street = routeComponent.long_name;
+    if (routeComponent) {
+      $scope.business.address.street = routeComponent.long_name;
+    }
     // get city
     var localityComponent = $scope.getAddressComponentByType(place, "locality");
-    $scope.business.address.city = localityComponent.long_name;
+    if (localityComponent) {
+      $scope.business.address.city = localityComponent.long_name;
+    }
     // get coordinates
     var location = place.geometry.location;
     $scope.business.address.coordinates[0] = location.B;
@@ -247,10 +256,12 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     if ($rootScope.session.isLoggedIn) {
       var user = $rootScope.session.currentUser;
       var rates = $scope.business.rates;
-      for (var i=0; i<rates.length; i++) {
-        if (rates[i].userId == user._id) {
-          $scope.userRate = rates[i].rate;
-          break;
+      if (rates) {
+        for (var i=0; i<rates.length; i++) {
+          if (rates[i].userId == user._id) {
+            $scope.userRate = rates[i].rate;
+            break;
+          }
         }
       }
     }
@@ -311,11 +322,13 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
   // private function for the google maps directions component
   function success(position) {
     myPosition = position.coords;
-    googleDirectionsInit();
   }
 
   // private function for the google maps directions component
-  function googleDirectionsInit() {
+  function initGoogleDirections() {
+    directionsService = new google.maps.DirectionsService();
+    directionsDisplay = new google.maps.DirectionsRenderer();
+
     var mapOptions = {
       zoom: 18,
       center: new google.maps.LatLng(myPosition.latitude, myPosition.longitude)
@@ -326,13 +339,8 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     directionsDisplay.setPanel(directionsPanel);
   }
 
-  // init the google maps directions component
-  var directionsService = new google.maps.DirectionsService();
-  var directionsDisplay = new google.maps.DirectionsRenderer();
   if (!myPosition) {
     getPosition();        
-  } else {
-    googleDirectionsInit();
   }
 
   var currentPath = $location.path();
@@ -341,6 +349,10 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
     $scope.getBusinessById($scope.businessId);
   } else if (currentPath === '/business/create/new') {
     $scope.createEmptyBusiness();
+    $scope.initDisplayAddress();
+    $scope.initDisplayOpenHours();
+    $scope.initFavoriteBusiness();
+    $scope.initRate();
   }
 
   $scope.$watch('displayAddress', function() {
@@ -353,7 +365,8 @@ controllers.controller('businessController', ['$scope', '$rootScope', '$routePar
    });
 
   $scope.$watch('business.address.coordinates', function(newCoordinates, oldCoordinates) {
-    if (oldCoordinates || newCoordinates) {
+    if (newCoordinates && newCoordinates.length > 0) {
+      initGoogleDirections();
       $scope.getDirections('DRIVING');
     }
   });
@@ -414,7 +427,9 @@ controllers.controller("searchController", ['$scope', '$rootScope', '$routeParam
   
 }]);
 
-controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', '$location',  function($scope, $rootScope, $location) {
+controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', '$location', 'limitToFilter', 'businessService',  function($scope, $rootScope, $location, limitToFilter, businessService) {
+  $scope.keyword = "";
+
   $scope.delegateSearchByKeyword = function(keyword) {
     var currentPath = $location.path();
     // bypass angular's route provider limitation:
@@ -428,6 +443,17 @@ controllers.controller("searchByKeywordBarController", ['$scope', '$rootScope', 
     } else {
       $location.path('/search/keyword/' + keyword);
     }
+  };
+
+  $scope.searchByKeyword = function(keyword) {
+    return businessService.getBusinessesByKeyword(keyword, $rootScope.position)
+      .then(function(response) {
+        return limitToFilter(response.data, 15);
+      });
+  };
+
+  $scope.typeaheadSelect = function ($item, $model, $label) {
+    $scope.keyword = $model.name;
   };
 }]);
 

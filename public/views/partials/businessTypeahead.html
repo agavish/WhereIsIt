@@ -1,0 +1,6 @@
+<a class="business-typeahead-link" ng-href="#/business/{{match.model._id}}">
+  <span class="business-typeahead-name" bind-html-unsafe="match.model.name | typeaheadHighlight:query"></span>
+  <span class="text-muted business-typeahead-distance">{{ ((match.model.distanceMeters > 1000) ? match.model.distanceKilometers + ' ק"מ' : match.model.distanceMeters + " מ'") }}</span>
+  <span class="text-muted business-typeahead-address">{{match.model.address.street}} {{match.model.address.homeNumber}} {{match.model.address.city}}</span>
+  <span class="text-muted business-typeahead-category" bind-html-unsafe="match.model.businessType | typeaheadHighlight:query"></span>
+</a>

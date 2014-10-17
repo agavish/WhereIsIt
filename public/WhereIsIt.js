@@ -106,8 +106,11 @@ app.directive('scrolltoanchor', ['$timeout', '$location', '$anchorScroll', funct
     link: function(scope, element, attrs, model) {
       $timeout(function() {
         var currentHash = $location.hash();
-        if (currentHash) {
-          $('html, body').animate({scrollTop: $("#"+currentHash).offset().top}, 1000);
+        var anchored = $("#"+currentHash);
+        if (currentHash && anchored) {
+          if (anchored.offset()) {
+            $('html, body').animate({scrollTop: anchored.offset().top}, 1000);
+          }
         }
       }, 0);
     }

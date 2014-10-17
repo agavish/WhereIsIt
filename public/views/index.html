@@ -66,7 +66,8 @@
               <span class="loader" ng-show="loading"><img src="../images/loading-spin.svg" /></span>
             </button>
           </span>
-          <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" placeholder="חפש בתי עסק, שירותים או מקומות בילוי" ng-required="true" />
+          <input id="search-input" class="form-control input-lg" type="text" ng-model="keyword" placeholder="חפש בתי עסק, שירותים או מקומות בילוי" ng-required="true" typeahead="business as business.name for business in searchByKeyword($viewValue) | filter:{name:$viewValue}" typeahead-on-select="typeaheadSelect($item, $model, $label)" typeahead-min-length="2" typeahead-wait-ms="200" typeahead-template-url="/views/partials/businessTypeahead.html" />
+
         </div>
       </form>
     </div>

@@ -12,13 +12,13 @@
                 <li>
                   <div class="business-profile-key">שם</div>
                   <div class="business-profile-value">
-                    <input class="form-control" type="text" ng-model="business.name" placeholder="שם" required />
+                    <input class="form-control" type="text" ng-model="business.name" placeholder="שם" ng-required="true" />
                   </div>
                 </li>
                 <li>
                   <div class="business-profile-key">קטגוריה</div>
                   <div class="business-profile-value">
-                    <select class="form-control" ng-model="business.businessType" placeholder="קטגוריה" required>
+                    <select class="form-control" ng-model="business.businessType" placeholder="קטגוריה" ng-required="true">
                       <option ng-repeat="businessType in businessTypes" value="{{businessType}}">{{businessType}}</option>
                     </select>
                   </div>
@@ -26,7 +26,7 @@
                 <li>
                   <div class="business-profile-key">כתובת</div>
                   <div class="business-profile-value">
-                    <input class="form-control" type="text" value="{{ displayAddress }}" name="displayAddress" id="displayAddress" ng-model="displayAddress" placeholder="רחוב ומס' בית, עיר" required googleautocomplete />
+                    <input class="form-control" type="text" value="{{ displayAddress }}" name="displayAddress" id="displayAddress" ng-model="displayAddress" placeholder="רחוב ומס' בית, עיר" ng-required="true" googleautocomplete />
                   </div>
                 </li>
                 <li>
