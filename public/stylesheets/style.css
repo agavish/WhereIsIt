@@ -14,13 +14,18 @@
     text-align: center;
     width: 100%;
   }
+  #login-btn {
+    float: none !important;
+    margin: 10px auto 4px !important;
+    display:inline-block;
+  }
   #user-details {
     float: none !important;
     position: relative;
     margin: 10px auto 4px !important;
     z-index: 2;
     text-align: center;
-    display:inline-block !important;
+    display:inline-block;
   }
   .google-directions-travel-mode-btn {
     width: 30% !important;

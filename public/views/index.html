@@ -31,11 +31,11 @@
 
     <!-- USER BAR -->
     <div id="user-bar">
+      <div id="logo">whereisit</div>
       <button ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" id="login-btn" class="btn btn-primary" type="button">
         <i class="fa fa-facebook"></i> 
         <span class="text">התחבר</span>
       </button>
-      <div id="logo">whereisit</div>
       <ul id="user-details" ng-show="session.isLoggedIn">
         <li>
           <div class="user-details-wrapper">
