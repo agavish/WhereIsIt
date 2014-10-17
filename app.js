@@ -14,9 +14,8 @@ var express = require('express')
   , docs = require("express-mongoose-docs");
 
 // dev: mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt
-//      mongodb://Admin1:Admin1@lennon.mongohq.com:10085/app28304691
 // prod (mta cluster): localhost:27017/WhereIsIt
-mongoose.connect('mongodb://Admin1:Admin1@lennon.mongohq.com:10085/app28304691', function(err, res) {
+mongoose.connect('mongodb://Admin:Admin@kahana.mongohq.com:10075/WhereIsIt', function(err, res) {
   if(err) {
     console.log('error connecting to MongoDB Database. ' + err);
   } else {
