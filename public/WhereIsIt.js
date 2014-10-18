@@ -2,13 +2,31 @@
  * Created by avi on 8/8/2014.
  */
 var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'angularMoment', 'ui.bootstrap', 'services', 'controllers'])
-                    .run(['$rootScope', '$window', 'sessionService', 'geoLocationService', 'amMoment', function ($rootScope, $window, sessionService, geoLocationService, amMoment) {
+                    .run(['$rootScope', '$window', '$location','sessionService', 'geoLocationService', 'amMoment', function ($rootScope, $window, $location, sessionService, geoLocationService, amMoment) {
 
   // these rootScope variables serves all inner controllers and views
   $rootScope.session = sessionService;
   $rootScope.position = null;
   $rootScope.loading = false;
   $rootScope.title = "";
+
+        /*
+  // register listener to watch route changes
+  $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+    if ( $rootScope.isLoggedIn == null || $rootScope.isLoggedIn == false) {
+        console.log("not logged in");
+
+
+        // no logged user, we should be going to #index
+        if ( next.templateUrl == "/views/index.html" ) {
+            // already going to #index, no redirect needed
+        } else {
+            // not going to #index, we should redirect now
+            $location.path( "/" );
+        }
+    }
+  });
+  */
 
   // authenticate and handle session and logged in user on app startup
   $window.app = {
@@ -52,7 +70,10 @@ app.config(['$routeProvider', '$locationProvider',
     $routeProvider.
       when('/business/create/new', {
         templateUrl: '/views/partials/businessCreate.html',
-        controller: 'businessController'
+        controller: 'businessController',
+        resolve: {
+            factory: CheckIfLoggedIn
+        }
       })
       .when('/business/:businessId', {
         templateUrl: '/views/partials/business.html',
@@ -60,7 +81,10 @@ app.config(['$routeProvider', '$locationProvider',
       })
       .when('/business/:businessId/update', {
         templateUrl: '/views/partials/businessUpdate.html',
-        controller: 'businessController'
+        controller: 'businessController',
+        resolve: {
+            factory: CheckIfLoggedIn
+        }
       })
       .when('/search/keyword/:keyword', {
         templateUrl: '/views/partials/search.html',
@@ -72,7 +96,10 @@ app.config(['$routeProvider', '$locationProvider',
       })
       .when('/users/:id', {
         templateUrl: '/views/partials/user.html',
-        controller: 'userController'
+        controller: 'userController',
+        resolve: {
+            factory: CheckIfLoggedIn
+        }
       })
       .otherwise({
         redirectTo: '/'
@@ -81,6 +108,15 @@ app.config(['$routeProvider', '$locationProvider',
       // use the HTML5 History API
       $locationProvider.html5Mode(true);
   }]);
+
+
+var CheckIfLoggedIn= function ($rootScope, $location) {
+    if ($rootScope.isLoggedIn) {
+        return true;
+    } else {
+        $location.path("/");
+    }
+};
 
 app.directive('googleautocomplete', function() {
   return {
