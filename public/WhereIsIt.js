@@ -101,6 +101,9 @@ app.config(['$routeProvider', '$locationProvider',
             factory: CheckIfLoggedIn
         }
       })
+      .when('/error', {
+        templateUrl: '/views/partials/error.html'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -114,7 +117,7 @@ var CheckIfLoggedIn= function ($rootScope, $location) {
     if ($rootScope.isLoggedIn) {
         return true;
     } else {
-        $location.path("/");
+        $location.path("/error");
     }
 };
 
