@@ -151,7 +151,7 @@ select[disabled] {
   float: left;
   direction: ltr;
   margin: 0;
-  cursor: default;
+  cursor: pointer;
 }
 #login-btn {
   float: right;

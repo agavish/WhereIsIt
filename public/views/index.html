@@ -31,7 +31,7 @@
 
     <!-- USER BAR -->
     <div id="user-bar">
-      <a id="logo" href="#/">whereisit</a>
+      <div id="logo" ng-click="redirectToIndex()">whereisit</div>
       <button ng-hide="session.isLoggedIn" ng-click="session.facebookLogin()" id="login-btn" class="btn btn-primary" type="button">
         <i class="fa fa-facebook"></i> 
         <span class="text">התחבר</span>

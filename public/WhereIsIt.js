@@ -56,6 +56,12 @@ var app = angular.module('WhereIsIt', ['ngRoute', 'ngAnimate', 'ngSanitize', 'an
     return ($rootScope.position != null);
   }
 
+  $rootScope.redirectToIndex = function() {
+    $rootScope.title = "";
+    $location.hash("");
+    $location.path("/");
+  }
+
   $rootScope.getPosition();
 
   // angular moment is used to translate Date objetcs to meaningful strings.
