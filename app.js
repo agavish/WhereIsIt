@@ -26,6 +26,7 @@ mongoose.connect('mongodb://Admin1:Admin1@lennon.mongohq.com:10085/app28304691',
 var app = express();
 
 // all environment
+app.enable("trust proxy");
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/public/views');
 app.engine('html', require('ejs').renderFile); // ' avi 8.8
